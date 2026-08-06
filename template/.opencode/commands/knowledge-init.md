@@ -1,37 +1,76 @@
 ---
-description: Inizializza la knowledge base analizzando tutte le fonti del workspace
+description: Initialize the structured workspace knowledge base
 agent: knowledge
 subtask: false
 ---
 
-Inizializza la knowledge base del progetto utilizzando le fonti disponibili in:
+Initialize the workspace knowledge base from:
 
 - `repositories/`;
 - `documents/`;
 - `trainings/`;
 - `notes/`.
 
-Procedi per fasi:
+Load:
 
-1. inventaria le fonti disponibili senza leggere indiscriminatamente tutti i file;
-2. individua repository, manifest, README, configurazioni e documenti principali;
-3. ricostruisci componenti, responsabilità, tecnologie, dipendenze e integrazioni;
-4. confronta le fonti e segnala conflitti, lacune e informazioni non verificabili;
-5. crea una knowledge base iniziale coerente e tracciabile;
-6. cita sempre i percorsi delle fonti utilizzate;
-7. modifica esclusivamente file sotto `knowledge-base/`;
-8. non modificare repository, documenti, training o note.
+- `knowledge-generation`;
+- `workspace-reading`;
+- `safe-file-writing`;
+- `repository-analysis`.
 
-Crea, quando supportati da evidenze, i seguenti file:
+Load `execution-flow-analysis` and `architecture-analysis` only when sufficient
+evidence exists for those topics.
 
-- `knowledge-base/overview.md`;
-- `knowledge-base/repositories.md`;
-- `knowledge-base/architecture.md`;
-- `knowledge-base/integrations.md`;
-- `knowledge-base/development.md`;
-- `knowledge-base/operations.md`;
-- `knowledge-base/glossary.md`.
+## Workflow
 
-Non creare sezioni vuote o contenuti riempitivi. Se un file esiste già, preserva
-le informazioni valide, aggiorna soltanto ciò che può essere verificato e segnala
-nel riepilogo finale i file creati o modificati.
+1. perform an authoritative Git repository inventory;
+2. collect repository identities and every workspace path for each logical
+   repository;
+3. identify repositories containing `.gitmodules`;
+4. identify submodules, relative paths, remote URLs and pinned commits;
+5. distinguish:
+   - repository roots;
+   - orchestrator repositories;
+   - nested submodules;
+   - duplicate or alternate checkouts;
+6. initialize:
+   - `knowledge-base/workspace/`;
+   - `knowledge-base/repositories/`;
+7. create one knowledge directory per logical repository;
+8. create `knowledge-base/workspace/overview.md` early;
+9. create one repository `overview.md` at a time;
+10. create `submodules.md` for orchestrator repositories;
+11. create `knowledge-base/workspace/orchestration.md` when orchestration evidence
+    exists;
+12. analyse explicit compile-time relationships;
+13. analyse runtime integrations only from concrete evidence;
+14. identify principal repository-local execution and data flows;
+15. identify principal cross-repository execution and data flows;
+16. persist findings incrementally;
+17. validate Markdown links, duplication and relationship classification.
+
+## Logical repository deduplication
+
+When the same logical repository appears at multiple workspace paths:
+
+- correlate copies using remote URL and Git identity;
+- create only one canonical repository knowledge directory;
+- list all known checkout paths in its `overview.md`;
+- identify which checkout is referenced by the orchestrator;
+- do not generate duplicate knowledge directories from directory names alone.
+
+Do not create every possible document.
+Do not generate the complete knowledge base in one large patch.
+
+## Final report
+
+Keep the final report concise. Summarize:
+
+- logical repositories covered;
+- orchestrators and submodules discovered;
+- duplicate or alternate checkouts;
+- files created or updated;
+- relationship types documented;
+- execution and data flows documented;
+- major unresolved issues;
+- the next highest-value analysis step.

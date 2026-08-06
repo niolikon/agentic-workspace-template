@@ -1,31 +1,20 @@
 ---
-description: Rileva repository, linguaggi e build system
+description: Inventory repositories, manifests and build systems
 agent: ask
 subtask: false
 ---
 
-Analizza tutte le directory immediatamente presenti sotto `repositories/`.
+Load `repository-analysis`.
 
-Per ogni repository:
+Identify Git repositories under `repositories/`.
 
-1. verifica la presenza di `.git`;
-2. individua i manifest principali;
-3. identifica linguaggio e build system solo da evidenze;
-4. non leggere codice sorgente non necessario;
-5. non modificare file.
+For each repository report:
 
-Cerca:
+- repository path;
+- primary manifests;
+- demonstrable languages;
+- demonstrable build system;
+- unresolved information.
 
-- `pom.xml`
-- `build.gradle`
-- `build.gradle.kts`
-- `package.json`
-- `*.sln`
-- `*.csproj`
-- `pyproject.toml`
-- `requirements.txt`
-- `go.mod`
-- `Cargo.toml`
-
-Restituisci una tabella con repository, manifest, linguaggio, build system e
-informazioni non determinabili.
+Do not inspect source code, CI/CD, Docker or tests unless required to determine
+the requested inventory.

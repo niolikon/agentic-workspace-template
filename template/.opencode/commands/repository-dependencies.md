@@ -1,24 +1,17 @@
 ---
-description: Individua dipendenze certe tra repository
+description: Identify evidence-backed relationships between repositories
 agent: ask
 subtask: false
 ---
 
-Analizza i manifest delle repository sotto `repositories/`.
+Load `repository-analysis`.
 
-Individua soltanto dipendenze interne supportate da evidenze concrete:
+Identify:
 
-- dipendenze Maven o Gradle;
-- `ProjectReference` .NET;
-- dipendenze npm workspace o locali;
-- riferimenti locali equivalenti.
+- compile-time dependencies;
+- local project references;
+- shared package dependencies;
+- runtime integrations only when clearly supported.
 
-Per ogni relazione indica:
-
-- repository sorgente;
-- repository destinazione;
-- file sorgente;
-- proprietà o riga che costituisce l'evidenza;
-- livello di confidenza.
-
-Non cercare integrazioni runtime e non modificare file.
+For every relationship report source repository, target repository, relationship
+type, evidence path and confidence.
