@@ -1,0 +1,50 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "model": "openai/gpt-5-mini",
+  "small_model": "openai/gpt-5-mini",
+
+  "share": "disabled",
+  "default_agent": "ask",
+
+  "permission": {
+    "edit": "ask",
+    "bash": "ask",
+    "external_directory": "deny",
+    "webfetch": "deny",
+    "websearch": "deny"
+  },
+
+  "watcher": {
+    "ignore": [
+      "**/.git/**",
+      "**/.env",
+      "**/.env.*",
+      "**/*.key",
+      "**/*.pem",
+      "**/*.p12",
+      "**/*.pfx",
+      "**/secrets/**",
+      "**/credentials/**",
+      "**/dumps/**",
+      "**/exports/**",
+      "**/node_modules/**",
+      "**/target/**",
+      "**/build/**",
+      "**/dist/**",
+      "**/bin/**",
+      "**/obj/**",
+      "**/.venv/**",
+      "**/venv/**",
+      "**/coverage/**",
+      "**/.idea/**",
+      "**/.vscode/**",
+      "documents/converted/**/*-media/**"
+    ]
+  },
+
+  "compaction": {
+    "auto": true,
+    "prune": true
+  }
+}
