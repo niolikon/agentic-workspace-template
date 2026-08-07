@@ -1,14 +1,12 @@
 ---
-description: Elenca la struttura principale del workspace
+description: Summarize the workspace root and source directories
 agent: ask
 subtask: false
 ---
 
-Esamina la root del workspace usando esclusivamente strumenti read-only.
+Load `workspace-reading`.
 
-1. Individua gli elementi immediatamente presenti nella root.
-2. Distingui directory e file quando possibile.
-3. Non leggere contenuti non necessari.
-4. Non inventare risultati se gli strumenti non restituiscono dati.
+Describe the immediate workspace structure and the purpose of each confirmed
+directory.
 
-Restituisci un elenco breve delle directory principali e del loro scopo.
+Do not inspect unrelated file contents.

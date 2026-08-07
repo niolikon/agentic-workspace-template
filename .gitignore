@@ -1,3 +1,59 @@
+# macOS / Windows
 .DS_Store
 Thumbs.db
+
+# Logs
 *.log
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+
+# Apache Maven Wrapper (temporary files)
+.mvn/timing.properties
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*#
+
+# Fleet (JetBrains)
+.fleet/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Cursor
+.cursor/
+
+# Zed
+.zed/
+
+# Temporary files
+tmp/
+temp/
