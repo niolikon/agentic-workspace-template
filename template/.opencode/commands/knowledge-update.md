@@ -17,6 +17,35 @@ Load:
 Load `repository-analysis`, `execution-flow-analysis` or
 `architecture-analysis` only when required by the requested topic.
 
+Load `business-rule-analysis` when the requested topic affects:
+
+- application behaviour;
+- domain logic;
+- validation;
+- state transitions;
+- lifecycle rules;
+- authorization decisions;
+- idempotency;
+- retries or compensation;
+- atomicity;
+- other business constraints.
+
+After repository-local updates, run cross-repository reconciliation when the
+changed knowledge affects:
+
+- outbound interactions;
+- inbound interfaces;
+- cross-repository execution flows;
+- cross-repository data flows;
+- workspace-level business rules.
+
+Update only the affected workspace documents and related repositories.
+
+When the requested update affects repository inventory, repository identity,
+orchestration, submodules, duplicate checkouts or cross-repository
+relationships, load `repository-analysis` and invoke `repository_inventory`
+before inspecting repository files.
+
 ## Scope classification
 
 Determine whether the requested update affects:
@@ -44,6 +73,13 @@ Determine whether the requested update affects:
 7. preserve validated content and prefer localized edits;
 8. verify Markdown structure, relative links and duplicate coverage.
 
+When the updated scope affects repository boundaries, runtime integrations or
+data exchanged between repositories, run cross-repository reconciliation for
+the affected repositories and update the corresponding workspace-level flow
+documents.
+
+Do not reanalyze unrelated repositories.
+
 ## Submodule changes
 
 When `.gitmodules` or a submodule commit changes:
@@ -60,12 +96,12 @@ Do not inspect unrelated repositories.
 
 ## Final report
 
-Keep the final report concise. Summarize:
+Keep the final response concise. 
 
-- identified scope;
-- repositories involved;
-- files created or updated;
-- orchestration or relationship changes;
-- execution or data flows affected;
-- conflicts and unresolved questions;
-- skipped work and reasons.
+Report:
+
+- affected scope;
+- knowledge files created or updated;
+- major findings introduced by the update;
+- unresolved blockers;
+- incomplete update work.

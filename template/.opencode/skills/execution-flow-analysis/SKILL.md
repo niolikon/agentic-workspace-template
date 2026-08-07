@@ -10,6 +10,58 @@ through the software.
 
 Do not generate exhaustive call graphs.
 
+Repository-local analysis and cross-repository analysis are independent.
+
+A repository may have meaningful internal execution and data flows even when no
+relationship with another repository is demonstrated.
+
+Always evaluate repository-local flows for each repository in scope.
+
+Evaluate cross-repository flows separately and only when boundary-crossing
+evidence exists.
+
+Not every repository has a meaningful standalone execution flow.
+
+Libraries, SDKs, shared frameworks, schema repositories and support tools may
+instead expose:
+
+- reusable components;
+- extension points;
+- public APIs;
+- middleware;
+- abstractions;
+- integration helpers.
+
+When no meaningful repository-local execution flow exists, do not invent one.
+
+Document the repository using the knowledge documents that best represent its
+actual role.
+
+## Repository coverage workflow
+
+When execution or data-flow analysis is requested for multiple repositories,
+process repositories one at a time.
+
+For each repository:
+
+1. identify its role;
+2. identify candidate entry points;
+3. identify principal internal processing paths;
+4. identify candidate business rules and, when business-rule analysis is in
+   scope, validate them using the `business-rule-analysis` skill;
+5. identify data transformations;
+6. identify persistence and external systems;
+7. identify outbound runtime interactions;
+8. write repository-local findings before moving to the next repository;
+9. mark the repository as:
+    - analysed;
+    - partially analysed;
+    - no meaningful execution flow;
+    - unresolved.
+
+Do not move to the final report until every repository in scope has one of
+these states.
+
 ## Flow categories
 
 ### Repository-local execution flow
@@ -149,3 +201,21 @@ For every flow include:
 
 Prioritize principal business and operational flows. Do not attempt exhaustive
 coverage.
+
+## Cross-repository reconciliation
+
+After repository-local analysis has completed:
+
+1. collect all outbound interactions discovered in repository-local flows;
+2. match them with corresponding inbound interfaces in other repositories;
+3. identify confirmed boundary transitions;
+4. reconstruct principal end-to-end flows;
+5. store confirmed cross-repository flows under
+   `knowledge-base/workspace/execution-flows.md`;
+6. store cross-repository data movement under
+   `knowledge-base/workspace/data-flows.md`.
+
+Only create flows supported by evidence from both sides when possible.
+
+When only one side of an interaction is supported by evidence, document the
+relationship as probable or unresolved instead of presenting it as confirmed.

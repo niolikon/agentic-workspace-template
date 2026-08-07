@@ -8,45 +8,61 @@ description: Discover and analyse Git repositories, submodules, build systems an
 Use this skill for repository inventories, Git submodule analysis, build-system
 detection, language detection and cross-repository relationship analysis.
 
+## Mandatory repository inventory
+
+For every repository-related task, invoke the `repository_inventory` tool
+before using `glob`, `grep`, `read` or Bash.
+
+The tool output is the authoritative workspace repository inventory.
+
+Every confirmed Git repository returned by the tool is a first-class workspace
+repository, regardless of whether it:
+
+- is referenced by an orchestrator;
+- is a Git submodule;
+- is a direct child of `repositories/`;
+- is nested inside another repository;
+- appears unrelated to the other repositories;
+- contains an application, library, driver, tool or infrastructure component.
+
+Orchestrator membership is metadata. It is never a filter for inclusion.
+
+Do not conclude that a repository does not exist based on `glob` results.
+
+Do not replace the tool result with an independently inferred repository list.
+
+## Workspace membership
+
+A repository belongs to the workspace when it is discovered under
+`repositories/`.
+
+Every workspace repository should be considered for repository-specific
+knowledge generation.
+
+Relationships between repositories may be:
+
+- submodule;
+- compile-time dependency;
+- runtime integration;
+- deployment relationship;
+- shared infrastructure;
+- no demonstrated relationship.
+
+The absence of a demonstrated relationship does not reduce the repository's
+importance or exclude it from documentation.
+
 ## Authoritative repository discovery
 
-Repository discovery MUST use filesystem or Git commands.
+The `repository_inventory` tool is the authoritative source for repository
+discovery.
 
-Do not use `glob` as the primary or authoritative repository-discovery method.
-A glob result may be used only as supplementary evidence.
+Do not independently rebuild the repository inventory using `glob`, `find`,
+PowerShell or Git commands.
 
-On Bash-compatible environments, locate both `.git` directories and `.git`
-files:
+Filesystem and Git commands may be used only to investigate details that are
+not already provided by the tool or to diagnose a tool failure.
 
-```bash
-find repositories \
-
-  \( -type d -o -type f \) \
-  -name .git \
-  -print
-```
-
-On PowerShell environments:
-
-```powershell
-Get-ChildItem repositories -Force -Recurse |
-    Where-Object { $_.Name -eq ".git" } |
-    Select-Object -ExpandProperty FullName
-```
-
-A repository root is confirmed when:
-
-- it directly contains a `.git` directory;
-- it directly contains a `.git` file used by a submodule or worktree;
-- `git -C <directory> rev-parse --show-toplevel` succeeds.
-
-Never inspect the internal contents of a `.git` directory.
-
-A directory may be both a Git repository root and a container of nested
-repositories or submodules. These roles are not mutually exclusive.
-
-Never classify a directory as a simple container before checking whether it is
-itself a Git repository.
+Never replace or narrow the repository set returned by `repository_inventory`.
 
 ## Repository identity
 

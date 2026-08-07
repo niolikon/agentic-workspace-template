@@ -5,6 +5,8 @@ temperature: 0.1
 steps: 60
 
 permission:
+  repository_inventory: allow
+   
   read: allow
   glob: allow
   grep: allow

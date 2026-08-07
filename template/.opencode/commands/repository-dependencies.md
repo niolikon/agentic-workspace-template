@@ -6,12 +6,5 @@ subtask: false
 
 Load `repository-analysis`.
 
-Identify:
-
-- compile-time dependencies;
-- local project references;
-- shared package dependencies;
-- runtime integrations only when clearly supported.
-
-For every relationship report source repository, target repository, relationship
-type, evidence path and confidence.
+Invoke `repository_inventory` first to establish the authoritative repository
+set, then analyze relationships between those repositories.

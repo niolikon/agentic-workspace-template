@@ -30,6 +30,7 @@ Create only when supported by evidence:
 - `orchestration.md`;
 - `execution-flows.md`;
 - `data-flows.md`;
+- `business-rules.md`;
 - `architectural-patterns.md`;
 - `development.md`;
 - `operations.md`;
@@ -44,6 +45,7 @@ Create only when supported by evidence:
 - `components.md`;
 - `execution-flows.md`;
 - `data-flows.md`;
+- `business-rules.md`;
 - `public-interfaces.md`;
 - `configuration.md`;
 - `dependencies.md`;
@@ -85,6 +87,58 @@ knowledge-base/workspace/orchestration.md
 ```
 
 Do not duplicate the complete submodule inventory in both locations.
+
+## Repository coverage
+
+Create repository-specific knowledge for every confirmed Git repository
+returned by `repository_inventory`.
+
+Repository documentation is required regardless of whether the repository:
+
+- participates in an orchestrated system;
+- is a standalone application;
+- is a shared library;
+- is an experimental component;
+- is a driver or integration adapter;
+- has no currently demonstrated relationship with other repositories.
+
+Do not use cross-repository relationships as a prerequisite for repository
+documentation.
+
+## Document responsibility
+
+Each knowledge document has a specific responsibility.
+
+`overview.md` is an entry point, not a catch-all document.
+
+It should contain only:
+
+- repository purpose;
+- role;
+- technology stack;
+- build system;
+- major responsibilities;
+- major dependencies;
+- links to detailed repository knowledge;
+- important unresolved questions.
+
+Do not place detailed execution flows, data flows, persistence models,
+configuration details or architectural analysis directly in `overview.md`
+when they justify dedicated documents.
+
+Use:
+
+- `execution-flows.md` for processing paths;
+- `data-flows.md` for data movement and transformation;
+- `business-rules.md` for domain constraints, invariants, lifecycle rules,
+  state transitions and other evidence-backed behavioural rules;
+- `architecture.md` for structural design;
+- `components.md` for important internal components;
+- `dependencies.md` for compile-time and runtime relationships;
+- `persistence.md` for persistence models;
+- `configuration.md` for runtime configuration.
+
+Update `overview.md` with relative links to those documents.
 
 ## Relationship documentation
 

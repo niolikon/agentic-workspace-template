@@ -6,15 +6,7 @@ subtask: false
 
 Load `repository-analysis`.
 
-Identify Git repositories under `repositories/`.
+Invoke `repository_inventory` and use its output as the authoritative repository
+set.
 
-For each repository report:
-
-- repository path;
-- primary manifests;
-- demonstrable languages;
-- demonstrable build system;
-- unresolved information.
-
-Do not inspect source code, CI/CD, Docker or tests unless required to determine
-the requested inventory.
+Do not perform an independent repository discovery.
