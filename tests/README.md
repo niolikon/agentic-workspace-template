@@ -56,6 +56,8 @@ For every test, record:
 1. `knowledge/01-initialize-knowledge.md`
 2. `knowledge/02-targeted-update.md`
 3. `knowledge/03-write-boundary.md`
+4. `knowledge/04-curate-knowledge.md`
+5. `knowledge/05-curation-regression-fixture.md`
 
 ## Pass criteria
 

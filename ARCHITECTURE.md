@@ -71,52 +71,56 @@ and focuses on durable rules rather than implementation details.
     smaller set of useful, focused documents over shallow documentation
     of every possible topic. Overviews summarize and link rather than
     duplicate detail.
+19. **Knowledge curation is source-independent by default.** Curation improves
+    the existing knowledge base through consolidation, reorganization and link
+    repair without reopening primary sources unless source validation is
+    explicitly requested. Evidence references are preserved during curation.
 
 ## Evidence and safety
 
-19. **Claims must be evidence-backed.** Confirmed facts must be
+20. **Claims must be evidence-backed.** Confirmed facts must be
     traceable to workspace-relative source paths. Inferences and
     unresolved questions must be clearly distinguished from confirmed
     facts.
-20. **Source material is read-only for knowledge workflows.** Knowledge
+21. **Source material is read-only for knowledge workflows.** Knowledge
     generation may inspect repositories and project material but may
     write only under `knowledge-base/`.
-21. **Sensitive material is outside normal analysis scope.** Agents must
+22. **Sensitive material is outside normal analysis scope.** Agents must
     not inspect credentials, private keys, production dumps, customer
     exports or personal-data exports.
-22. **Public web access is disabled for workspace reasoning.** Project
+23. **Public web access is disabled for workspace reasoning.** Project
     knowledge should be derived from local workspace evidence unless a
     different workflow explicitly provides external sources.
 
 ## User experience and autonomous execution
 
-23. **A requested workflow implicitly authorizes its permitted read-only
+24. **A requested workflow implicitly authorizes its permitted read-only
     work.** Agents must not repeatedly ask for confirmation before
     reading workspace files that their configured permissions already
     allow them to inspect.
-24. **Progress milestones are not completion conditions.** Inventory
+25. **Progress milestones are not completion conditions.** Inventory
     creation, repository overviews or completion of one repository are
     intermediate results. An agent must continue while required workflow
     phases remain.
-25. **Agents choose the next analysis step autonomously.** During a
+26. **Agents choose the next analysis step autonomously.** During a
     complete workflow, agents should select the next repository and
     phase themselves instead of repeatedly asking the user what to
     analyse next.
-26. **Confirmation is reserved for real boundaries.** User intervention
+27. **Confirmation is reserved for real boundaries.** User intervention
     should be requested only when required by permissions, missing
     information that cannot be derived locally, an actual blocker, or an
     operation whose impact requires explicit approval.
-27. **Long workflows use explicit progress tracking.** Multi-repository
+28. **Long workflows use explicit progress tracking.** Multi-repository
     or multi-phase work should maintain a task list and mark work
     complete incrementally rather than losing or recreating progress.
-28. **Final responses are summaries, not duplicate documentation.** Once
+29. **Final responses are summaries, not duplicate documentation.** Once
     knowledge has been persisted, conversational output should report
     coverage, changed files, major findings, blockers and incomplete
     work without reproducing the generated documents.
-29. **Do not propose optional follow-up work before the requested
+30. **Do not propose optional follow-up work before the requested
     workflow is complete.** Agents should finish the work already
     implied by the command before asking what the user wants to do next.
-30. **Completion is evidence-based.** A workflow is complete only when
+31. **Completion is evidence-based.** A workflow is complete only when
     every applicable repository and analysis phase has produced
     knowledge, been explicitly assessed as not applicable, or been
     blocked for a documented reason.
