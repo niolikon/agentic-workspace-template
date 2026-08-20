@@ -46,6 +46,7 @@ The generated workspace is copied from `template/` and does not inherit the temp
 ```text
 /knowledge-init
 /knowledge-update <topic>
+/knowledge-curate [focus]
 /project-help
 /repository-inventory
 /repository-dependencies

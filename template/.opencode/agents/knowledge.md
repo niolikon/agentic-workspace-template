@@ -21,6 +21,7 @@ permission:
     "business-rule-analysis": allow
     "architecture-analysis": allow
     "knowledge-generation": allow
+    "knowledge-curation": allow
 
   bash:
     "*": ask
@@ -69,6 +70,8 @@ Load `business-rule-analysis` whenever the task involves:
 ## Responsibilities
 
 - maintain the canonical knowledge-base structure;
+- curate existing knowledge for concision, consistency and navigation without
+  source reanalysis unless explicitly requested;
 - separate workspace-level knowledge from repository-specific knowledge;
 - update existing knowledge incrementally;
 - preserve traceability to workspace-relative source paths;

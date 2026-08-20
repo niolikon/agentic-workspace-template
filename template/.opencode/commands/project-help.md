@@ -13,6 +13,7 @@ Includi:
 - analisi delle dipendenze;
 - inizializzazione completa della knowledge base;
 - aggiornamento mirato della knowledge base;
+- curation della knowledge base esistente senza rianalisi delle sorgenti;
 - sviluppo e modifica controllata.
 
 Per ogni attività indica l'agente, il comando slash e un esempio.

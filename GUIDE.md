@@ -226,6 +226,7 @@ Available slash commands:
 ```text
 /knowledge-init
 /knowledge-update <topic>
+/knowledge-curate [focus]
 /project-help
 /repository-inventory
 /repository-dependencies
