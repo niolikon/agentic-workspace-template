@@ -110,7 +110,62 @@ WSL accesses the same directory as:
 
 The scripts copy `template/` into the destination and do not copy `.git`.
 
-## 6. Configure a provider
+## 6. Update an existing workspace
+
+When the template repository evolves, existing workspaces can refresh the OpenCode resources maintained centrally by the template.
+
+First update or pull the template repository, then run:
+
+### PowerShell
+
+```powershell
+.\scripts\update-project.ps1 `
+  -Workspace "$HOME\Projects\MyProject"
+```
+
+Preview without modifying the workspace:
+
+```powershell
+.\scripts\update-project.ps1 `
+  -Workspace "$HOME\Projects\MyProject" `
+  -DryRun
+```
+
+### Bash
+
+```bash
+./scripts/update-project.sh "$HOME/Projects/MyProject"
+```
+
+Preview without modifying the workspace:
+
+```bash
+./scripts/update-project.sh "$HOME/Projects/MyProject" --dry-run
+```
+
+The updater treats these directories as fully managed by the template:
+
+```text
+.opencode/agents/
+.opencode/commands/
+.opencode/skills/
+.opencode/tools/
+```
+
+When one of them differs from the template, the destination directory is removed and copied again from the canonical template. Local files added inside these four directories are therefore removed by an update.
+
+Everything else in the destination workspace is preserved. In particular, the updater does not replace the `.opencode` directory itself and does not touch installation or local configuration files such as:
+
+```text
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json
+.opencode/.gitignore
+```
+
+Project-owned content such as `repositories/`, `documents/`, `trainings/`, `notes/` and `knowledge-base/` is also outside the update scope.
+
+## 7. Configure a provider
 
 Run the configuration script from the template repository or copy the `providers/` directory beside the generated workspace.
 
@@ -156,7 +211,7 @@ opencode auth login
 
 Do not store API keys in `opencode.jsonc`, scripts or Git.
 
-## 7. Start OpenCode
+## 8. Start OpenCode
 
 In the default setup, simply open a terminal in the workspace root and start
 OpenCode:
@@ -186,7 +241,7 @@ OpenCode automatically discovers the nearest workspace configuration
 (`opencode.jsonc`, `.opencode/` and `AGENTS.md`) by walking up the directory
 tree, so no additional startup options are normally required.
 
-## 8. Isolated startup (optional)
+## 9. Isolated startup (optional)
 
 The workspace also includes `start-opencode` helper scripts.
 
@@ -209,7 +264,7 @@ helper scripts are optional and may be ignored or removed.
 ./start-opencode.sh
 ```
 
-## 9. Agents
+## 10. Agents
 
 The workspace contains three primary agents:
 
@@ -219,7 +274,7 @@ The workspace contains three primary agents:
 
 The agents use the model configured in `opencode.jsonc` unless a model is explicitly set in their frontmatter.
 
-## 10. Commands
+## 11. Commands
 
 Available slash commands:
 
@@ -233,7 +288,7 @@ Available slash commands:
 /workspace-inventory
 ```
 
-## 11. Validate the workspace
+## 12. Validate the workspace
 
 The `tests/` directory contains a manual validation guide and reusable prompts
 for Ask, Coding and Knowledge.
@@ -250,7 +305,7 @@ prompt. Verify:
 
 See [tests/README.md](tests/README.md).
 
-## 12. Privacy
+## 13. Privacy
 
 A remote model receives prompts and relevant tool output. File discovery can happen locally, but any file content used for reasoning may be transmitted to the provider.
 

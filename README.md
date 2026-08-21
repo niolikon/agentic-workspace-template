@@ -41,6 +41,25 @@ Or from Bash:
 
 The generated workspace is copied from `template/` and does not inherit the template repository's `.git` directory.
 
+
+### Update an existing workspace
+
+After pulling a newer version of this template repository, refresh the template-managed OpenCode resources in an existing workspace with:
+
+```powershell
+.\scripts\update-project.ps1 -Workspace "$HOME\Projects\MyProject"
+```
+
+Or from Bash:
+
+```bash
+./scripts/update-project.sh "$HOME/Projects/MyProject"
+```
+
+The updater replaces only `.opencode/agents`, `.opencode/commands`, `.opencode/skills` and `.opencode/tools`. Other `.opencode` content, including OpenCode installation files such as `node_modules`, `package.json`, `package-lock.json` and `.gitignore`, is left untouched.
+
+Preview the update without changing files with `-DryRun` in PowerShell or `--dry-run` in Bash.
+
 ## Workspace commands
 
 ```text
