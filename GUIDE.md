@@ -33,6 +33,18 @@ Install:
 
 OpenCode can run directly on Windows, macOS or Linux. WSL is optional.
 
+The required development toolchains depend on the repositories in the workspace.
+For example, a Maven project may require Java and Maven, a Gradle project may
+provide and use its Gradle wrapper, a .NET project requires the .NET SDK, and a
+JavaScript project may require npm, Yarn or pnpm according to its repository
+metadata and lockfiles. Python projects likewise require the package/environment
+tooling selected by the project.
+
+The `ask` agent can use these native tools to inspect external dependencies when
+repository-local evidence is insufficient. It does not install missing tools
+automatically. Repository-provided wrappers and explicitly selected package
+managers are preferred over generic language defaults.
+
 ## 3. Install OpenCode
 
 Using npm:

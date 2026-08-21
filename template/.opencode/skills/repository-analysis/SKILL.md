@@ -151,18 +151,34 @@ A repository may have more than one role.
 
 Look for:
 
-- `pom.xml`;
-- `build.gradle`;
-- `build.gradle.kts`;
-- `package.json`;
-- `*.sln`;
-- `*.csproj`;
-- `pyproject.toml`;
-- `requirements.txt`;
-- `go.mod`;
-- `Cargo.toml`.
+- `pom.xml`, `.mvn/`, `mvnw`, `mvnw.cmd`;
+- `build.gradle`, `build.gradle.kts`, `gradlew`, `gradlew.bat`;
+- `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`,
+  `pnpm-workspace.yaml`;
+- `*.sln`, `*.csproj`, `packages.lock.json`, `nuget.config`;
+- `pyproject.toml`, `requirements*.txt`, `poetry.lock`, `Pipfile`, `uv.lock`;
+- `go.mod`, `go.sum`;
+- `Cargo.toml`, `Cargo.lock`.
 
 This list is not exhaustive.
+
+## Native toolchain selection
+
+When analysis requires the repository's development tooling, determine the tool
+from repository evidence rather than language alone.
+
+Prefer, in order:
+
+1. an explicit repository wrapper such as `mvnw` or `gradlew`;
+2. package-manager metadata such as the `packageManager` field;
+3. an ecosystem-specific lockfile;
+4. the primary build manifest.
+
+Do not silently substitute npm for Yarn or pnpm, Maven for Gradle, or another
+tool merely because it is installed locally.
+
+Repository analysis identifies the toolchain. Detailed inspection of external
+dependencies belongs to the `dependency-inspection` skill.
 
 ## Relationship taxonomy
 

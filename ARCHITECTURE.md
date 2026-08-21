@@ -124,3 +124,18 @@ and focuses on durable rules rather than implementation details.
     every applicable repository and analysis phase has produced
     knowledge, been explicitly assessed as not applicable, or been
     blocked for a documented reason.
+
+
+## Native dependency evidence
+
+Native toolchains are local evidence sources for questions that cannot be
+answered from workspace knowledge, manifests or repository source alone. The
+`ask` agent may use the build system or package manager selected by repository
+evidence to inspect resolved external dependencies.
+
+This capability is demand-driven and preserves the read-only workspace model:
+normal external package-cache writes may occur during approved dependency
+resolution, but repository files must not be intentionally modified. Commands
+that may execute project-defined build logic, lifecycle hooks or restore/install
+operations remain behind the Bash approval boundary. Public-web research is not
+used as a substitute for native dependency resolution.

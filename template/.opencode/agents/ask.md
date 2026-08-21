@@ -17,6 +17,7 @@ permission:
     "repository-analysis": allow
     "execution-flow-analysis": allow
     "architecture-analysis": allow
+    "dependency-inspection": allow
 
   edit: deny
   write: deny
@@ -46,6 +47,36 @@ permission:
     "tail *": allow
     "wc *": allow
     "jq *": allow
+    "java -version": allow
+    "javac -version": allow
+    "jar --version": allow
+    "mvn --version": allow
+    "mvn -version": allow
+    "./mvnw --version": allow
+    "./mvnw -version": allow
+    "mvnw.cmd --version": allow
+    "mvnw.cmd -version": allow
+    "gradle --version": allow
+    "./gradlew --version": allow
+    "gradlew.bat --version": allow
+    "dotnet --info": allow
+    "dotnet --version": allow
+    "nuget help": allow
+    "node --version": allow
+    "npm --version": allow
+    "yarn --version": allow
+    "pnpm --version": allow
+    "python --version": allow
+    "python3 --version": allow
+    "pip --version": allow
+    "pip3 --version": allow
+    "python -m pip --version": allow
+    "python3 -m pip --version": allow
+    "poetry --version": allow
+    "uv --version": allow
+    "go version": allow
+    "cargo --version": allow
+    "rustc --version": allow
 
   task: deny
   todowrite: deny
@@ -90,6 +121,12 @@ execution or data-flow questions.
 
 Load `architecture-analysis` for architectural styles or implementation
 patterns.
+
+Load `dependency-inspection` only when repository manifests, local source and
+existing knowledge are insufficient and the question requires evidence from an
+external dependency. Use the repository-native toolchain and preserve the Bash
+approval boundary for dependency resolution or commands that may execute project
+code.
 
 ## Permanent constraints
 
