@@ -213,3 +213,11 @@ insufficient. Verification needed to support a current claim is completed in the
 same analysis or the claim is weakened rather than deferred to an optional
 follow-up.
 
+
+### Completion discipline
+
+Once a requested dependency analysis is complete, agents stop rather than
+appending optional investigation menus. Additional verification is performed
+only when required to support the current answer or explicitly requested by the
+user.
+

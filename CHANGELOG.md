@@ -1,5 +1,7 @@
 # Changelog
 
+- Added completion discipline so dependency analysis stops once the requested answer is complete instead of appending unsolicited follow-up investigation menus.
+
 - Finalized dependency evidence boundaries: unresolved versions remain explicitly unconfirmed, provider-specific claims require provider evidence, and required verification cannot be deferred to optional follow-up menus.
 
 - Added local-source short-circuiting, stricter declared/cache/resolved wording, retrieval retry discipline, and direct archive-inspection fallbacks for dependency analysis.

@@ -255,3 +255,19 @@ The test fails if the final answer says things such as "choose A or B", "if you
 want I can verify...", or "tell me whether to run restore" when that verification
 is necessary to justify a claim already presented.
 
+
+### Completion behavior
+
+When the requested analysis has been completed, the final answer should end.
+
+The test fails if the agent appends optional menus or prompts such as:
+
+- "If you want, I can...";
+- "Choose A or B";
+- "Do you want me to proceed?";
+- "I can also inspect...";
+- "Tell me which additional check you prefer."
+
+unless the original user request explicitly asks for alternatives, next steps or
+additional exploration.
+

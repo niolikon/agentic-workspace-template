@@ -370,6 +370,30 @@ when that verification is necessary to justify the preceding conclusion.
 Optional follow-up suggestions are acceptable only for genuinely additional
 analysis that is not required to support the answer already given.
 
+## Completion discipline
+
+When the user's requested dependency analysis is complete, stop.
+
+Do not append optional follow-up menus, alternative investigation branches or
+questions asking which additional analysis to perform unless the user explicitly
+asked for alternatives, next steps or further exploration.
+
+Avoid endings such as:
+
+- "If you want, I can...";
+- "Choose A or B";
+- "Do you want me to proceed?";
+- "I can also inspect...";
+- "Tell me which additional check you prefer."
+
+If additional verification is required to support the current answer, perform it
+during the current analysis or weaken the claim according to the evidence rules
+above.
+
+If additional verification is merely optional and not required by the user's
+request, omit it from the final answer.
+
+
 ## Critical evidence-strength rule
 
 Never present evidence as stronger than it actually is.
