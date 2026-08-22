@@ -11,6 +11,9 @@ $ErrorActionPreference = "Stop"
 $RepositoryRoot = Split-Path -Parent $PSScriptRoot
 $SourceOpenCode = Join-Path $RepositoryRoot "template/.opencode"
 $DestinationOpenCode = Join-Path $Workspace ".opencode"
+$StagingRoot = Join-Path $DestinationOpenCode ".tmp"
+$StagingDependencies = Join-Path $StagingRoot "dependencies"
+$StagingEcosystems = @("npm", "python", "maven", "gradle", "nuget", "yarn", "pnpm", "go", "cargo")
 $ManagedDirectories = @("agents", "commands", "skills", "tools")
 
 if (-not (Test-Path $Workspace -PathType Container)) {
@@ -73,7 +76,24 @@ if ($DryRun) {
     Write-Host "Dry run: $Workspace"
 }
 else {
-    New-Item -ItemType Directory -Force -Path $DestinationOpenCode | Out-Null
+    New-Item -ItemType Directory -Force -Path $DestinationOpenCode, $StagingDependencies | Out-Null
+    foreach ($Ecosystem in $StagingEcosystems) {
+        New-Item -ItemType Directory -Force -Path (Join-Path $StagingDependencies $Ecosystem) | Out-Null
+    }
+    @"
+**/*
+!.gitignore
+!dependencies/
+!dependencies/npm/
+!dependencies/python/
+!dependencies/maven/
+!dependencies/gradle/
+!dependencies/nuget/
+!dependencies/yarn/
+!dependencies/pnpm/
+!dependencies/go/
+!dependencies/cargo/
+"@ | Set-Content -LiteralPath (Join-Path $StagingRoot ".gitignore") -Encoding UTF8
     Write-Host "Updating workspace: $Workspace"
 }
 

@@ -139,3 +139,45 @@ resolution, but repository files must not be intentionally modified. Commands
 that may execute project-defined build logic, lifecycle hooks or restore/install
 operations remain behind the Bash approval boundary. Public-web research is not
 used as a substitute for native dependency resolution.
+
+
+## Dependency inspection staging
+
+Approved dependency retrieval uses the workspace-local
+`.opencode/.tmp/dependencies/` staging area. Retrieved artifacts are ephemeral,
+Git-ignored and kept outside `repositories/`. This allows the `ask` agent to
+inspect exact dependency artifacts without granting access to operating-system
+temporary directories or weakening `external_directory: deny`.
+
+### Dependency evidence boundaries
+
+Dependency caches are local evidence stores, not dependency-resolution
+authorities. Cached artifacts may be inspected in place, while the version
+actually resolved by a repository must come from lockfiles, generated resolution
+metadata, dependency-management configuration or native toolchain output.
+`.opencode/.tmp/dependencies/` is reserved for artifacts intentionally
+materialized for analysis.
+
+Unrelated anomalies discovered during dependency inspection remain observations
+until their relevant runtime wiring or configuration has been verified.
+
+
+### Shell approval ownership
+
+Agents never implement shell-command approval conversationally. They invoke the
+required Bash command and OpenCode's native permission layer owns the approval
+decision and user interaction.
+
+Artifacts materialized solely for dependency inspection must be staged under
+`.opencode/.tmp/dependencies/<ecosystem>/`; repository-local build/output
+directories are not valid inspection staging areas.
+
+
+### Evidence strength
+
+Agent conclusions must preserve the strength of their supporting evidence.
+Manifest declarations, cache contents, resolution metadata, exact API
+documentation and implementation source are distinct evidence classes and must
+not be conflated. Inferences remain explicitly qualified until direct evidence
+supports a stronger conclusion.
+

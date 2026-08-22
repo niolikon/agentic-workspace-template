@@ -330,3 +330,14 @@ The workspace therefore:
 - minimizes the number and size of files read.
 
 These controls reduce exposure but are not an operating-system sandbox. Verify the provider's data terms and your organization's policies before using proprietary material.
+
+
+### Temporary dependency artifacts
+
+When an approved `ask` dependency-inspection command downloads an artifact, it
+should stage it under `.opencode/.tmp/dependencies/` whenever the native tool
+supports an explicit output destination. The directory is
+workspace-local, ignored by Git and can be deleted safely when OpenCode is not
+using it. Do not configure dependency retrieval to use `%TEMP%`, `/tmp` or other
+directories outside the workspace when a workspace-local staging destination can
+be supplied. Retrieval itself remains subject to Bash approval.

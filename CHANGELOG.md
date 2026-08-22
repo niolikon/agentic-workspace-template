@@ -1,4 +1,10 @@
 # Changelog
+
+- Tightened dependency evidence discipline so declared/cached/resolved versions remain distinct and inferences cannot be promoted to confirmed findings without direct API or resolution evidence.
+
+- Hardened dependency inspection UX: no conversational Bash approval, native OpenCode permission dialogs only, Maven cache-first inspection, and mandatory workspace-local staging for newly materialized artifacts.
+
+- Refined dependency evidence handling: inspect caches in place, prove resolved versions from resolution metadata, reserve staging for retrieval, and preserve uncertainty for unrelated anomalies.
 - Hardened `/knowledge-curate` destructive consolidation with an explicit preservation ledger, exact evidence-path target checks, structural post-write validation, and safer handling of broad rewrites.
 
 ## 0.1.0
@@ -19,3 +25,10 @@
 - Require an explicit disposition/outcome for every duplicate or overlap candidate.
 - Keep preservation ledgers as transient working state instead of creating curation bookkeeping files in `knowledge-base/`.
 - Extend the regression fixture contract to reject silent candidates and persistent `curation-*.md` consolidation logs.
+
+### Dependency inspection staging
+
+- Route approved dependency retrieval through the workspace-local `.opencode/.tmp/dependencies/` staging area.
+- Keep `external_directory: deny` and require Bash approval for every command that retrieves, restores, installs, builds or otherwise materializes external dependencies.
+- Keep only local inspection and harmless tool discovery auto-allowed.
+- Make project update scripts create Git-ignored dependency staging directories for existing workspaces.

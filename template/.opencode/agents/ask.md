@@ -24,59 +24,6 @@ permission:
 
   bash:
     "*": ask
-    "pwd": allow
-    "pwd *": allow
-    "git status": allow
-    "git status *": allow
-    "git -C * status*": allow
-    "git log *": allow
-    "git -C * log *": allow
-    "git diff *": allow
-    "git -C * diff *": allow
-    "git remote -v": allow
-    "git -C * remote -v": allow
-    "git submodule*": allow
-    "git -C * submodule*": allow
-    "git -C * rev-parse*": allow
-    "find *": allow
-    "fd *": allow
-    "rg *": allow
-    "tree *": allow
-    "file *": allow
-    "head *": allow
-    "tail *": allow
-    "wc *": allow
-    "jq *": allow
-    "java -version": allow
-    "javac -version": allow
-    "jar --version": allow
-    "mvn --version": allow
-    "mvn -version": allow
-    "./mvnw --version": allow
-    "./mvnw -version": allow
-    "mvnw.cmd --version": allow
-    "mvnw.cmd -version": allow
-    "gradle --version": allow
-    "./gradlew --version": allow
-    "gradlew.bat --version": allow
-    "dotnet --info": allow
-    "dotnet --version": allow
-    "nuget help": allow
-    "node --version": allow
-    "npm --version": allow
-    "yarn --version": allow
-    "pnpm --version": allow
-    "python --version": allow
-    "python3 --version": allow
-    "pip --version": allow
-    "pip3 --version": allow
-    "python -m pip --version": allow
-    "python3 -m pip --version": allow
-    "poetry --version": allow
-    "uv --version": allow
-    "go version": allow
-    "cargo --version": allow
-    "rustc --version": allow
 
   task: deny
   todowrite: deny
@@ -124,9 +71,9 @@ patterns.
 
 Load `dependency-inspection` only when repository manifests, local source and
 existing knowledge are insufficient and the question requires evidence from an
-external dependency. Use the repository-native toolchain and preserve the Bash
-approval boundary for dependency resolution or commands that may execute project
-code.
+external dependency. Use the repository-native toolchain. Use the ecosystem adapter and common safety contract defined by that skill. Construct and invoke required shell commands normally. Never ask for shell
+permission conversationally: OpenCode's native Bash permission dialog is the
+only approval mechanism. All Bash commands use the same `ask` boundary.
 
 ## Permanent constraints
 

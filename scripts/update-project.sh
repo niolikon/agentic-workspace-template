@@ -51,6 +51,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPOSITORY_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SOURCE_OPENCODE="$REPOSITORY_ROOT/template/.opencode"
 DESTINATION_OPENCODE="$WORKSPACE/.opencode"
+STAGING_ROOT="$DESTINATION_OPENCODE/.tmp"
+STAGING_DEPENDENCIES="$STAGING_ROOT/dependencies"
+STAGING_ECOSYSTEMS="npm python maven gradle nuget yarn pnpm go cargo"
 MANAGED_DIRECTORIES=(agents commands skills tools)
 
 [[ -d "$WORKSPACE" ]] || { echo "Workspace not found: $WORKSPACE" >&2; exit 1; }
@@ -74,7 +77,24 @@ has_changes() {
 if [[ "$DRY_RUN" == true ]]; then
   echo "Dry run: $WORKSPACE"
 else
-  mkdir -p "$DESTINATION_OPENCODE"
+  mkdir -p "$DESTINATION_OPENCODE" "$STAGING_DEPENDENCIES"
+  for ecosystem in $STAGING_ECOSYSTEMS; do
+    mkdir -p "$STAGING_DEPENDENCIES/$ecosystem"
+  done
+  cat > "$STAGING_ROOT/.gitignore" <<'EOF'
+**/*
+!.gitignore
+!dependencies/
+!dependencies/npm/
+!dependencies/python/
+!dependencies/maven/
+!dependencies/gradle/
+!dependencies/nuget/
+!dependencies/yarn/
+!dependencies/pnpm/
+!dependencies/go/
+!dependencies/cargo/
+EOF
   echo "Updating workspace: $WORKSPACE"
 fi
 

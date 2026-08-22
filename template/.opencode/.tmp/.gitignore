@@ -1,0 +1,12 @@
+*
+!.gitignore
+!dependencies/
+!dependencies/npm/
+!dependencies/python/
+!dependencies/maven/
+!dependencies/gradle/
+!dependencies/nuget/
+!dependencies/yarn/
+!dependencies/pnpm/
+!dependencies/go/
+!dependencies/cargo/

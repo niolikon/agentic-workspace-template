@@ -21,8 +21,9 @@ Before using a development tool:
 2. inspect the repository manifest and lockfiles;
 3. determine the toolchain from repository evidence rather than language alone;
 4. prefer a repository-provided wrapper when one exists;
-5. verify that the required executable is available;
-6. use the least invasive operation that can answer the question.
+5. determine the exact resolved dependency version before remote retrieval;
+6. verify that the required executable is available;
+7. use the least invasive operation that can answer the question.
 
 Do not install missing development tools automatically.
 
@@ -51,143 +52,309 @@ Use this order where applicable:
 
 1. dependency declaration in the repository manifest;
 2. lockfile or effective dependency metadata already in the workspace;
-3. artifact already present in a local package cache;
-4. source artifact or type declarations already present locally;
-5. native tool metadata query;
-6. native dependency resolution or artifact download when necessary and
-   permitted;
-7. binary metadata inspection when source is unavailable.
+3. artifact already present in the repository-local dependency directory;
+4. artifact already present in a local package cache;
+5. source artifact, type declaration or binary metadata already present locally;
+6. native tool metadata query that does not materialize dependencies;
+7. retrieval of the smallest exact artifact required through the native Bash permission boundary;
+8. binary metadata inspection when source is unavailable.
 
-Stop as soon as sufficient evidence exists.
+Stop as soon as sufficient evidence exists. Never resolve the whole dependency
+graph merely because an inspection mechanism is available.
 
-## Read-only boundary
+## Native Bash permission contract
 
-The workspace remains read-only.
+Permission handling belongs to OpenCode, not to the agent conversation.
 
-Acceptable side effects are limited to normal external caches managed by the
-selected toolchain, for example Maven, Gradle, NuGet, npm, Yarn, pnpm, Python,
-Go or Cargo caches.
+Every shell command must be constructed and invoked normally. The agent must
+never ask questions such as "May I run this command?", "Do you approve?" or
+"Can I proceed with Maven/npm/etc.?".
 
-Do not intentionally:
+OpenCode's native Bash permission system is the sole authority for shell-command
+approval. With the `ask` agent, Bash commands are configured with `"*": ask`,
+so OpenCode may display its native approval dialog for any command. The user can
+then allow or deny the command using the OpenCode interface, including any
+persistent approval option offered by that interface.
 
-- edit source files, manifests or lockfiles;
-- generate project files into the repository;
-- run code generators;
-- publish or deploy artifacts;
-- install global packages;
-- modify the development environment beyond dependency resolution;
-- execute project applications or tests merely to inspect a dependency.
+Before invoking a dependency-related command:
 
-If a command may modify repository files, do not run it automatically.
+1. establish the dependency from repository evidence;
+2. determine the exact resolved version whenever possible;
+3. inspect repository-local artifacts and already-populated local caches first;
+4. choose the least invasive native command that can produce the missing evidence;
+5. ensure the command does not intentionally modify repository source, manifests or lockfiles;
+6. direct temporary artifacts under `.opencode/.tmp/dependencies/` whenever the tool supports an explicit output destination.
 
-## Command safety
+Then invoke the command directly and let OpenCode enforce the permission policy.
 
-Native build and package tools may execute arbitrary project-defined code.
-Treat this as a security boundary.
+If OpenCode denies the command, do not rephrase the same request as a
+conversational approval question and do not bypass the denial with another tool
+or package manager. Continue with the remaining evidence when possible and
+report the resulting limitation.
 
-Safe automatic operations are limited to commands whose primary effect is tool
-availability/version discovery or inspection of already-local artifacts.
+The safety guidance in this skill determines which command is appropriate to
+attempt. It does not replace OpenCode's permission system.
 
-Operations that may resolve dependencies, execute build configuration, invoke
-plugins, run lifecycle hooks, restore packages or contact configured registries
-must remain subject to the Bash permission model unless an equally safe command
-has been explicitly allowlisted.
+## Critical permission-handling rule
 
-In particular, do not automatically run generic commands such as:
+Bash approval is **never conversational**.
 
-- `mvn package`, `mvn install`, `mvn test`;
-- `gradle build`, `gradlew build`, arbitrary Gradle tasks;
-- `npm install`, `npm ci`, `npm run ...`;
-- `yarn install`, `yarn run ...`;
-- `pnpm install`, `pnpm run ...`;
-- `dotnet build`, `dotnet test`, `dotnet run`;
-- arbitrary Python installation commands into the active project environment;
-- publication, deployment or release commands in any ecosystem.
+Never ask the user for permission to execute a shell command.
 
-When dependency resolution is required, explain the intended command and use
-the existing approval boundary instead of bypassing it.
+Forbidden conversational patterns include:
+
+- "May I run this command?"
+- "Do you approve?"
+- "Can I proceed?"
+- "Reply yes to continue."
+- "I need your approval before running Maven/npm/dotnet/etc."
+
+If a shell command is necessary, invoke the Bash tool immediately.
+
+OpenCode's native Bash permission system is the only approval mechanism. It may
+interrupt execution and display its own approval dialog. Do not predict,
+simulate, duplicate or replace that dialog in the conversation.
+
+If OpenCode denies a command, respect the denial, continue with the evidence
+already available when possible, and report the limitation. Do not ask the user
+again in chat for permission to run the same operation.
+
+## Critical staging rule
+
+Dependency artifacts intentionally materialized for inspection must never be
+written inside a repository.
+
+Do not use repository-local staging paths such as:
+
+- `target/deps/`;
+- `build/deps/`;
+- `node_modules/`;
+- `src/`;
+- repository-local `tmp/` directories.
+
+Use the canonical workspace-local staging area instead:
+
+```text
+.opencode/.tmp/dependencies/<ecosystem>/
+```
+
+Examples:
+
+- `.opencode/.tmp/dependencies/maven/`
+- `.opencode/.tmp/dependencies/gradle/`
+- `.opencode/.tmp/dependencies/nuget/`
+- `.opencode/.tmp/dependencies/npm/`
+- `.opencode/.tmp/dependencies/python/`
+
+Existing artifacts already present in external package-manager caches may be
+inspected in place. The staging rule applies only to artifacts intentionally
+materialized for the current analysis.
+
+## Local caches and resolved-version evidence
+
+Existing dependency caches are valid local evidence sources and should be
+inspected in place when already available. Do not copy an already-local artifact
+into `.opencode/.tmp/dependencies/` merely to inspect it. The staging area is
+reserved for artifacts intentionally materialized by retrieval commands.
+
+Cache contents do not establish which dependency version a repository resolves:
+a cache may contain versions accumulated from unrelated projects.
+
+Determine the exact resolved version from resolution evidence, preferring as
+applicable:
+
+- lockfiles;
+- generated resolution metadata such as `.NET` `obj/project.assets.json`;
+- central dependency-management files such as `Directory.Packages.props`;
+- effective dependency trees or equivalent native-tool output;
+- other ecosystem-specific resolution metadata.
+
+A manifest version is only a declared version unless resolution evidence confirms
+it. Use the confirmed resolved version to locate an artifact in a local cache. If
+the artifact is absent, construct the narrowest retrieval command, invoke it immediately through Bash,
+and let OpenCode's native permission system handle authorization.
+
+## Critical evidence-strength rule
+
+Never present evidence as stronger than it actually is.
+
+A declared dependency version plus a matching artifact in a local cache does
+not prove that the repository resolves that version.
+
+Unless a lockfile, generated resolution metadata, effective dependency tree or
+equivalent native-tool output confirms the version, report the facts separately,
+for example:
+
+- declared version: `9.0.5`;
+- cached artifact inspected: `9.0.5`;
+- resolved version: not independently confirmed.
+
+Do not use terms such as `resolved`, `confirmed`, `guaranteed`, `proves` or
+equivalent wording unless the cited evidence directly supports that strength of
+claim.
+
+Never upgrade an inference into a confirmed finding in the final answer. If the
+analysis establishes only that a behavior is likely, expected or reasonable,
+the final conclusion must retain the same uncertainty.
+
+Before making a behavioral claim from broad documentation searches, locate
+evidence for the exact API/member or implementation path involved whenever
+practical. Generic mentions of a concept elsewhere in package documentation do
+not confirm the behavior of the API under analysis.
+
+A behavior may be described as confirmed only when directly supported by
+inspected evidence such as:
+
+- source code for the relevant implementation;
+- binary/assembly metadata that establishes the behavior in question;
+- documentation for the exact API/member;
+- lock/resolution metadata for dependency-version claims;
+- equivalent authoritative local evidence.
+
+If direct evidence cannot be found, state the remaining uncertainty explicitly.
+
+## Evidence discipline
+
+Keep conclusions within the evidence actually inspected. If dependency
+inspection reveals an unrelated anomaly or potential runtime problem, distinguish
+the observation from a confirmed runtime conclusion. Inspect the relevant wiring,
+registration or configuration before claiming runtime behavior; otherwise state
+the uncertainty explicitly and keep the observation concise.
+
+For example, finding a method that throws `NotImplementedException` does not by
+itself prove that the method is reached at runtime. Verify dependency injection
+or other runtime wiring before making that claim.
+
+### Maven inspection flow
+
+For Maven repositories:
+
+1. establish the dependency and exact resolved version from repository/toolchain
+   resolution evidence;
+2. derive the corresponding location in the local Maven repository;
+3. inspect the artifact in `~/.m2/repository` in place when it already exists;
+4. only if the required artifact/source artifact is missing, invoke the narrowest
+   Maven retrieval command;
+5. direct any artifact intentionally copied for inspection to
+   `.opencode/.tmp/dependencies/maven/`, never to `target/` or another repository
+   directory;
+6. invoke Maven directly and let OpenCode's native Bash permission system handle
+   any approval dialog.
+
+Do not stop before step 6 to ask the user for conversational approval.
+
+
+## Workspace-local staging
+
+Use `.opencode/.tmp/dependencies/` as the canonical staging area for temporary
+dependency artifacts created after approval.
+
+Suggested ecosystem subdirectories include:
+
+- `.opencode/.tmp/dependencies/npm/`;
+- `.opencode/.tmp/dependencies/python/`;
+- `.opencode/.tmp/dependencies/maven/`;
+- `.opencode/.tmp/dependencies/nuget/`;
+- `.opencode/.tmp/dependencies/go/`;
+- `.opencode/.tmp/dependencies/cargo/`.
+
+Do not extract or materialize dependency contents inside `repositories/`. Avoid
+external temporary directories for command output when a workspace-local staging
+destination can be supplied. Package-manager caches that are already populated
+may still be inspected read-only when the current permission model allows it.
 
 ## Ecosystem guidance
 
-### Java / Maven
+### npm / Yarn / pnpm
 
-Prefer `mvnw` or `mvnw.cmd` when provided.
+Respect the package manager selected by repository metadata and lockfiles. Check
+`node_modules` and available local cache evidence before attempting retrieval.
 
-Useful evidence sources include:
+For npm, a constrained retrieval such as the following is appropriate when the
+exact version is known:
 
-- `pom.xml`;
-- effective dependency metadata;
-- the Maven local repository;
-- binary JAR contents;
-- `*-sources.jar` when available.
+```text
+npm pack <package>@<exact-version> --ignore-scripts --pack-destination .opencode/.tmp/dependencies/npm
+```
 
-Typical inspection may use Maven dependency goals, `jar`, or `javap` as
-appropriate. Dependency goals that can download artifacts or invoke project
-plugins must respect the approval boundary.
+Invoke the command normally; OpenCode's native Bash permission policy decides whether it may run. Keep `--ignore-scripts`; never use bare
+`npm pack`, and do not substitute `npm install`, `npm ci`, `npm update`,
+`npm run`, `npm exec` or `npx` merely to inspect a dependency.
 
-### Java / Gradle
-
-Prefer the Gradle wrapper when present.
-
-Gradle build scripts are executable code. Even metadata tasks can evaluate
-project build logic, therefore arbitrary Gradle invocations must not be treated
-as intrinsically safe.
-
-Prefer already-resolved Gradle cache artifacts when sufficient.
-
-### .NET / NuGet
-
-Use project and lock metadata first. Inspect the NuGet package cache when the
-resolved package is already available.
-
-`dotnet restore` and equivalent resolution operations may modify caches and
-project-generated state and therefore must respect the approval boundary.
-
-When source is unavailable, assembly metadata may still provide evidence about
-public types and signatures.
-
-### JavaScript / TypeScript
-
-Respect the package manager selected by repository metadata and lockfiles.
-
-Prefer:
-
-- lockfile metadata;
-- an existing `node_modules` package;
-- package metadata;
-- `.d.ts` type declarations;
-- package source already present locally.
-
-Do not replace Yarn or pnpm with npm merely for convenience.
-
-Package installation can execute lifecycle scripts. Installation, restore and
-script execution must therefore respect the approval boundary.
+Yarn and pnpm retrieval use the same native Bash permission boundary. Prefer narrowly scoped
+artifact retrieval over full project installation when their tooling supports it.
 
 ### Python
 
-Respect the environment and package-management strategy declared by the
-repository.
+Respect the package/environment strategy declared by the repository. Prefer an
+already-installed distribution or local cache first.
 
-Prefer installed distribution metadata and package source from the active or
-project-declared environment before downloading anything.
+When an exact version is known and a wheel is sufficient, a constrained command
+may be proposed:
 
-Do not mutate the repository's environment or dependency declarations merely to
-inspect a package.
+```text
+python -m pip download <package>==<exact-version> --only-binary=:all: --no-deps --dest .opencode/.tmp/dependencies/python
+```
 
-### Go and Rust
+Invoke it through the normal Bash tool and let OpenCode enforce its native permission boundary. Keep `--only-binary=:all:` and `--no-deps` so
+the command does not fall back to source-distribution build hooks or resolve the
+whole dependency graph. Inspect the downloaded wheel without importing or
+installing it.
 
-Use module/package metadata and existing caches first. Native dependency fetch
-operations may use configured registries and caches and must respect the
-approval boundary when they produce side effects or network access.
+### Maven / Gradle
+
+Use `pom.xml`, Gradle metadata, lock/dependency information and local caches
+first. Prefer repository wrappers when they exist.
+
+Commands that resolve or download Maven/Gradle artifacts must be invoked through the normal Bash tool; OpenCode handles approval.
+Project/plugin evaluation may execute code, so describe that possibility before
+running the command. Avoid full build/test lifecycle commands when a narrower
+dependency-oriented command is sufficient.
+
+### .NET / NuGet
+
+Use project files, lock metadata and the global NuGet package cache first. Remote
+package retrieval or `dotnet restore` uses the native Bash permission boundary. Prefer narrowly scoped
+package acquisition into `.opencode/.tmp/dependencies/nuget/` when possible; do
+not use `dotnet add package` for inspection.
+
+### Go
+
+Use `go.mod`, `go.sum` and the module cache first. Commands such as
+`go mod download` or other module retrieval must go through the native Bash permission boundary because they may
+contact remote sources and may affect module/workspace state depending on context.
+Do not use `go get` for read-only inspection.
+
+### Rust / Cargo
+
+Use `Cargo.toml`, `Cargo.lock` and existing Cargo caches first. `cargo fetch` and
+other retrieval/resolution commands use the native Bash permission boundary. Builds and tests are not
+dependency-inspection substitutes.
+
+## Command safety examples
+
+Do not choose generic commands such as these merely for dependency inspection:
+
+- `mvn package`, `mvn install`, `mvn test`, Maven dependency goals not explicitly
+  validated by this skill;
+- `gradle build`, `gradlew build` or arbitrary Gradle tasks;
+- `npm install`, `npm ci`, `npm update`, `npm run`, `npm exec`, `npx`;
+- `yarn install`, `yarn run`, `pnpm install`, `pnpm run`;
+- `dotnet restore`, `dotnet build`, `dotnet test`, `dotnet run`;
+- `pip install`, source-distribution builds or environment mutation;
+- `go get`, `go mod download` from the repository;
+- `cargo fetch`, `cargo build`, `cargo test`;
+- publication, deployment or release commands in any ecosystem.
+
+When a shell command is necessary, invoke the safest appropriate command directly and let OpenCode present any required permission dialog. Do not add a conversational pre-approval step and do not try a different package manager merely to bypass a denial.
 
 ## Network boundary
 
 Do not use public-web tools or generic HTTP clients for dependency research.
 
-Native package managers may contact registries configured by the repository or
-local development environment when dependency resolution is explicitly needed
-and permitted. Treat registry access as part of the native toolchain workflow,
-not as general web research.
+Native package-manager operations permitted by OpenCode may contact registries
+configured by the repository or local development environment. Treat this as
+native dependency resolution, not general web research.
 
 Never upload workspace content as part of dependency inspection.
 
@@ -209,7 +376,7 @@ When dependency inspection contributes materially to an answer, report:
 
 - repository and manifest establishing the dependency;
 - resolved dependency identity and version when known;
-- toolchain used;
+- toolchain and retrieval state used (`local inspection` or `approval required`);
 - local artifact, cache path, source archive, type declaration or binary
   metadata inspected;
 - whether the evidence came from source, declarations or compiled metadata;
