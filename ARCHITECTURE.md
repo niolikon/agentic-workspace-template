@@ -124,3 +124,100 @@ and focuses on durable rules rather than implementation details.
     every applicable repository and analysis phase has produced
     knowledge, been explicitly assessed as not applicable, or been
     blocked for a documented reason.
+
+
+## Native dependency evidence
+
+Native toolchains are local evidence sources for questions that cannot be
+answered from workspace knowledge, manifests or repository source alone. The
+`ask` agent may use the build system or package manager selected by repository
+evidence to inspect resolved external dependencies.
+
+This capability is demand-driven and preserves the read-only workspace model:
+normal external package-cache writes may occur during approved dependency
+resolution, but repository files must not be intentionally modified. Commands
+that may execute project-defined build logic, lifecycle hooks or restore/install
+operations remain behind the Bash approval boundary. Public-web research is not
+used as a substitute for native dependency resolution.
+
+
+## Dependency inspection staging
+
+Approved dependency retrieval uses the workspace-local
+`.opencode/.tmp/dependencies/` staging area. Retrieved artifacts are ephemeral,
+Git-ignored and kept outside `repositories/`. This allows the `ask` agent to
+inspect exact dependency artifacts without granting access to operating-system
+temporary directories or weakening `external_directory: deny`.
+
+### Dependency evidence boundaries
+
+Dependency caches are local evidence stores, not dependency-resolution
+authorities. Cached artifacts may be inspected in place, while the version
+actually resolved by a repository must come from lockfiles, generated resolution
+metadata, dependency-management configuration or native toolchain output.
+`.opencode/.tmp/dependencies/` is reserved for artifacts intentionally
+materialized for analysis.
+
+Unrelated anomalies discovered during dependency inspection remain observations
+until their relevant runtime wiring or configuration has been verified.
+
+
+### Shell approval ownership
+
+Agents never implement shell-command approval conversationally. They invoke the
+required Bash command and OpenCode's native permission layer owns the approval
+decision and user interaction.
+
+Artifacts materialized solely for dependency inspection must be staged under
+`.opencode/.tmp/dependencies/<ecosystem>/`; repository-local build/output
+directories are not valid inspection staging areas.
+
+
+### Evidence strength
+
+Agent conclusions must preserve the strength of their supporting evidence.
+Manifest declarations, cache contents, resolution metadata, exact API
+documentation and implementation source are distinct evidence classes and must
+not be conflated. Inferences remain explicitly qualified until direct evidence
+supports a stronger conclusion.
+
+
+### Cache-first dependency inspection
+
+Resolved artifacts already available in package-manager caches are inspected in
+place whenever they expose the required evidence. Workspace staging is reserved
+for retrieval or transformations that are actually necessary.
+
+Native toolchains may create ordinary resolution/build metadata such as
+`obj/project.assets.json`; these files are tolerated build side effects and are
+not inspection staging areas.
+
+API contracts must not be promoted into stronger quantitative or runtime
+guarantees without direct supporting evidence.
+
+
+### Local-source short circuit
+
+Dependency inspection stops at the earliest sufficient local evidence. Cached
+source artifacts take precedence over retrieval. Manifest declarations and cache
+contents remain separate from resolved-version evidence, and failed retrieval
+commands trigger re-evaluation of local evidence before any retry.
+
+
+### Provider and resolution evidence boundaries
+
+Unverified dependency resolution remains explicitly unconfirmed even when a
+matching artifact exists in a local cache. Provider-specific runtime behavior
+requires provider-specific evidence; core-library contracts alone are
+insufficient. Verification needed to support a current claim is completed in the
+same analysis or the claim is weakened rather than deferred to an optional
+follow-up.
+
+
+### Completion discipline
+
+Once a requested dependency analysis is complete, agents stop rather than
+appending optional investigation menus. Additional verification is performed
+only when required to support the current answer or explicitly requested by the
+user.
+

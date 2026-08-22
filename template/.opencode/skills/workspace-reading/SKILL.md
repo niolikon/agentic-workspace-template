@@ -27,8 +27,10 @@ Use this order when applicable:
 4. repository documentation and manifests;
 5. repository configuration and public interfaces;
 6. implementation source code;
-7. `trainings/`;
-8. `notes/`.
+7. external dependency evidence through `dependency-inspection`, only when the
+   question requires information unavailable from repository evidence;
+8. `trainings/`;
+9. `notes/`.
 
 This is a retrieval strategy, not an absolute authority ranking.
 
@@ -50,3 +52,5 @@ Inside a repository inspect:
 - Distinguish confirmed facts, likely interpretations and unresolved questions.
 - Do not invent missing information.
 - Do not recursively inspect the entire workspace before candidate discovery.
+- Do not inspect external dependencies by default. Escalate to
+  `dependency-inspection` only when repository-local evidence is insufficient.

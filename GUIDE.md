@@ -33,6 +33,18 @@ Install:
 
 OpenCode can run directly on Windows, macOS or Linux. WSL is optional.
 
+The required development toolchains depend on the repositories in the workspace.
+For example, a Maven project may require Java and Maven, a Gradle project may
+provide and use its Gradle wrapper, a .NET project requires the .NET SDK, and a
+JavaScript project may require npm, Yarn or pnpm according to its repository
+metadata and lockfiles. Python projects likewise require the package/environment
+tooling selected by the project.
+
+The `ask` agent can use these native tools to inspect external dependencies when
+repository-local evidence is insufficient. It does not install missing tools
+automatically. Repository-provided wrappers and explicitly selected package
+managers are preferred over generic language defaults.
+
 ## 3. Install OpenCode
 
 Using npm:
@@ -318,3 +330,14 @@ The workspace therefore:
 - minimizes the number and size of files read.
 
 These controls reduce exposure but are not an operating-system sandbox. Verify the provider's data terms and your organization's policies before using proprietary material.
+
+
+### Temporary dependency artifacts
+
+When an approved `ask` dependency-inspection command downloads an artifact, it
+should stage it under `.opencode/.tmp/dependencies/` whenever the native tool
+supports an explicit output destination. The directory is
+workspace-local, ignored by Git and can be deleted safely when OpenCode is not
+using it. Do not configure dependency retrieval to use `%TEMP%`, `/tmp` or other
+directories outside the workspace when a workspace-local staging destination can
+be supplied. Retrieval itself remains subject to Bash approval.

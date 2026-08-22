@@ -17,35 +17,13 @@ permission:
     "repository-analysis": allow
     "execution-flow-analysis": allow
     "architecture-analysis": allow
+    "dependency-inspection": allow
 
   edit: deny
   write: deny
 
   bash:
     "*": ask
-    "pwd": allow
-    "pwd *": allow
-    "git status": allow
-    "git status *": allow
-    "git -C * status*": allow
-    "git log *": allow
-    "git -C * log *": allow
-    "git diff *": allow
-    "git -C * diff *": allow
-    "git remote -v": allow
-    "git -C * remote -v": allow
-    "git submodule*": allow
-    "git -C * submodule*": allow
-    "git -C * rev-parse*": allow
-    "find *": allow
-    "fd *": allow
-    "rg *": allow
-    "tree *": allow
-    "file *": allow
-    "head *": allow
-    "tail *": allow
-    "wc *": allow
-    "jq *": allow
 
   task: deny
   todowrite: deny
@@ -90,6 +68,12 @@ execution or data-flow questions.
 
 Load `architecture-analysis` for architectural styles or implementation
 patterns.
+
+Load `dependency-inspection` only when repository manifests, local source and
+existing knowledge are insufficient and the question requires evidence from an
+external dependency. Use the repository-native toolchain. Use the ecosystem adapter and common safety contract defined by that skill. Construct and invoke required shell commands normally. Never ask for shell
+permission conversationally: OpenCode's native Bash permission dialog is the
+only approval mechanism. All Bash commands use the same `ask` boundary.
 
 ## Permanent constraints
 
