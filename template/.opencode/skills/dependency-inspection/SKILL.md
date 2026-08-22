@@ -308,6 +308,68 @@ Likewise, statements about generated database values, identity propagation or
 provider-specific behavior must remain explicitly qualified unless the exact
 provider/API behavior was inspected.
 
+## Critical unresolved-version wording rule
+
+Do not soften an unverified resolved-version claim with phrases such as:
+
+- "strong evidence that this is the resolved version";
+- "very likely the effective version";
+- "the build probably uses this version";
+- equivalent wording.
+
+If resolution has not been independently verified, keep the boundary explicit
+everywhere in the answer:
+
+- declared version: `<version>`;
+- cached artifact inspected: `<version>`;
+- resolved version: not independently confirmed.
+
+Do not let later prose, summaries or conclusions implicitly promote that version
+to resolved/effective merely because the declared and cached versions match.
+
+## Critical provider-specific evidence rule
+
+Do not infer provider-specific runtime behavior from core-library API evidence.
+
+If a conclusion depends on a concrete provider, runtime, adapter or backend
+implementation, inspect provider-specific evidence before presenting the behavior
+as confirmed.
+
+Examples include:
+
+- EF Core SQL Server identity/HiLo/value-generation behavior;
+- Hibernate dialect/provider behavior;
+- database-driver-specific generated-value handling;
+- npm/Yarn/pnpm runtime or lifecycle behavior beyond the inspected package API;
+- framework adapter behavior that is not defined by the core package contract.
+
+If provider-specific evidence is not inspected, mark the conclusion as
+unverified/provider-dependent.
+
+## Critical verification-completion rule
+
+Do not offer optional follow-up verification for evidence that is required to
+support a claim already made in the current answer.
+
+If a claim requires additional verification, choose one of two paths:
+
+1. perform the verification during the current analysis, invoking shell commands
+   directly and relying on OpenCode's native Bash permission system when needed;
+2. weaken the claim so that it accurately reflects the evidence already
+   available.
+
+Do not end with menus such as:
+
+- "If you want, I can verify the provider";
+- "Choose A or B";
+- "Tell me whether to run restore";
+- "I can confirm this with another command if you prefer";
+
+when that verification is necessary to justify the preceding conclusion.
+
+Optional follow-up suggestions are acceptable only for genuinely additional
+analysis that is not required to support the answer already given.
+
 ## Critical evidence-strength rule
 
 Never present evidence as stronger than it actually is.

@@ -203,3 +203,13 @@ source artifacts take precedence over retrieval. Manifest declarations and cache
 contents remain separate from resolved-version evidence, and failed retrieval
 commands trigger re-evaluation of local evidence before any retry.
 
+
+### Provider and resolution evidence boundaries
+
+Unverified dependency resolution remains explicitly unconfirmed even when a
+matching artifact exists in a local cache. Provider-specific runtime behavior
+requires provider-specific evidence; core-library contracts alone are
+insufficient. Verification needed to support a current claim is completed in the
+same analysis or the claim is weakened rather than deferred to an optional
+follow-up.
+

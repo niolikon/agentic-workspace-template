@@ -227,3 +227,31 @@ When a JAR/NUPKG is already present locally, prefer direct archive entry reading
 over copying, renaming or extracting the archive merely to satisfy a tool's file
 extension restriction.
 
+
+### Unresolved-version wording behavior
+
+If independent resolution evidence is absent, the final answer must keep the
+resolved version explicitly unconfirmed throughout. Matching manifest/cache
+versions must not be described as strong evidence of resolution.
+
+### Provider-specific behavior
+
+If a claim depends on a concrete provider or backend implementation, verify the
+provider-specific evidence or keep the conclusion explicitly qualified as
+provider-dependent/unverified.
+
+The test fails if core-library documentation is used to confirm provider-specific
+behavior without inspecting the relevant provider evidence.
+
+### Verification-completion behavior
+
+The agent must not defer evidence required for its current conclusion into an
+optional follow-up menu.
+
+If extra verification is required to support a claim, it should either perform
+that verification during the current analysis or weaken the claim.
+
+The test fails if the final answer says things such as "choose A or B", "if you
+want I can verify...", or "tell me whether to run restore" when that verification
+is necessary to justify a claim already presented.
+

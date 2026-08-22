@@ -1,5 +1,7 @@
 # Changelog
 
+- Finalized dependency evidence boundaries: unresolved versions remain explicitly unconfirmed, provider-specific claims require provider evidence, and required verification cannot be deferred to optional follow-up menus.
+
 - Added local-source short-circuiting, stricter declared/cache/resolved wording, retrieval retry discipline, and direct archive-inspection fallbacks for dependency analysis.
 
 - Refined dependency inspection to prefer in-place cache evidence, reserve workspace staging for necessary retrieval/transformation, tolerate native resolution metadata, and prevent stronger runtime guarantees than the inspected API contract supports.
