@@ -174,6 +174,140 @@ it. Use the confirmed resolved version to locate an artifact in a local cache. I
 the artifact is absent, construct the narrowest retrieval command, invoke it immediately through Bash,
 and let OpenCode's native permission system handle authorization.
 
+## Critical local-source short-circuit rule
+
+When the candidate dependency version has a source artifact already available in
+a local package-manager cache, inspect that source artifact immediately before
+attempting any retrieval.
+
+A cached source artifact takes precedence over:
+
+- dependency download/get/copy commands;
+- archive extraction into workspace staging;
+- alternate package-manager retrieval strategies;
+- repeated toolchain retries.
+
+If the cached source artifact contains the exact implementation or API evidence
+required by the question, dependency retrieval must stop there.
+
+Do not retrieve an artifact merely to obtain another copy of evidence that is
+already locally inspectable.
+
+## Critical no-cache-to-resolution rule
+
+A manifest declaration plus a matching cached artifact never proves the resolved
+dependency version.
+
+If resolution has not been independently established from lockfiles, generated
+resolution metadata, effective dependency-tree output or equivalent evidence,
+report the distinction explicitly:
+
+- declared version;
+- cached artifact version inspected;
+- resolved version: not independently confirmed.
+
+Do not combine manifest and cache presence into phrases such as "the build uses
+this version", "the effective version is", or "the resolved version is".
+
+If the user's question does not require independent resolution verification, it
+is acceptable to inspect the cached artifact corresponding to the declared
+version, provided the answer clearly states that boundary.
+
+## Critical retrieval retry rule
+
+After any retrieval command fails, re-evaluate existing local evidence before
+trying another retrieval form.
+
+Do not repeatedly try `dependency:get`, `dependency:copy`, alternate plugin
+invocations, wrapper variants or equivalent commands when the required artifact
+is already present in a local cache.
+
+Retry retrieval only when:
+
+1. the artifact required for the analysis is genuinely absent or insufficient;
+2. the previous failure identifies a specific correctable cause;
+3. the next command materially improves the chance of obtaining missing evidence.
+
+If local evidence becomes sufficient at any point, stop retrieval attempts and
+continue the analysis.
+
+## Archive inspection fallback
+
+For ZIP-compatible dependency artifacts such as JAR and NUPKG files:
+
+1. prefer direct inspection without copying or extracting when possible;
+2. use an ecosystem-native archive tool when available;
+3. otherwise use an already-available ZIP API/tool;
+4. avoid renaming or copying an archive solely to satisfy a filename-extension
+   restriction when direct archive reading is possible.
+
+On Windows, PowerShell/.NET `System.IO.Compression.ZipFile` is an acceptable
+fallback for direct JAR/NUPKG entry inspection.
+
+## Critical cache-first inspection rule
+
+If the exact resolved artifact is already present in a local package-manager
+cache and already exposes the evidence needed for the analysis, inspect it in
+place.
+
+Do not copy, unpack or extract an already-inspectable cached artifact into
+`.opencode/.tmp/dependencies/` merely for convenience.
+
+Workspace-local staging is used only when one of the following is true:
+
+- the required artifact is not present locally and must be retrieved;
+- the cached artifact must be transformed or unpacked because the required
+  evidence cannot otherwise be inspected;
+- the native tool requires an explicit output location for the operation.
+
+Before staging anything, check whether directly readable source files,
+documentation, metadata, archives or binaries already exist in the resolved
+cache location.
+
+For example, if a NuGet cache directory already contains the exact
+`Microsoft.EntityFrameworkCore.xml` required for API inspection, read that file
+directly rather than extracting the matching `.nupkg` into workspace staging.
+
+## Toolchain-generated resolution metadata
+
+Native dependency-resolution commands may create normal build metadata inside a
+repository when that is required to establish the resolved dependency graph.
+
+Examples include:
+
+- `.NET` `obj/project.assets.json`;
+- Maven/Gradle generated resolution/build metadata;
+- equivalent ecosystem-specific files created by the native toolchain.
+
+Such files are tolerated build-tool side effects, not dependency-inspection
+staging. They must not be used as a general-purpose location for copied or
+downloaded inspection artifacts.
+
+The agent should avoid generating build metadata when existing resolution
+evidence is already sufficient, but may allow the native toolchain to create it
+when necessary to answer the question accurately.
+
+## Critical contract-strength rule
+
+Do not derive a stronger runtime or quantitative guarantee than the inspected
+API contract actually states.
+
+For example:
+
+> `SaveChangesAsync` returns the number of state entries written to the database.
+
+does not by itself prove:
+
+> one logical insert always returns exactly `1`.
+
+If a stronger conclusion depends on model shape, cascading behavior, provider
+semantics, generated values, interceptors or other runtime conditions, retain
+that qualification unless those conditions were directly verified.
+
+Likewise, statements about generated database values, identity propagation or
+provider-specific behavior must remain explicitly qualified unless the exact
+provider/API behavior was inspected.
+
 ## Critical evidence-strength rule
 
 Never present evidence as stronger than it actually is.

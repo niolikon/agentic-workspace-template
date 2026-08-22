@@ -157,3 +157,73 @@ In particular:
 - if exact evidence cannot be obtained, the answer must state what is known,
   what is inferred and what remains unconfirmed.
 
+
+### Cache-first and staging behavior
+
+When the exact resolved dependency already exists in a local cache, verify that
+the agent first checks whether the required evidence can be read directly from
+that cache.
+
+The test fails if the agent copies or extracts an already-inspectable cached
+artifact into `.opencode/.tmp/dependencies/` merely for convenience.
+
+Workspace staging is appropriate only when retrieval or transformation is
+required to make the evidence inspectable.
+
+### Toolchain build-metadata behavior
+
+Generated resolution metadata such as `.NET` `obj/project.assets.json` is an
+acceptable native-tool side effect when needed to establish resolved versions.
+
+The agent must distinguish such build metadata from dependency-inspection
+staging and must not intentionally place copied/downloaded inspection artifacts
+under repository build directories.
+
+### Contract-strength behavior
+
+Verify that API contracts are not promoted into stronger runtime guarantees.
+
+For example, documentation that says `SaveChangesAsync` returns the number of
+state entries written must not be summarized as "one insert returns exactly 1"
+unless the concrete runtime conditions needed for that conclusion were verified.
+
+Provider-dependent behavior and generated-value propagation must remain
+qualified unless supported by exact inspected evidence.
+
+
+### Local-source short-circuit behavior
+
+If a source artifact for the candidate dependency/version already exists in a
+local cache, the expected behavior is to inspect it before attempting retrieval.
+
+The test fails if the agent performs dependency download/get/copy operations
+before checking or using an already-available source artifact that is sufficient
+for the analysis.
+
+### Retrieval retry discipline
+
+After a retrieval failure, the agent must re-check whether local evidence is
+already sufficient.
+
+The test fails if the agent repeatedly tries alternate retrieval commands for
+the same artifact while the required JAR/source JAR/NUPKG/source distribution is
+already available locally.
+
+### Declared/cache/resolved wording
+
+The test fails if the agent combines a declared manifest version and matching
+cache contents into a claim that the dependency is resolved/effectively used at
+that version without independent resolution evidence.
+
+If resolution is not checked, the final answer should retain wording such as:
+
+- declared version: X;
+- cached artifact inspected: X;
+- resolved version: not independently confirmed.
+
+### Archive-inspection behavior
+
+When a JAR/NUPKG is already present locally, prefer direct archive entry reading
+over copying, renaming or extracting the archive merely to satisfy a tool's file
+extension restriction.
+

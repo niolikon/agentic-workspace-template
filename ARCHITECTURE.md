@@ -181,3 +181,25 @@ documentation and implementation source are distinct evidence classes and must
 not be conflated. Inferences remain explicitly qualified until direct evidence
 supports a stronger conclusion.
 
+
+### Cache-first dependency inspection
+
+Resolved artifacts already available in package-manager caches are inspected in
+place whenever they expose the required evidence. Workspace staging is reserved
+for retrieval or transformations that are actually necessary.
+
+Native toolchains may create ordinary resolution/build metadata such as
+`obj/project.assets.json`; these files are tolerated build side effects and are
+not inspection staging areas.
+
+API contracts must not be promoted into stronger quantitative or runtime
+guarantees without direct supporting evidence.
+
+
+### Local-source short circuit
+
+Dependency inspection stops at the earliest sufficient local evidence. Cached
+source artifacts take precedence over retrieval. Manifest declarations and cache
+contents remain separate from resolved-version evidence, and failed retrieval
+commands trigger re-evaluation of local evidence before any retry.
+

@@ -1,5 +1,9 @@
 # Changelog
 
+- Added local-source short-circuiting, stricter declared/cache/resolved wording, retrieval retry discipline, and direct archive-inspection fallbacks for dependency analysis.
+
+- Refined dependency inspection to prefer in-place cache evidence, reserve workspace staging for necessary retrieval/transformation, tolerate native resolution metadata, and prevent stronger runtime guarantees than the inspected API contract supports.
+
 - Tightened dependency evidence discipline so declared/cached/resolved versions remain distinct and inferences cannot be promoted to confirmed findings without direct API or resolution evidence.
 
 - Hardened dependency inspection UX: no conversational Bash approval, native OpenCode permission dialogs only, Maven cache-first inspection, and mandatory workspace-local staging for newly materialized artifacts.
