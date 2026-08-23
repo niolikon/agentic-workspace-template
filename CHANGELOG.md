@@ -1,5 +1,9 @@
 # Changelog
 
+- Hardened Ask execution-flow routing so execution questions load `execution-flow-analysis` before repository retrieval, including empty-workspace cases.
+
+- Added focused execution-flow reconstruction for Ask, with automatic skill selection, evidence-ranked transitions, framework/dependency resolution, cross-repository continuation and independent manual validation scenarios.
+
 - Added completion discipline so dependency analysis stops once the requested answer is complete instead of appending unsolicited follow-up investigation menus.
 
 - Finalized dependency evidence boundaries: unresolved versions remain explicitly unconfirmed, provider-specific claims require provider evidence, and required verification cannot be deferred to optional follow-up menus.

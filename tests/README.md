@@ -44,6 +44,10 @@ For every test, record:
 4. `ask/04-cross-repository-analysis.md`
 5. `ask/05-unknown-information.md`
 6. `ask/06-sensitive-content.md`
+7. `ask/07-native-dependency-inspection.md`
+8. `ask/08-execution-flow-analysis.md`
+9. `ask/09-cross-repository-execution-flow.md`
+10. `ask/10-framework-mediated-execution-flow.md`
 
 ### Coding
 

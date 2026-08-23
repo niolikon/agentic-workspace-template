@@ -1,11 +1,18 @@
 ---
 name: workspace-reading
-description: Evidence-driven retrieval with minimal context loading
+description: Retrieve workspace evidence with minimal context loading; supports specialized analysis without replacing it
 ---
 
 # Workspace reading
 
-Use this skill for all local retrieval tasks.
+Use this skill for ordinary local retrieval and as a supporting evidence-retrieval
+capability for specialized analysis skills.
+
+Do not treat the need to read local files as a reason to select this skill instead
+of a more specific analysis capability. When the user's question is primarily an
+execution-flow, repository, architecture or dependency-analysis question, the
+matching specialized skill should govern the analysis and may use this retrieval
+strategy as needed.
 
 ## Retrieval workflow
 
