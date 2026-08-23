@@ -1,17 +1,26 @@
 ---
 name: repository-analysis
-description: Discover and analyse Git repositories, submodules, build systems and repository relationships
+description: Use for repository inventory, identity, submodules, build systems and repository relationships; supporting capability for other analysis, not execution-path tracing
 ---
 
 # Repository analysis
 
-Use this skill for repository inventories, Git submodule analysis, build-system
-detection, language detection and cross-repository relationship analysis.
+Use this skill when repository discovery, identity, topology, build structure or
+repository relationships are themselves part of the requested analysis. It can
+also be loaded as a supporting capability by a specialized analysis skill when
+a repository inventory or relationship must be established as evidence.
+
+Do not use this skill as a substitute for a matching specialized capability. In
+particular, questions about how an operation executes or propagates through the
+system belong to `execution-flow-analysis`; load this skill only afterwards if
+the execution analysis needs authoritative repository evidence.
 
 ## Mandatory repository inventory
 
-For every repository-related task, invoke the `repository_inventory` tool
-before using `glob`, `grep`, `read` or Bash.
+When this skill is responsible for repository discovery or has been loaded to
+provide authoritative repository evidence, invoke the `repository_inventory`
+tool before using `glob`, `grep`, `read` or Bash for that repository-discovery
+work.
 
 The tool output is the authoritative workspace repository inventory.
 
