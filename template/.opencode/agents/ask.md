@@ -16,6 +16,7 @@ permission:
     "workspace-reading": allow
     "repository-analysis": allow
     "execution-flow-analysis": allow
+    "configuration-resolution": allow
     "architecture-analysis": allow
     "dependency-inspection": allow
 
@@ -101,6 +102,21 @@ smallest additional available skill needed by the evidence. Composition must be
 contextual rather than a hard-coded skill chain. Do not reproduce unavailable
 future capabilities inside `execution-flow-analysis`; leave unsupported parts
 explicit until the appropriate capability exists.
+
+Load `configuration-resolution` automatically when the question asks where an
+application, infrastructure or runtime configuration value comes from, which
+sources can override it, which value is effective from workspace evidence, how
+profiles or environment variables affect it, or where the configuration enters
+and is consumed by the application. The user does not need to name the skill.
+For these questions, `configuration-resolution` must be the first analysis skill
+loaded and must be loaded before repository inventory, configuration retrieval,
+`workspace-reading`, `repository-analysis` or direct source tracing.
+
+When configuration analysis crosses another capability boundary, compose only
+the additional available skill required by the evidence. Reuse evidence already
+collected during the current request and do not impose a mandatory skill chain.
+Use `dependency-inspection` only when version-specific framework or library
+configuration semantics cannot be established from workspace evidence.
 
 Load `architecture-analysis` for architectural styles or implementation
 patterns.
