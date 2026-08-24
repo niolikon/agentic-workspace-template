@@ -95,6 +95,35 @@ Use this order as a default, not as a rigid pipeline:
 4. dependency inspection only when version-specific external semantics are
    required to establish precedence, binding or default behavior.
 
+### Knowledge-first repository scoping
+
+For any question that may cross repository boundaries, workspace knowledge is a
+mandatory scoping step when relevant knowledge exists. Consult repository
+relationships and configuration/deployment knowledge before broad repository
+discovery.
+
+For cross-repository questions, inspect repository-relationship knowledge before
+performing workspace-wide repository or configuration discovery. Avoid broad
+workspace `grep`, `glob` or equivalent discovery before consulting available
+relationship knowledge, except for the minimal lookup required to locate that
+knowledge itself.
+
+Use that knowledge to establish the initial repository scope, then inspect source
+only within that scope to validate and enrich the documented relationships. Do not
+rediscover repository relationships from source before consulting available
+workspace knowledge.
+
+Broaden discovery beyond the knowledge-derived scope only when one of the
+following is true:
+
+- relevant workspace knowledge is missing;
+- the documented relationship is ambiguous;
+- implementation evidence contradicts the documented relationship;
+- the requested configuration cannot be resolved within the scoped repositories.
+
+When broadening scope, preserve the knowledge-derived relationship as prior
+evidence and explain why additional discovery was necessary.
+
 Existing knowledge is reusable evidence and a retrieval lead. If current source
 or deployment configuration contradicts it, report the conflict and prefer the
 stronger/current implementation evidence for claims about effective behavior.
@@ -234,9 +263,11 @@ Do not derive the target value first and justify the transition afterward.
 
 Each edge must be classified as exactly one of:
 
-- **directly evidenced**: the relationship is explicit in workspace source or local
-  documentation, such as a property placeholder directly referencing an environment
-  variable or a configuration binder explicitly reading a named key;
+- **directly evidenced**: the relationship is explicit in workspace source, such as
+  a property placeholder directly referencing an environment variable or a
+  configuration binder explicitly reading a named key. Workspace documentation may
+  corroborate the intended relationship, but it is not semantic proof when external
+  framework or tool behavior is required to make that relationship effective;
 - **externally semantic**: the relationship depends on behavior of a framework,
   runtime, build tool, shell, orchestrator or configuration processor;
 - **runtime-dependent**: the relationship depends on state unavailable from the
@@ -263,6 +294,86 @@ For an **externally semantic** edge, invoke `dependency-inspection` or another
 appropriate evidence source before using the relationship in a derivation. The
 edge remains closed until concrete evidence for the required behavior is produced.
 
+Semantic validation applies to structural relationships as well as propagated
+values. A declaration can directly prove that a configuration mechanism is
+configured without proving the external runtime semantics that connect two
+sources or components.
+
+An edge is externally semantic whenever external framework/tool behavior is
+needed to establish either:
+
+- the value propagated across the edge; or
+- the fact that the source and target participate in the same effective
+  configuration chain.
+
+For example, declarations such as:
+
+- `spring.config.import=configserver:...`;
+- `spring.cloud.config.server.git.uri=...`;
+- Helm value references;
+- Kubernetes `ConfigMap` or `Secret` injection;
+- build-tool property propagation;
+
+prove that those mechanisms are declared. They do not, by declaration alone,
+prove the runtime behavior that imports, serves, injects, merges or propagates
+configuration across the edge. Verify that semantic relationship before
+presenting the cross-source connection as established.
+
+If the semantic relationship cannot be verified, keep the declarations as
+confirmed evidence but mark the structural edge unresolved and stop that branch
+according to the unresolved-edge hard stop.
+
+### Structural semantic evidence gate
+
+Workspace knowledge, naming conventions, matching files, dependency declarations
+and configuration declarations may identify or corroborate an expected relationship
+between components, but they do not replace verification of external framework or
+tool semantics.
+
+When an edge is classified as externally semantic:
+
+- keep it externally semantic even when workspace knowledge explicitly describes
+  the intended architecture;
+- treat knowledge as corroborating context and repository-scoping evidence, not as
+  proof of the runtime/configuration-processing semantics;
+- do not promote the edge to directly evidenced merely because repository names,
+  filenames, dependencies, annotations or configuration keys line up with the
+  expected design;
+- verify the required framework or tool behavior before presenting the edge as an
+  established propagation path.
+
+If verification is unavailable, report only:
+
+- the declarations that are confirmed;
+- the workspace knowledge that describes or expects the relationship;
+- the externally semantic edge that remains unverified;
+- the last established point in the chain and the evidence required to continue.
+
+Do not present downstream configuration sources, merged values, selected profile
+files or consumers as reached through that unresolved structural edge.
+
+This gate applies even when no concrete value is being derived. Establishing that
+two configuration sources or components are connected at all can itself depend on
+external semantics.
+
+For example:
+
+```text
+spring.config.import=configserver:...
+```
+
+directly proves that a Config Server import is declared. It does not by itself prove
+which remote property sources are fetched, merged or selected.
+
+Likewise:
+
+```text
+spring.cloud.config.server.git.uri=...
+```
+
+directly proves that a Git backend URI is configured. It does not by itself prove
+how the Config Server resolves application/profile files from that backend.
+
 This validation is mandatory even when adjacent files make the intended result
 look obvious. In particular, for Docker Compose:
 
@@ -286,6 +397,57 @@ values based on general knowledge or on what the external tool would usually do.
 An unresolved branch may state the known upstream expression and the evidence
 required to continue, but it must not speculate about the result that evidence
 would likely produce.
+
+### Unverified structural edge boundary
+
+An externally semantic structural edge that has not been verified is a hard
+boundary for configuration propagation.
+
+Sources, declarations and consumers on both sides of the boundary may still be
+inspected and reported independently, but do not state or imply that a
+configuration value crosses the edge.
+
+Workspace knowledge may describe the expected topology and source declarations
+may show the intended mechanism. Until the external semantics are verified, report
+them separately as:
+
+- expected relationship from workspace knowledge;
+- declared configuration mechanism;
+- externally semantic propagation edge — unverified.
+
+Do not use corroborating knowledge, matching names, compatible dependencies or
+adjacent declarations to continue propagation beyond the boundary. In particular:
+
+- a value in a remote configuration repository remains a declared candidate
+  source until remote propagation is verified;
+- a profile-specific file remains a profile-specific candidate source until the
+  framework semantics selecting and merging it are verified;
+- do not state that a candidate value reaches an application property binding or
+  consumer across an unverified structural edge;
+- do not classify one candidate source as an effective override of another across
+  that edge.
+
+When a structural propagation edge is unresolved, apply the unresolved-edge hard
+stop exactly as for value-transformation edges. Do not add conditional scenarios
+such as what would happen with no active profile or with default environment
+values when those scenarios require crossing the unresolved edge.
+
+For example, when Spring Cloud Config propagation has not been semantically
+verified:
+
+```text
+demo-service.yml       -> declared candidate source
+demo-service-dev.yml   -> profile-specific candidate source
+demo-service-prod.yml  -> profile-specific candidate source
+
+Config repository -> Config Server -> client application
+                    externally semantic — unverified
+```
+
+It is valid to report the expected topology and independently identify the
+downstream `@ConfigurationProperties` binding and consumer. It is not valid to
+claim that `30s`, `10s` or `60s` reaches that binding until the unresolved
+propagation edge is closed with evidence.
 
 ## Value classification
 
@@ -683,7 +845,9 @@ When useful, report:
 7. repository boundaries crossed;
 8. framework/dependency evidence used only when a reported conclusion actually
    depends on verified external semantics;
-9. limitations and conflicting evidence.
+9. workspace knowledge used for repository scoping, while clearly distinguishing
+   documented architecture from verified external semantics;
+10. limitations and conflicting evidence.
 
 Do not add a general framework-precedence section when the concrete chain already
 answers the question. If broader precedence was not verified with concrete dependency
