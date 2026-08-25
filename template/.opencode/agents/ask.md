@@ -152,6 +152,40 @@ impact edge cannot be established from the existing evidence. Expand outward
 from the confirmed flow toward consumers, integrations, configuration, tests,
 contracts and other affected surfaces only as required by the impact question.
 
+### Workspace access discipline
+
+After skill selection, keep all retrieval anchored to the current workspace. The
+configured `read`, `glob`, `grep` and `repository_inventory` permissions already
+authorize read-only inspection of workspace content; do not ask the user for an
+additional permission merely to inspect files under the workspace.
+
+Use retrieval tools according to their target type:
+
+- use `read` only for a concrete file path, never for a directory such as
+  `repositories`, `/repositories` or a repository root;
+- use `repository_inventory` when repository identity or workspace repository
+  structure is required;
+- use `glob` to discover files or paths when the exact file is not yet known;
+- use `grep` to locate symbols, configuration keys, endpoint paths or other
+  textual evidence.
+
+Prefer workspace-relative paths returned by successful retrieval calls. Do not
+prefix workspace paths with a filesystem root unless a tool result explicitly
+returned that absolute path. In particular, `repositories/...` is a workspace
+path; `/repositories/...` must not be invented as an equivalent filesystem path.
+
+If a retrieval call fails because the target is a directory, malformed or not
+found, recover with `repository_inventory`, `glob` or `grep` as appropriate and
+continue from the evidence already collected. A failed retrieval call is not, by
+itself, evidence that workspace file access requires user approval.
+
+Never replace failed workspace discovery with guessed generic repository names or
+paths such as `repositories/frontend`, `repositories/backend`,
+`repositories/deployment` or `repositories/gateway`. Repository and file names
+must come from workspace evidence. If the requested evidence remains unavailable
+after valid workspace-relative retrieval attempts, report that limitation using
+the paths and facts actually observed rather than proposing invented paths.
+
 Load `workspace-reading` for ordinary retrieval and as a supporting retrieval
 capability when a specialized analysis skill needs workspace evidence.
 
