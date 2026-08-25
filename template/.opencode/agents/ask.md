@@ -100,13 +100,25 @@ directly matched specialized skills in a composite request.
 
 ### Mandatory composite preflight
 
-Before the first repository retrieval tool call, evaluate each explicit clause of
-the user's request independently against the specialized capability triggers
-below. If two or more clauses independently match different specialized
-capabilities, the request is composite and all of those matched skills must be
-loaded before `grep`, `glob`, `read`, `repository_inventory`, `lsp`, Bash,
-`workspace-reading` or `repository-analysis`. Generic retrieval must not be used
-as a substitute for a matched secondary capability.
+The composite preflight is a hard routing boundary, not a recommendation. Perform
+it directly from the user's wording before any workspace discovery or evidence
+collection. Until this preflight is complete, do not call `repository_inventory`,
+`glob`, `grep`, `read`, `lsp`, Bash, `workspace-reading` or
+`repository-analysis`, even to learn enough context to decide which specialized
+skill applies. Skill selection must be based first on the outcomes explicitly
+requested by the user.
+
+Evaluate each explicit clause of the request independently against the specialized
+capability triggers below. If two or more clauses independently match different
+specialized capabilities, the request is composite and all of those matched
+skills must be loaded before the first workspace retrieval call. Generic retrieval
+must not be used as a substitute for a matched secondary capability.
+
+A hypothetical, proposed or planned change is an explicit `impact-analysis`
+outcome when the user also asks what is affected, what may break, what depends on
+the changed element, which consumers or integrations must change, what regression
+risk exists, or what must be checked before making the change. This remains true
+when the same request first asks to explain or trace the current behavior.
 
 Concrete routing examples are normative:
 
@@ -115,9 +127,11 @@ Concrete routing examples are normative:
   `execution-flow-analysis` before repository retrieval; loading only
   `execution-flow-analysis` and reconstructing the configuration chain with
   `grep`/`read` is invalid;
-- "how does operation X propagate, and what would be affected if component Y in
-  that path changed?" requires both `execution-flow-analysis` and
-  `impact-analysis`;
+- "trace operation X, then suppose endpoint/component Y changes and tell me what
+  is affected, what must change or what could break" requires both
+  `execution-flow-analysis` and `impact-analysis` before repository retrieval;
+  loading only `execution-flow-analysis` and later performing a broad reference
+  search for impacted files is invalid;
 - "where does setting X come from, and what could be affected if its semantics
   changed?" requires both `configuration-resolution` and `impact-analysis`;
 - a request that explicitly asks for configuration provenance, affected runtime
@@ -129,6 +143,14 @@ the user explicitly asks for both outcomes. Supporting evidence is incidental
 information needed to answer one outcome; a separately requested explanation,
 resolution or consequence is an outcome and retains ownership by its specialized
 capability.
+
+When `impact-analysis` is composed with `execution-flow-analysis`, the confirmed
+flow nodes, transitions, repositories, interfaces and runtime edges already
+established during the request are the initial evidence set for impact analysis.
+Do not rediscover that flow or restart repository discovery unless a required
+impact edge cannot be established from the existing evidence. Expand outward
+from the confirmed flow toward consumers, integrations, configuration, tests,
+contracts and other affected surfaces only as required by the impact question.
 
 Load `workspace-reading` for ordinary retrieval and as a supporting retrieval
 capability when a specialized analysis skill needs workspace evidence.
