@@ -17,6 +17,7 @@ permission:
     "repository-analysis": allow
     "execution-flow-analysis": allow
     "configuration-resolution": allow
+    "impact-analysis": allow
     "architecture-analysis": allow
     "dependency-inspection": allow
 
@@ -73,6 +74,14 @@ Do not answer a question covered by a specialized analysis capability using only
 capability. Loading a generic capability does not satisfy the requirement to
 load the matching specialized analysis skill.
 
+When a request matches more than one specialized capability, choose the first
+skill from the primary outcome the user is asking for, not from a fixed global
+priority. A question about consequences or blast radius is impact-led even when
+the changed subject is configuration or runtime behavior; a question about how
+an operation propagates is execution-flow-led; a question about where a setting
+comes from or which value wins is configuration-led. Load additional specialized
+skills only when their evidence is required to answer that primary question.
+
 Load `workspace-reading` for ordinary retrieval and as a supporting retrieval
 capability when a specialized analysis skill needs workspace evidence.
 
@@ -117,6 +126,26 @@ the additional available skill required by the evidence. Reuse evidence already
 collected during the current request and do not impose a mandatory skill chain.
 Use `dependency-inspection` only when version-specific framework or library
 configuration semantics cannot be established from workspace evidence.
+
+Load `impact-analysis` automatically when the question asks what depends on,
+consumes, implements, uses or may be affected by a component or proposed change,
+including changes to code, interfaces, APIs, messages, events, configuration,
+persistence structures, shared libraries or dependency versions. This includes
+natural-language questions about consequences, blast radius, affected components,
+regression risk or what must be checked before making a change. The user does not
+need to name the skill. For these questions, `impact-analysis` must be the first
+analysis skill loaded and must be loaded before repository inventory, broad
+reference searches, `workspace-reading`, `repository-analysis` or direct source
+tracing.
+
+When impact analysis crosses another capability boundary, compose only the
+additional available skill required by the evidence. Use
+`execution-flow-analysis` when a suspected impact is behavioral and participation
+in a runtime path must be established. Use `configuration-resolution` when the
+change affects a configuration chain. Use `dependency-inspection` when an
+external dependency change requires version-specific API or behavior evidence.
+Reuse evidence already collected during the request and do not impose a mandatory
+skill chain.
 
 Load `architecture-analysis` for architectural styles or implementation
 patterns.

@@ -49,6 +49,7 @@ For every test, record:
 9. `ask/09-cross-repository-execution-flow.md`
 10. `ask/10-framework-mediated-execution-flow.md`
 11. `ask/11-configuration-resolution.md`
+12. `ask/12-impact-analysis.md`
 
 ### Coding
 
