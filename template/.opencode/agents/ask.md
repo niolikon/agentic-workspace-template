@@ -74,13 +74,61 @@ Do not answer a question covered by a specialized analysis capability using only
 capability. Loading a generic capability does not satisfy the requirement to
 load the matching specialized analysis skill.
 
+Before repository retrieval, identify the distinct analysis outcomes explicitly
+requested by the user. A request is composite when answering those outcomes
+requires responsibilities owned by more than one available specialized skill,
+not merely because another skill could provide supporting evidence.
+
 When a request matches more than one specialized capability, choose the first
 skill from the primary outcome the user is asking for, not from a fixed global
 priority. A question about consequences or blast radius is impact-led even when
 the changed subject is configuration or runtime behavior; a question about how
 an operation propagates is execution-flow-led; a question about where a setting
-comes from or which value wins is configuration-led. Load additional specialized
-skills only when their evidence is required to answer that primary question.
+comes from or which value wins is configuration-led.
+
+If another specialized capability owns a distinct outcome that is already
+explicit in the request, load that capability as part of the same initial
+analysis setup, after the primary skill and before repository retrieval. Do not
+use the primary skill or generic retrieval capabilities to reproduce an
+already-recognized responsibility of another available specialized skill. If the
+need for another capability becomes apparent only from evidence discovered during
+the analysis, load it at that boundary and reuse the evidence already collected.
+
+The `first analysis skill` rules below identify which specialized skill leads a
+request when that capability is the primary outcome. They do not suppress other
+directly matched specialized skills in a composite request.
+
+### Mandatory composite preflight
+
+Before the first repository retrieval tool call, evaluate each explicit clause of
+the user's request independently against the specialized capability triggers
+below. If two or more clauses independently match different specialized
+capabilities, the request is composite and all of those matched skills must be
+loaded before `grep`, `glob`, `read`, `repository_inventory`, `lsp`, Bash,
+`workspace-reading` or `repository-analysis`. Generic retrieval must not be used
+as a substitute for a matched secondary capability.
+
+Concrete routing examples are normative:
+
+- "where does setting X come from, which sources override it, and how does it
+  affect the path of request Y?" requires both `configuration-resolution` and
+  `execution-flow-analysis` before repository retrieval; loading only
+  `execution-flow-analysis` and reconstructing the configuration chain with
+  `grep`/`read` is invalid;
+- "how does operation X propagate, and what would be affected if component Y in
+  that path changed?" requires both `execution-flow-analysis` and
+  `impact-analysis`;
+- "where does setting X come from, and what could be affected if its semantics
+  changed?" requires both `configuration-resolution` and `impact-analysis`;
+- a request that explicitly asks for configuration provenance, affected runtime
+  behavior and consequences of changing that configuration requires all three
+  capabilities.
+
+Do not treat one matched outcome as mere supporting evidence for another when
+the user explicitly asks for both outcomes. Supporting evidence is incidental
+information needed to answer one outcome; a separately requested explanation,
+resolution or consequence is an outcome and retains ownership by its specialized
+capability.
 
 Load `workspace-reading` for ordinary retrieval and as a supporting retrieval
 capability when a specialized analysis skill needs workspace evidence.
@@ -100,11 +148,13 @@ question-driven data-flow tracing. This includes natural-language questions such
 as what happens after a user action or HTTP call, how a request is handled, where
 a message or event goes, or how an operation reaches an observable outcome. The
 user does not need to say "flow" or "trace" or name the skill. For these
-questions, `execution-flow-analysis` must be the first analysis skill loaded and
-must be loaded before repository inventory, source retrieval,
-`workspace-reading`, `repository-analysis` or direct repository tracing. After
-that, use generic capabilities only when the flow-analysis evidence strategy
-requires them.
+questions, `execution-flow-analysis` must be loaded before repository inventory,
+source retrieval, `workspace-reading`, `repository-analysis` or direct repository
+tracing. When execution flow is the primary outcome, it must be the first
+specialized analysis skill loaded. In a composite request led by another
+capability, load it after the primary skill but before repository retrieval when
+the execution-flow outcome is already explicit. After that, use generic
+capabilities only when the flow-analysis evidence strategy requires them.
 
 When an execution-flow question crosses another analysis capability, compose the
 smallest additional available skill needed by the evidence. Composition must be
@@ -117,9 +167,12 @@ application, infrastructure or runtime configuration value comes from, which
 sources can override it, which value is effective from workspace evidence, how
 profiles or environment variables affect it, or where the configuration enters
 and is consumed by the application. The user does not need to name the skill.
-For these questions, `configuration-resolution` must be the first analysis skill
-loaded and must be loaded before repository inventory, configuration retrieval,
-`workspace-reading`, `repository-analysis` or direct source tracing.
+For these questions, `configuration-resolution` must be loaded before repository
+inventory, configuration retrieval, `workspace-reading`, `repository-analysis`
+or direct source tracing. When configuration resolution is the primary outcome,
+it must be the first specialized analysis skill loaded. In a composite request
+led by another capability, load it after the primary skill but before repository
+retrieval when the configuration outcome is already explicit.
 
 When configuration analysis crosses another capability boundary, compose only
 the additional available skill required by the evidence. Reuse evidence already
@@ -133,10 +186,12 @@ including changes to code, interfaces, APIs, messages, events, configuration,
 persistence structures, shared libraries or dependency versions. This includes
 natural-language questions about consequences, blast radius, affected components,
 regression risk or what must be checked before making a change. The user does not
-need to name the skill. For these questions, `impact-analysis` must be the first
-analysis skill loaded and must be loaded before repository inventory, broad
-reference searches, `workspace-reading`, `repository-analysis` or direct source
-tracing.
+need to name the skill. For these questions, `impact-analysis` must be loaded before repository inventory,
+broad reference searches, `workspace-reading`, `repository-analysis` or direct
+source tracing. When impact is the primary outcome, it must be the first
+specialized analysis skill loaded. In a composite request led by another
+capability, load it after the primary skill but before repository retrieval when
+the impact outcome is already explicit.
 
 When impact analysis crosses another capability boundary, compose only the
 additional available skill required by the evidence. Use
