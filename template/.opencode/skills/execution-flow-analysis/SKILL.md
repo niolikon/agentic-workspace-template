@@ -238,6 +238,137 @@ Possible outcomes include:
 Distinguish an invoked persistence API from a guaranteed durable result when
 transactional or provider behaviour has not been established.
 
+## Mandatory integration-boundary checkpoint
+
+When an execution flow crosses a repository or deployable-component boundary, target selection is a mandatory checkpoint, not an optional refinement.
+
+Follow this procedure in order:
+
+1. Trace inside the currently confirmed component only until the flow reaches an external boundary such as an HTTP endpoint, gateway route, queue/topic, service name, RPC destination, scheduled hand-off, or another explicit integration contract.
+2. Record the boundary contract and stop tracing implementation internals beyond that boundary.
+3. Determine which deployed component actually receives that contract using the strongest available workspace evidence. Prefer, when applicable:
+   - gateway, ingress, reverse-proxy, or API routing;
+   - deployment and orchestration configuration;
+   - message broker bindings or destination configuration;
+   - repository-relationship knowledge backed by current workspace evidence;
+   - explicit client-to-service integration configuration.
+4. If repository inventory or workspace structure shows an orchestration/deployment repository, inspect the relevant routing or deployment evidence before selecting among implementation candidates.
+5. Only after the integration evidence selects a target may the analysis continue into that target's controller, handler, service, repository, persistence, mapper, middleware, or framework internals.
+6. Reuse the selected boundary and target as confirmed evidence for the remainder of the flow. Do not rediscover the same binding unless later evidence contradicts it.
+
+A source match is not a deployment binding. Finding a controller, handler, route annotation, interface implementation, or method whose name/path matches the boundary only creates an **implementation candidate**. It does not confirm that runtime execution reaches that candidate.
+
+If multiple candidates expose the same or compatible contract:
+
+- do not choose the first search result;
+- do not deep-inspect any candidate merely to decide which one is active;
+- resolve the integration binding first;
+- follow only the selected target as the confirmed flow;
+- mention unselected candidates only when useful, clearly labeling them as alternatives not proven to participate in the requested flow.
+
+If the workspace does not contain enough evidence to select a target, keep the boundary unresolved and present the plausible candidates. Do not turn one candidate into a confirmed edge by inference.
+
+### Exploration budget at unresolved boundaries
+
+Protect the analysis budget at cross-repository boundaries.
+
+Before a target is selected, allowed work should be limited to evidence needed to resolve the binding: repository inventory, relationship knowledge, deployment/orchestration files, gateway/proxy/ingress configuration, message bindings, and shallow inspection of candidate entry-point declarations when necessary.
+
+Before target selection, **do not read** candidate service implementations, repositories, persistence/database code, mappers, middleware, migrations, exception handling, framework internals, or other downstream implementation details.
+
+For example, if an Angular client calls `/api/Todos` and both Java and .NET repositories expose `/api/Todos`, neither controller is sufficient evidence of the runtime target. Resolve the deployment edge first. If APISIX routes `/api/Todos` to `taskboard-service-boot`, continue through the Java implementation and treat the .NET implementation only as an unselected alternative.
+
+This checkpoint applies to execution-flow analysis itself. Reading deployment, gateway, proxy, or orchestration configuration to establish a runtime edge does not by itself require `configuration-resolution`; that capability is needed only when the user's outcome requires configuration provenance, precedence, effective-value resolution, or equivalent configuration-specific analysis.
+
+## Cross-repository target disambiguation
+
+When the same operation or endpoint appears to have multiple candidate receiving
+implementations, do not select a target repository merely because its source
+contains a matching route, controller, handler, interface or contract. A matching
+inbound implementation proves only that the repository can handle that shape of
+request; it does not prove that the execution path being analyzed reaches it.
+
+Before continuing into the internals of a candidate receiving repository, establish
+the integration edge that selects that target when practical. Prefer evidence such
+as:
+
+1. deployment or orchestration configuration naming the receiving service;
+2. gateway, ingress, proxy or service-routing configuration mapping the outbound
+   address/path to a concrete target;
+3. message/topic/queue bindings that select a concrete consumer;
+4. repository-relationship or workspace knowledge backed by current implementation
+   evidence;
+5. only then, matching inbound routes or handlers as supporting evidence.
+
+For example, finding both a Java controller and a .NET controller for `/api/Todos`
+does not establish two equivalent runtime branches. If deployment or gateway
+evidence routes `/api/Todos` to the Java service, trace that service as the confirmed
+flow and treat the .NET implementation only as an alternative implementation
+present in the workspace unless other evidence selects it.
+
+If the selecting integration edge cannot be resolved:
+
+- do not promote the first matching implementation to the confirmed flow;
+- keep the boundary unresolved or present the candidates explicitly;
+- inspect each candidate internally only when doing so materially helps answer the
+  question despite the unresolved selection.
+
+This disambiguation is part of execution-flow reconstruction and does not by itself
+require configuration-resolution. Reading deployment, gateway or routing
+configuration as evidence of a runtime transition remains within this skill's
+responsibility.
+
+### Disambiguate before deep inspection
+
+Treat target selection as a hard boundary in the exploration strategy. Once more
+than one receiving implementation is discovered for the same outbound operation,
+route, topic, queue or contract, stop deep inspection of those candidates until
+the selecting integration edge has been resolved as far as workspace evidence
+allows.
+
+Before a target is selected, do not spend exploration budget reading candidate
+service layers, repositories, persistence implementations, migrations, DTO
+mappings or other internal details merely to decide which implementation is
+active. At this stage, inspect only the minimum inbound evidence needed to
+identify the candidates, then move outward to the evidence that selects among
+them.
+
+Prefer the following exploration sequence when multiple targets are plausible:
+
+1. record the outbound address/path/topic/contract already established;
+2. identify the candidate receiving repositories using shallow evidence only;
+3. inspect deployment, orchestration, gateway, ingress, proxy, service discovery,
+   message binding or repository-relationship evidence that can select a target;
+4. select the confirmed target, or preserve the boundary as unresolved if no
+   selector can be established;
+5. only then continue into the selected target's controller/handler, service,
+   repository and persistence path.
+
+A shallow candidate check should normally stop after confirming a matching inbound
+route, handler, listener or contract. Reading several internal layers of a
+non-selected candidate is unnecessary unless the user explicitly asks to compare
+implementations or the unresolved candidates themselves materially affect the
+answer.
+
+### Exploration budget
+
+Preserve tool-call budget for evidence that can change the reconstructed path.
+Do not exhaust the analysis by exploring implementation details of branches that
+have not been selected by runtime/integration evidence. In particular:
+
+- do not follow controller -> service -> repository -> persistence for every
+  matching backend candidate;
+- do not inspect migrations, database internals or DTO mappings before the target
+  repository is selected unless those details are directly required by the user;
+- prefer one focused routing/orchestration lookup over several speculative deep
+  dives;
+- once a target is selected, continue only along the shortest evidence-backed path
+  needed to reach the requested observable effect.
+
+If the tool-call budget becomes constrained, prioritize completing the confirmed
+end-to-end path over investigating alternative implementations, incidental
+security details, serialization minutiae or unrelated anomalies.
+
 ## Cross-repository continuation
 
 Do not stop at a repository boundary when evidence shows the same operation
