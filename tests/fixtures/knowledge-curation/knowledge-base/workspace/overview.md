@@ -18,6 +18,19 @@ Repositories discovered (canonical logical repositories covered in this initiali
 See repository overviews under `knowledge-base/repositories/` for per-repository
 responsibilities, build systems and primary evidence paths.
 
+## Repository coverage
+
+| Repository | State | Knowledge artifact | Notes |
+|---|---:|---|---|
+| TaskBoard.App.Ng | analysed | repositories/TaskBoard.App.Ng/overview.md | Existing validated state. |
+| TaskBoard.Authenticator.Boot | analysed | repositories/TaskBoard.Authenticator.Boot/overview.md | Existing validated state. |
+| TaskBoard.DropStack.Boot | not analysed |  | Deliberately remains not analysed even though a repository overview exists. |
+| TaskBoard.Framework.Boot | analysed | repositories/TaskBoard.Framework.Boot/overview.md | Existing validated state. |
+| TaskBoard.Framework.Core | analysed | repositories/TaskBoard.Framework.Core/overview.md | Existing validated state. |
+| TaskBoard.Service.Boot | analysed | repositories/TaskBoard.Service.Boot/overview.md | Existing validated state. |
+| TaskBoard.Service.Core | partially analysed | repositories/TaskBoard.Service.Core/overview.md | Existing validated state must not be promoted by curation. |
+| TaskBoard.Zone.Boot | referenced, not analysed | repositories/TaskBoard.Zone.Boot/overview.md | Existing validated state must be preserved. |
+
 Navigation
 
 - [Workspace architecture](./architecture-legacy.md)

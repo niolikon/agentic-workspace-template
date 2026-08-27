@@ -1,6 +1,6 @@
 # Knowledge curation intentional-defect test plan
 
-This fixture is based on the original TaskBoard knowledge base and contains four deliberate defects. Run `/knowledge-curate` with no source-analysis request.
+This fixture is based on the original TaskBoard knowledge base and contains four deliberate curation defects plus repository-coverage guard data. Run `/knowledge-curate` with no source-analysis request.
 
 ## Defect A — broken internal link
 
@@ -33,6 +33,26 @@ Location: `knowledge-base/workspace/runtime-reference-legacy.md`
 This deliberately monolithic note mixes architecture, orchestration, execution/data flow, authentication, gateway, repository relationships, a decision, and unresolved questions. Its claims are derived from existing knowledge and overlap canonical workspace documents.
 
 Expected: reorganize it conservatively. Acceptable outcomes include consolidating unique/evidence-bearing details into canonical workspace documents and removing/replacing the legacy note with navigation, or splitting only where that produces clearer canonical responsibilities. It should NOT simply preserve the monolith unchanged if it recognizes the overlap/size problem, and it must not discard evidence, confidence, or unresolved qualifications.
+
+## Repository coverage guard
+
+Location: `knowledge-base/workspace/overview.md`
+
+The fixture contains a valid `## Repository coverage` table. In particular,
+`TaskBoard.DropStack.Boot` is deliberately recorded as `not analysed` even
+though `knowledge-base/repositories/TaskBoard.DropStack.Boot/overview.md`
+exists, and other rows retain weaker-than-analysed states intentionally.
+
+Expected: curation may repair navigation or otherwise improve non-coverage
+content in the overview, but the complete coverage table must remain unchanged.
+The presence of repository overview files must not promote coverage state.
+
+For the inconsistent-coverage validation, make a temporary copy of this fixture
+and add a second `TaskBoard.DropStack.Boot` row with a contradictory state.
+Expected: `/knowledge-curate` reports a repository-coverage consistency problem,
+does not choose a replacement state from repository knowledge, and leaves the
+coverage section untouched while continuing unrelated safe curation when
+possible.
 
 ## Critical negative checks
 

@@ -40,7 +40,12 @@ needed for that validation and inspect the smallest relevant source set.
    neighboring documents; do not declare curation complete while inventoried
    files remain uninspected;
 3. identify repository and workspace entry points and their outgoing links;
-4. detect duplicated or substantially overlapping knowledge;
+   when `knowledge-base/workspace/overview.md` contains the exact
+   `## Repository coverage` heading, snapshot that complete section as protected
+   cumulative state before planning any overview edit;
+4. detect duplicated or substantially overlapping knowledge, excluding
+   repository-coverage rows/state from free-form duplicate or consolidation
+   decisions;
 5. detect unnecessarily fragmented or mixed-purpose oversized documents;
 6. identify broken internal relative Markdown links;
 7. identify inconsistent names or organization that materially hurt
@@ -89,6 +94,9 @@ needed for that validation and inspect the smallest relevant source set.
     `knowledge-base/` unless the user explicitly requested a persistent
     audit/history artifact;
 16. update affected repository and workspace indexes after structural changes;
+    for `workspace/overview.md`, edit only outside the protected
+    `## Repository coverage` section and never reconstruct coverage from
+    repository knowledge artifacts;
 17. after every successful write, re-read the complete affected file and run
     the post-write validation checklist from `safe-file-writing`; a `read`
     alone is not verification;
@@ -110,10 +118,16 @@ needed for that validation and inspect the smallest relevant source set.
     broken link, perform an observable exact search for the old target and require
     zero remaining matches before reporting the repair successful, then verify the
     new target exists;
-22. verify that all inventoried Markdown files were inspected and that evidence
+22. if `workspace/overview.md` was modified, extract its complete
+    `## Repository coverage` section after the final write and compare it with
+    the pre-write snapshot; require the section, repository states, knowledge
+    artifact references and notes to remain unchanged. If an obvious coverage
+    inconsistency was observed, report it without repairing or inferring a
+    replacement state from curated Markdown;
+23. verify that all inventoried Markdown files were inspected and that evidence
     references, conflicts, confidence and unresolved questions remain
     preserved;
-23. close the candidate queue: compute `disposed_candidate_count` and require
+24. close the candidate queue: compute `disposed_candidate_count` and require
     `disposed_candidate_count == candidate_count` before reporting curation
     complete. If any candidate remains pending, report it explicitly as
     incomplete work and do not claim completion.
@@ -123,6 +137,15 @@ needed for that validation and inspect the smallest relevant source set.
 - Never modify repositories or primary-source documentation.
 - Never write outside `knowledge-base/`.
 - Never regenerate the knowledge base from scratch.
+- Treat `workspace/overview.md` repository coverage as protected cumulative
+  state during curation. Do not directly add, remove, merge, reorder or change
+  coverage rows, states, artifact references or notes with generic Markdown
+  editing.
+- Do not infer coverage from generated repository knowledge. In particular, a
+  repository `overview.md` does not imply that repository is `analysed`.
+- If coverage appears inconsistent, report the consistency problem; do not
+  repair it by deriving replacement states from the knowledge base being
+  curated.
 - Never discard evidence-backed information.
 - Preserving only representative evidence is insufficient: all unique evidence
   and its associated nuance must survive a consolidation.
@@ -170,6 +193,8 @@ Report:
   including `evidence: verified/expected` for every destructive consolidation;
 - duplicate or navigation problems resolved;
 - broken links repaired or left unresolved;
+- repository-coverage preservation status when `workspace/overview.md` was
+  changed, and any coverage consistency problem observed without repair;
 - any evidence-preservation concern, plus exact failed-write counts
   (`attempts`, `recovered`, `unresolved`), or explicit zero counts;
 - incomplete or uninspected curation work.
