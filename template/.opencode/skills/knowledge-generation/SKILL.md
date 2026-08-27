@@ -90,10 +90,16 @@ Do not duplicate the complete submodule inventory in both locations.
 
 ## Repository coverage
 
-Create repository-specific knowledge for every confirmed Git repository
-returned by `repository_inventory`.
+For full-workspace initialization, create repository-specific knowledge for every
+confirmed Git repository returned by `repository_inventory`.
 
-Repository documentation is required regardless of whether the repository:
+For scoped initialization, keep the full inventory visible for coverage but
+create or deepen repository-specific knowledge only for repositories in the
+requested detailed analysis scope. An out-of-scope repository may appear in
+workspace relationship knowledge without receiving repository-local analysis.
+
+Repository documentation, when the repository is in the detailed analysis
+scope, is required regardless of whether the repository:
 
 - participates in an orchestrated system;
 - is a standalone application;
@@ -104,6 +110,28 @@ Repository documentation is required regardless of whether the repository:
 
 Do not use cross-repository relationships as a prerequisite for repository
 documentation.
+
+### Coverage state
+
+Keep repository coverage observable in existing workspace knowledge, preferably
+in `knowledge-base/workspace/overview.md`. Use the simplest representation that
+fits the existing document, such as a compact Markdown table.
+
+Distinguish:
+
+- `analysed`;
+- `partially analysed`;
+- `referenced, not analysed`;
+- `not analysed`.
+
+Coverage is cumulative across initialization runs. Preserve prior validated
+coverage and strengthen it only when new evidence supports the stronger state.
+A discovered relationship is evidence for `referenced, not analysed`, never by
+itself for `analysed`.
+
+Coverage entries should link to repository knowledge when it exists and should
+remain traceable to actual initialization evidence. Do not create placeholder
+repository directories merely to represent uninspected repositories.
 
 ## Document responsibility
 

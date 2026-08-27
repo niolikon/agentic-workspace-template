@@ -74,6 +74,7 @@ Load `business-rule-analysis` whenever the task involves:
   source reanalysis unless explicitly requested;
 - separate workspace-level knowledge from repository-specific knowledge;
 - update existing knowledge incrementally;
+- preserve repository coverage across incremental initialization scopes;
 - preserve traceability to workspace-relative source paths;
 - distinguish confirmed facts, informal notes, inferences and unresolved
   questions;
@@ -157,7 +158,10 @@ starting substantive analysis.
 The task list should cover:
 
 - the major workflow phases;
-- every canonical repository in scope.
+- every canonical repository in the requested detailed analysis scope.
+
+Repositories outside a scoped initialization remain coverage context, not
+required repository-analysis tasks.
 
 Update the task list as each repository and phase is completed.
 

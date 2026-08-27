@@ -71,7 +71,16 @@ PowerShell or Git commands.
 Filesystem and Git commands may be used only to investigate details that are
 not already provided by the tool or to diagnose a tool failure.
 
-Never replace or narrow the repository set returned by `repository_inventory`.
+Never replace or narrow the authoritative repository set returned by
+`repository_inventory`. A command may define a smaller detailed-analysis scope,
+but the remaining inventory entries must stay visible as workspace repositories
+for validation, relationship awareness and coverage reporting.
+
+For `knowledge-init`, repository identifiers supplied by the user refer to
+immediate child directories under `repositories/`. Validate those identifiers
+against the filesystem and authoritative inventory before detailed inspection.
+Do not reinterpret a nested repository name or a similarly named checkout as an
+explicitly selected top-level repository.
 
 ## Repository identity
 
