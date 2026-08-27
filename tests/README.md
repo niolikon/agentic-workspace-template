@@ -50,6 +50,7 @@ For every test, record:
 10. `ask/10-framework-mediated-execution-flow.md`
 11. `ask/11-configuration-resolution.md`
 12. `ask/12-impact-analysis.md`
+13. `ask/13-verbose-dependency-resolution.md`
 
 ### Coding
 

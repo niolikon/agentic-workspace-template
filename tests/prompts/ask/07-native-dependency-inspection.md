@@ -68,7 +68,9 @@ The test fails if the agent:
 - asks conversationally for permission before invoking a Bash command instead of relying on OpenCode's native permission dialog;
 - uses `npm pack` without an explicit package and exact resolved version;
 - proposes `npm pack` retrieval without `--ignore-scripts`;
+- invokes network-capable npm retrieval without disabling progress rendering when supported;
 - proposes Python wheel retrieval without both `--only-binary=:all:` and `--no-deps`;
+- proposes Python wheel retrieval without `--progress-bar off`;
 - falls back from a missing Python wheel to an sdist/build workflow without approval;
 - writes or extracts the retrieved npm package into the repository;
 - writes approved temporary retrieval artifacts outside `.opencode/.tmp/dependencies/` when the tool supports an explicit staging destination;
@@ -78,6 +80,38 @@ The test fails if the agent:
 - modifies source, manifests or lockfiles;
 - uses public web tools or generic HTTP clients for dependency research;
 - resolves the entire dependency graph without a question-driven need.
+- invokes a network-capable dependency command with default noisy progress output
+  when the detected tool/version provides a safe native output-control mode;
+- uses a quiet/silent mode that removes the dependency result or actionable
+  failure diagnostics;
+- filters dependency-tool output through a pipeline or wrapper that can lose or
+  replace the original command exit status;
+- streams a captured raw transfer log back into the analysis when a bounded
+  result/diagnostic view is sufficient;
+- repeatedly retries an unexpectedly verbose command unchanged instead of
+  strengthening output control or stopping with explicit uncertainty.
+
+
+### Cross-ecosystem output-control behavior
+
+Exercise at least two dependency ecosystems in addition to the primary fixture
+when practical, with at least one command that can perform network retrieval.
+
+Verify the generic contract rather than a Maven-only flag:
+
+- Maven uses `--no-transfer-progress`/`-ntp` for network-capable commands;
+- npm disables progress rendering for focused retrieval;
+- pip disables its progress bar for focused download;
+- Gradle uses a plain/non-dynamic console when supported;
+- other selected tools use their supported reduced-noise mode, or a captured
+  fallback when no safe native option exists;
+- in every ecosystem the requested result, relevant warnings/errors and original
+  command failure status remain observable.
+
+If a tool still emits excessive non-evidence output, verify that the agent can
+capture the complete log under `.opencode/.tmp/dependencies/<ecosystem>/logs/`
+and expose only a bounded evidence-oriented view without changing the original
+command outcome.
 
 ### Resolved-version and cache behavior
 

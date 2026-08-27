@@ -62,6 +62,117 @@ Use this order where applicable:
 Stop as soon as sufficient evidence exists. Never resolve the whole dependency
 graph merely because an inspection mechanism is available.
 
+## Dependency-tool output control
+
+Dependency commands must be optimized for **evidence density**, not silence.
+Output control is a mandatory part of command construction for every dependency
+tool, not an ecosystem-specific optimization.
+
+Before invoking any command that may resolve, download, restore, fetch or inspect
+external dependencies, choose an output profile:
+
+1. **focused result** — use the narrowest query that directly returns the
+   requested dependency information;
+2. **controlled retrieval** — when network/materialization is required, disable
+   transfer progress, animations, dynamic consoles and other repetitive status
+   output using native tool options whenever available;
+3. **captured fallback** — when native controls are unavailable or known to be
+   insufficient, capture complete stdout/stderr under
+   `.opencode/.tmp/dependencies/<ecosystem>/logs/`, then emit only a bounded
+   evidence-oriented view while preserving the dependency command's original
+   exit status.
+
+A network-capable dependency command must not be invoked with its default noisy
+output mode when the selected tool/version provides a safer no-progress, plain
+console or reduced-verbosity mode that preserves required evidence.
+
+### Output-control contract
+
+For every dependency-tool invocation:
+
+1. determine whether the command itself produces requested evidence or merely
+   prepares/materializes that evidence;
+2. keep normal result output when it is the evidence being requested;
+3. suppress only non-evidence transport/progress output by default;
+4. preserve warnings and errors needed to diagnose dependency resolution,
+   authentication, repository, configuration and command failures;
+5. never use global quiet/silent modes when they would hide the requested result
+   or actionable diagnostics;
+6. never redirect all stderr away;
+7. never use a filtering pipeline whose reported success can differ from the
+   dependency command's real exit status;
+8. if capture/filtering is required, explicitly retain the original exit status,
+   print the relevant bounded result/diagnostic excerpt, then finish with the
+   original status;
+9. do not stream the captured raw log back into the analysis after successful
+   filtering merely because it exists; inspect the raw log only when a concrete
+   failure requires additional diagnostics.
+
+The bounded view should prioritize, in this order:
+
+- the exact dependency/result requested by the inspection;
+- command failure summary and exit status;
+- artifact/repository/authentication/configuration errors;
+- warnings materially relevant to the inspection;
+- a small amount of surrounding context when needed to interpret the result.
+
+Do not include repetitive download percentages, progress bars, spinner frames,
+per-file transfer ticks or long repeated status records unless one of them is
+itself required to diagnose the failure.
+
+### Native output adapters
+
+Use repository-selected tooling and adapt output control to the detected
+tool/version. Known safe defaults include:
+
+- **Maven**: add `--no-transfer-progress`/`-ntp` to network-capable commands;
+  normally combine with `--batch-mode`; do not use `-q` when INFO-level goal
+  output is the requested evidence;
+- **Gradle**: prefer `--console=plain` for dependency-oriented commands when
+  supported; avoid `--quiet` when task output contains the requested evidence;
+- **npm**: use `--progress=false` for network-capable retrieval and keep scripts
+  disabled for inspection-oriented packaging;
+- **pip**: use `--progress-bar off` and normally
+  `--disable-pip-version-check` for focused downloads;
+- **Yarn / pnpm**: use the selected client's supported non-dynamic/no-progress
+  reporter or equivalent option when available; do not invent flags from a
+  different major version;
+- **NuGet / dotnet**: use the narrowest supported verbosity that retains warnings
+  and errors; avoid diagnostic verbosity unless troubleshooting a concrete
+  failure;
+- **Go**: prefer focused/module-specific or machine-readable output such as
+  `-json` when it directly serves the inspection; normal module tooling usually
+  does not require transfer-progress suppression;
+- **Cargo**: `--quiet` is acceptable only for retrieval/status noise when errors
+  remain visible and the command's normal output is not itself the requested
+  evidence.
+
+If support for an output-control option depends on the installed tool version,
+derive support from repository metadata, wrapper/tool version or focused local
+help rather than guessing. If no safe native option exists, use the captured
+fallback instead of accepting an unbounded progress stream.
+
+### Verbose-command recovery
+
+If a command still produces unexpectedly large output despite the selected
+profile:
+
+1. do not immediately rerun the same command unchanged;
+2. identify whether the excess output is progress noise or evidence;
+3. switch to a stronger native output-control mode when safe, otherwise use the
+   captured fallback;
+4. retry only when the next command materially improves output control or fixes a
+   specific diagnosed failure;
+5. do not cycle through equivalent dependency commands merely to obtain the same
+   artifact or answer;
+6. when bounded diagnostics are insufficient to repair the failure, stop and
+   report explicit uncertainty instead of consuming the analysis context with
+   repeated tool output.
+
+This policy applies equally to Maven, Gradle, npm, Yarn, pnpm, Python package
+tools, NuGet/.NET, Go, Cargo and future dependency tooling. Ecosystem guidance
+below refines this contract but must not weaken it.
+
 ## Native Bash permission contract
 
 Permission handling belongs to OpenCode, not to the agent conversation.
@@ -213,6 +324,53 @@ If the user's question does not require independent resolution verification, it
 is acceptable to inspect the cached artifact corresponding to the declared
 version, provided the answer clearly states that boundary.
 
+## Critical post-resolution cache rule
+
+After a native dependency query establishes the exact resolved version, check the
+selected ecosystem's local cache again **before** issuing any retrieval command.
+Resolution and retrieval are separate steps: a dependency tree, lockfile restore,
+metadata query or equivalent operation may populate the cache as a side effect.
+
+Use this sequence for every ecosystem:
+
+1. establish the exact resolved dependency/version;
+2. immediately locate that exact artifact and any matching source/documentation
+   artifact in repository-local storage or the native local cache;
+3. do not issue a retrieval command until this post-resolution cache check has
+   completed;
+4. inspect cached evidence in place when it is sufficient, using direct file/archive
+   inspection rather than retrieval or staging;
+5. retrieve/materialize only the specific missing artifact when the cache check
+   proves the required evidence absent or insufficient;
+6. after any retrieval failure, check the cache once more before trying a fallback.
+
+Do not assume that an artifact which was absent before resolution is still absent
+after resolution. Do not issue a download/get/copy/restore command merely because
+that was the originally planned next step.
+
+This rule is ecosystem-neutral. Apply it to Maven local repositories, Gradle caches,
+npm/Yarn/pnpm stores, Python package caches/environments, NuGet global packages, Go
+module caches, Cargo registries/git caches and equivalent future dependency stores.
+Use toolchain evidence to locate caches; do not guess paths when the native tool can
+report them safely.
+
+## Critical fallback-budget rule
+
+Troubleshooting must be evidence-driven and bounded across all dependency tools.
+After a focused dependency operation fails:
+
+1. classify the failure before choosing another command;
+2. re-check local/cache evidence that the failed operation may have materialized;
+3. attempt at most one equivalent retrieval fallback unless the latest diagnostic
+   identifies a new, specific and correctable cause;
+4. prefer inspection of newly available local evidence over another network call;
+5. stop with explicit uncertainty when additional equivalent commands would only
+   repeat the same failure.
+
+A change of command spelling, plugin goal, wrapper, output path or package-manager
+subcommand does not by itself justify another attempt. The next operation must be
+expected to produce new evidence or correct a diagnosed cause.
+
 ## Critical retrieval retry rule
 
 After any retrieval command fails, re-evaluate existing local evidence before
@@ -233,16 +391,30 @@ continue the analysis.
 
 ## Archive inspection fallback
 
-For ZIP-compatible dependency artifacts such as JAR and NUPKG files:
+For ZIP-compatible dependency artifacts such as JAR and NUPKG files, use a
+deterministic inspection ladder and stop at the first mechanism that works:
 
-1. prefer direct inspection without copying or extracting when possible;
-2. use an ecosystem-native archive tool when available;
-3. otherwise use an already-available ZIP API/tool;
-4. avoid renaming or copying an archive solely to satisfy a filename-extension
-   restriction when direct archive reading is possible.
+1. prefer direct inspection of the cached artifact without copying or extracting;
+2. prefer a simple already-available generic archive command that can read the
+   format directly, such as `tar -tf` to locate entries and `tar -xOf` to read a
+   selected entry without materializing the archive;
+3. otherwise use an ecosystem-native archive tool already proven available;
+4. otherwise use an already-available ZIP API/tool with a minimal command that
+   avoids shell-variable interpolation and nested scripting where possible;
+5. only copy, rename or fully extract the archive when direct entry inspection is
+   genuinely unavailable or insufficient for the evidence required.
 
-On Windows, PowerShell/.NET `System.IO.Compression.ZipFile` is an acceptable
-fallback for direct JAR/NUPKG entry inspection.
+Do not troubleshoot multiple archive mechanisms speculatively. A failed archive
+command consumes the same fallback budget as another dependency-inspection
+operation: classify the failure, choose one materially different mechanism, and
+stop trying alternatives once the required entry can be inspected.
+
+On Windows, prefer simple commands that avoid nested PowerShell quoting and
+variable interpolation when an equivalent archive reader is already available.
+For example, when `tar` can read the JAR/NUPKG directly, prefer `tar -tf` /
+`tar -xOf` over copying a `.jar` to `.zip`, `Expand-Archive`, or a dynamically
+constructed PowerShell/.NET script. `System.IO.Compression.ZipFile` remains an
+acceptable fallback when a simpler direct reader is unavailable.
 
 ## Critical cache-first inspection rule
 
@@ -455,13 +627,28 @@ For Maven repositories:
 3. inspect the artifact in `~/.m2/repository` in place when it already exists;
 4. only if the required artifact/source artifact is missing, invoke the narrowest
    Maven retrieval command;
-5. direct any artifact intentionally copied for inspection to
+5. add `--no-transfer-progress` (or `-ntp`) to Maven commands that may resolve or
+   download artifacts, and prefer `--batch-mode` for non-interactive inspection;
+6. do **not** add `--quiet`/`-q` when the requested evidence is emitted at Maven's
+   normal INFO level, for example `dependency:tree`;
+7. direct any artifact intentionally copied for inspection to
    `.opencode/.tmp/dependencies/maven/`, never to `target/` or another repository
    directory;
-6. invoke Maven directly and let OpenCode's native Bash permission system handle
+8. invoke Maven directly and let OpenCode's native Bash permission system handle
    any approval dialog.
 
-Do not stop before step 6 to ask the user for conversational approval.
+For example, a focused artifact retrieval should use the equivalent of:
+
+```text
+mvn --batch-mode --no-transfer-progress dependency:get -Dartifact=<coordinates> -Dtransitive=false
+```
+
+The exact goal and arguments must still be derived from the current question.
+`--no-transfer-progress` suppresses transfer-progress noise without turning Maven
+into a silent process; failures, repository/authentication errors and the goal's
+useful output remain available.
+
+Do not stop before step 8 to ask the user for conversational approval.
 
 
 ## Workspace-local staging
@@ -490,11 +677,18 @@ may still be inspected read-only when the current permission model allows it.
 Respect the package manager selected by repository metadata and lockfiles. Check
 `node_modules` and available local cache evidence before attempting retrieval.
 
+Disable progress rendering when the selected client supports it. For npm, prefer
+`--progress=false` on retrieval commands that may contact the registry. Keep the
+normal warning/error channel unless a narrower log level has been verified not to
+hide evidence required by the current inspection. For Yarn or pnpm, prefer their
+plain/non-dynamic reporter or no-progress mode when supported by the repository's
+selected client version; do not assume flags from another major version.
+
 For npm, a constrained retrieval such as the following is appropriate when the
 exact version is known:
 
 ```text
-npm pack <package>@<exact-version> --ignore-scripts --pack-destination .opencode/.tmp/dependencies/npm
+npm pack <package>@<exact-version> --ignore-scripts --progress=false --pack-destination .opencode/.tmp/dependencies/npm
 ```
 
 Invoke the command normally; OpenCode's native Bash permission policy decides whether it may run. Keep `--ignore-scripts`; never use bare
@@ -510,10 +704,11 @@ Respect the package/environment strategy declared by the repository. Prefer an
 already-installed distribution or local cache first.
 
 When an exact version is known and a wheel is sufficient, a constrained command
-may be proposed:
+may be proposed. Disable pip's transfer progress and version-check chatter while
+retaining normal diagnostics:
 
 ```text
-python -m pip download <package>==<exact-version> --only-binary=:all: --no-deps --dest .opencode/.tmp/dependencies/python
+python -m pip download <package>==<exact-version> --only-binary=:all: --no-deps --progress-bar off --disable-pip-version-check --dest .opencode/.tmp/dependencies/python
 ```
 
 Invoke it through the normal Bash tool and let OpenCode enforce its native permission boundary. Keep `--only-binary=:all:` and `--no-deps` so
@@ -527,29 +722,42 @@ Use `pom.xml`, Gradle metadata, lock/dependency information and local caches
 first. Prefer repository wrappers when they exist.
 
 Commands that resolve or download Maven/Gradle artifacts must be invoked through the normal Bash tool; OpenCode handles approval.
-Project/plugin evaluation may execute code, so describe that possibility before
-running the command. Avoid full build/test lifecycle commands when a narrower
-dependency-oriented command is sufficient.
+For Maven, use `--no-transfer-progress`/`-ntp` for network-capable inspection
+commands. For Gradle, prefer a plain console such as `--console=plain` when the
+selected Gradle version supports it so dynamic progress rendering does not flood
+tool output. Do not add `--quiet` merely to reduce volume when task output is the
+evidence being requested. Project/plugin evaluation may execute code, so
+describe that possibility before running the command. Avoid full build/test
+lifecycle commands when a narrower dependency-oriented command is sufficient.
 
 ### .NET / NuGet
 
 Use project files, lock metadata and the global NuGet package cache first. Remote
-package retrieval or `dotnet restore` uses the native Bash permission boundary. Prefer narrowly scoped
-package acquisition into `.opencode/.tmp/dependencies/nuget/` when possible; do
-not use `dotnet add package` for inspection.
+package retrieval or `dotnet restore` uses the native Bash permission boundary.
+When a restore or package operation is genuinely required, use the narrowest
+supported verbosity that still retains warnings and errors relevant to the
+inspection; avoid diagnostic verbosity unless troubleshooting a failure. Prefer
+narrowly scoped package acquisition into `.opencode/.tmp/dependencies/nuget/`
+when possible; do not use `dotnet add package` for inspection.
 
 ### Go
 
 Use `go.mod`, `go.sum` and the module cache first. Commands such as
 `go mod download` or other module retrieval must go through the native Bash permission boundary because they may
 contact remote sources and may affect module/workspace state depending on context.
-Do not use `go get` for read-only inspection.
+Prefer focused module queries and machine-readable output such as `-json` only
+when it directly serves the requested inspection; Go's module tooling normally
+does not need a separate transfer-progress suppression flag. Do not use `go get`
+for read-only inspection.
 
 ### Rust / Cargo
 
 Use `Cargo.toml`, `Cargo.lock` and existing Cargo caches first. `cargo fetch` and
-other retrieval/resolution commands use the native Bash permission boundary. Builds and tests are not
-dependency-inspection substitutes.
+other retrieval/resolution commands use the native Bash permission boundary.
+When Cargo's status/progress output is not evidence, `--quiet` may be used for a
+focused retrieval operation only if errors remain visible; do not apply it to a
+command whose normal output is itself the requested evidence. Builds and tests
+are not dependency-inspection substitutes.
 
 ## Command safety examples
 
@@ -567,6 +775,16 @@ Do not choose generic commands such as these merely for dependency inspection:
 - publication, deployment or release commands in any ecosystem.
 
 When a shell command is necessary, invoke the safest appropriate command directly and let OpenCode present any required permission dialog. Do not add a conversational pre-approval step and do not try a different package manager merely to bypass a denial.
+
+Also avoid output-control choices that defeat the inspection:
+
+- Maven `-q`/`--quiet` when INFO-level goal output is required;
+- redirecting all stderr to `/dev/null`, `NUL` or an equivalent sink;
+- filtering generic words such as `error`, `warning` or repository URLs that may
+  contain the actual failure reason;
+- pipelines whose exit status reflects only the filter rather than the dependency
+  command;
+- verbose/debug modes unless they are needed to diagnose a concrete failure.
 
 ## Network boundary
 
