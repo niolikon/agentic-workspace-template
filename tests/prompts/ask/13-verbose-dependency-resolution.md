@@ -64,12 +64,22 @@ The agent should:
    preferably together with `--batch-mode` for non-interactive use;
 7. avoid Maven `-q`/`--quiet` when doing so would hide the dependency result or
    other evidence needed by the inspection;
-8. continue the analysis after dependency resolution and inspect the resolved
-   dependency source, API or binary metadata needed to answer the question;
-9. preserve relevant warnings and all actionable Maven failures;
-10. cite both repository evidence and the external dependency evidence used;
-11. leave repository source, manifests and lock/configuration files unchanged;
-12. terminate after answering the requested investigation.
+8. after the resolved version is known, immediately check the local Maven cache
+   again, including matching source artifacts, before issuing any separate retrieval
+   command, because the resolution step may already have materialized the evidence;
+9. when a cached JAR/source JAR contains the required evidence, inspect entries
+   directly with the simplest available archive mechanism and do not retrieve, copy
+   or fully extract it merely for convenience;
+10. retrieve only the exact missing artifact when the mandatory post-resolution
+    cache check proves the required evidence absent or insufficient;
+11. after a failed retrieval, re-check the cache before attempting a fallback and
+    avoid equivalent retries unless a concrete diagnostic justifies them;
+13. continue the analysis after dependency resolution and inspect the resolved
+    dependency source, API or binary metadata needed to answer the question;
+13. preserve relevant warnings and all actionable Maven failures;
+14. cite both repository evidence and the external dependency evidence used;
+15. leave repository source, manifests and lock/configuration files unchanged;
+16. terminate after answering the requested investigation.
 
 A typical network-capable Maven invocation should be equivalent in output
 behavior to:
@@ -91,6 +101,14 @@ Verify that:
 - normal Maven transfer lines such as `Progress (1): ...`, repeated download
   percentages or equivalent progress rendering do not dominate the Bash result;
 - the requested dependency information remains visible after output control;
+- after version resolution, the agent re-checks the local cache before issuing a
+  separate retrieval command;
+- if the resolution operation already materialized sufficient evidence, the agent
+  inspects it directly and does not perform a redundant download/get/copy;
+- a cached source JAR or equivalent archive is inspected in place with a simple
+  direct-entry mechanism when available, instead of cycling through extraction tools;
+- after one archive mechanism fails, any fallback is materially different and the
+  agent stops archive-tool troubleshooting as soon as the required entry is readable;
 - the agent still has enough execution context to inspect the resolved artifact
   and finish the framework analysis;
 - the final conclusion distinguishes repository evidence from framework evidence;
@@ -148,6 +166,15 @@ The test fails if the agent:
 - repeatedly streams transfer-progress output into the analysis;
 - retries the same unexpectedly verbose command unchanged instead of switching
   to stronger native output control or a bounded captured fallback;
+- issues a retrieval/download command without re-checking the local cache after a
+  resolution operation that may have materialized the required artifact;
+- copies, renames or fully extracts an already-inspectable cached archive merely to
+  work around a tool preference when direct entry inspection is available;
+- cycles through `Expand-Archive`, custom PowerShell/.NET scripts, `jar`, `tar` or
+  equivalent archive tools without evidence that each fallback addresses the prior
+  failure;
+- cycles through equivalent get/copy/restore/download commands after a failure
+  without a new diagnostic that makes the next attempt materially different;
 - captures output but loses the dependency command's original exit status;
 - stops immediately after download instead of inspecting the resolved
   dependency;

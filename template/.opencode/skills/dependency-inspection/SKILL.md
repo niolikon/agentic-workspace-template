@@ -324,6 +324,53 @@ If the user's question does not require independent resolution verification, it
 is acceptable to inspect the cached artifact corresponding to the declared
 version, provided the answer clearly states that boundary.
 
+## Critical post-resolution cache rule
+
+After a native dependency query establishes the exact resolved version, check the
+selected ecosystem's local cache again **before** issuing any retrieval command.
+Resolution and retrieval are separate steps: a dependency tree, lockfile restore,
+metadata query or equivalent operation may populate the cache as a side effect.
+
+Use this sequence for every ecosystem:
+
+1. establish the exact resolved dependency/version;
+2. immediately locate that exact artifact and any matching source/documentation
+   artifact in repository-local storage or the native local cache;
+3. do not issue a retrieval command until this post-resolution cache check has
+   completed;
+4. inspect cached evidence in place when it is sufficient, using direct file/archive
+   inspection rather than retrieval or staging;
+5. retrieve/materialize only the specific missing artifact when the cache check
+   proves the required evidence absent or insufficient;
+6. after any retrieval failure, check the cache once more before trying a fallback.
+
+Do not assume that an artifact which was absent before resolution is still absent
+after resolution. Do not issue a download/get/copy/restore command merely because
+that was the originally planned next step.
+
+This rule is ecosystem-neutral. Apply it to Maven local repositories, Gradle caches,
+npm/Yarn/pnpm stores, Python package caches/environments, NuGet global packages, Go
+module caches, Cargo registries/git caches and equivalent future dependency stores.
+Use toolchain evidence to locate caches; do not guess paths when the native tool can
+report them safely.
+
+## Critical fallback-budget rule
+
+Troubleshooting must be evidence-driven and bounded across all dependency tools.
+After a focused dependency operation fails:
+
+1. classify the failure before choosing another command;
+2. re-check local/cache evidence that the failed operation may have materialized;
+3. attempt at most one equivalent retrieval fallback unless the latest diagnostic
+   identifies a new, specific and correctable cause;
+4. prefer inspection of newly available local evidence over another network call;
+5. stop with explicit uncertainty when additional equivalent commands would only
+   repeat the same failure.
+
+A change of command spelling, plugin goal, wrapper, output path or package-manager
+subcommand does not by itself justify another attempt. The next operation must be
+expected to produce new evidence or correct a diagnosed cause.
+
 ## Critical retrieval retry rule
 
 After any retrieval command fails, re-evaluate existing local evidence before
@@ -344,16 +391,30 @@ continue the analysis.
 
 ## Archive inspection fallback
 
-For ZIP-compatible dependency artifacts such as JAR and NUPKG files:
+For ZIP-compatible dependency artifacts such as JAR and NUPKG files, use a
+deterministic inspection ladder and stop at the first mechanism that works:
 
-1. prefer direct inspection without copying or extracting when possible;
-2. use an ecosystem-native archive tool when available;
-3. otherwise use an already-available ZIP API/tool;
-4. avoid renaming or copying an archive solely to satisfy a filename-extension
-   restriction when direct archive reading is possible.
+1. prefer direct inspection of the cached artifact without copying or extracting;
+2. prefer a simple already-available generic archive command that can read the
+   format directly, such as `tar -tf` to locate entries and `tar -xOf` to read a
+   selected entry without materializing the archive;
+3. otherwise use an ecosystem-native archive tool already proven available;
+4. otherwise use an already-available ZIP API/tool with a minimal command that
+   avoids shell-variable interpolation and nested scripting where possible;
+5. only copy, rename or fully extract the archive when direct entry inspection is
+   genuinely unavailable or insufficient for the evidence required.
 
-On Windows, PowerShell/.NET `System.IO.Compression.ZipFile` is an acceptable
-fallback for direct JAR/NUPKG entry inspection.
+Do not troubleshoot multiple archive mechanisms speculatively. A failed archive
+command consumes the same fallback budget as another dependency-inspection
+operation: classify the failure, choose one materially different mechanism, and
+stop trying alternatives once the required entry can be inspected.
+
+On Windows, prefer simple commands that avoid nested PowerShell quoting and
+variable interpolation when an equivalent archive reader is already available.
+For example, when `tar` can read the JAR/NUPKG directly, prefer `tar -tf` /
+`tar -xOf` over copying a `.jar` to `.zip`, `Expand-Archive`, or a dynamically
+constructed PowerShell/.NET script. `System.IO.Compression.ZipFile` remains an
+acceptable fallback when a simpler direct reader is unavailable.
 
 ## Critical cache-first inspection rule
 
