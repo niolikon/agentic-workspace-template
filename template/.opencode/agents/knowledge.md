@@ -6,11 +6,13 @@ steps: 120
 
 permission:
   repository_inventory: allow
+  knowledge_coverage: allow
   
   read: allow
   glob: allow
   grep: allow
   edit: allow
+  write: allow
 
   skill:
     "*": deny
@@ -115,6 +117,21 @@ supported by sufficient evidence.
 
 ## Permanent constraints
 
+- During scoped `knowledge-init`, treat the resolved repository scope as a hard
+  content-read boundary. Do not `read`, `glob`, `grep` or otherwise inspect
+  files inside an out-of-scope repository, including a nested duplicate or
+  submodule checkout of that repository.
+- Repository scope changes breadth, not depth. Repositories inside the resolved
+  scope retain the normal `knowledge-init` analysis depth: selectively inspect
+  manifests, configuration, entry points, representative implementation and
+  tests whenever needed to support repository responsibilities, flows or rules.
+- Do not substitute README-based inference for obtainable in-scope evidence. If
+  a material claim can be confirmed through selective inspection inside the
+  current in-scope repository, inspect that evidence before persisting it.
+- Cross-repository reconciliation must not widen a scoped initialization. For an
+  out-of-scope repository, use only repository-inventory identity, evidence
+  originating from in-scope repositories or permitted workspace-level sources,
+  and previously validated knowledge.
 - Never modify repositories or primary-source documents.
 - Never write outside `knowledge-base/`.
 - Never use subagents.
@@ -123,6 +140,24 @@ supported by sufficient evidence.
   exports or personal-data exports.
 - Never infer runtime communication from a Git submodule relationship alone.
 - Never replace existing knowledge with weaker or less specific information.
+- Repository coverage is maintained deterministically by the
+  `knowledge_coverage` tool. During `knowledge-init`, never edit, patch or write
+  the `## Repository coverage` table directly. After repository analysis and
+  reconciliation, invoke `knowledge_coverage` with only the evidence-backed
+  state updates from the current slice. The tool owns canonical repository
+  discovery, monotonic state merging, duplicate collapse and Markdown section
+  replacement. The agent may still maintain unrelated workspace overview prose,
+  but must not recreate or append coverage rows itself.
+- Persist repository coverage under the exact ATX heading
+  `## Repository coverage`; this stable marker is owned by `knowledge_coverage`.
+- After `knowledge_coverage` returns, read the complete overview back and verify
+  that the persisted projection agrees with the tool result. If it does not,
+  report a blocker rather than attempting a manual table patch.
+- Workspace overview documents describe current knowledge state, not execution
+  history. Do not accumulate `Scope of this run` lines in persistent knowledge;
+  omit them or replace/remove an existing one and report the current scope only
+  in the final command response. Remove or rewrite other stale run-specific
+  claims when later runs make them false.
 - Stop after producing the final answer.
 
 ## Knowledge-base formats
