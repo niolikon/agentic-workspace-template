@@ -4,6 +4,10 @@ agent: knowledge
 subtask: false
 ---
 
+Optional repository scope supplied by the user:
+
+$ARGUMENTS
+
 Initialize the workspace knowledge base from:
 
 - `repositories/`;
@@ -28,9 +32,93 @@ Architecture analysis is the final analytical phase.
 Do not perform architecture analysis before repository-local analysis and
 cross-repository reconciliation have completed.
 
+## Repository scope
+
+Treat `$ARGUMENTS` as an optional whitespace-separated list of repository
+identifiers. Each identifier must name a directory immediately under
+`repositories/`.
+
+Always invoke `repository_inventory` for the workspace-wide authoritative
+repository set before detailed repository inspection. Use that inventory to
+validate the requested scope and to retain awareness of repositories outside
+the current slice.
+
+When `$ARGUMENTS` is empty:
+
+- preserve the existing full-workspace initialization behavior;
+- every canonical repository is in the detailed analysis scope.
+
+When `$ARGUMENTS` contains repositories:
+
+- resolve each identifier against an immediate child directory of
+  `repositories/`;
+- reject unknown, ambiguous or non-immediate-child identifiers and report them
+  without silently substituting another repository;
+- perform detailed repository analysis only for canonical repositories that
+  correspond to the selected directories;
+- do not deeply inspect an unselected repository merely because it is mentioned
+  by selected-repository evidence;
+- allow workspace-level `documents/`, `trainings/` and `notes/` to be inspected
+  selectively when relevant to the selected repositories;
+- preserve valid knowledge from previous initialization slices.
+
+Repository slices are execution scopes, not separate knowledge bases. All
+knowledge continues to be created or updated under `knowledge-base/`.
+
+A cross-scope relationship may be recorded when evidence from the selected
+repositories or relevant workspace-level sources supports it. Record the
+external repository as referenced but not analysed unless it was already
+analysed by a previous initialization. Do not expand the current detailed
+analysis scope automatically.
+
+Repository scope changes analysis breadth, not analysis depth. For every
+repository in `analysis_scope`, perform the same selective repository-analysis
+phases that full-workspace `knowledge-init` would normally perform. Do not stop
+at inventory or README evidence when manifests, configuration, representative
+implementation files or tests are needed to substantiate responsibilities,
+execution flows, data flows or business rules.
+
+### Scoped read barrier
+
+When a repository scope is provided, treat it as a hard boundary for content
+inspection, not merely as a reporting preference.
+
+After `repository_inventory` resolves the canonical repositories, derive and
+retain two explicit sets for the remainder of the command:
+
+- `analysis_scope`: selected canonical repositories;
+- `outside_scope`: every other canonical repository in the authoritative
+  inventory.
+
+Repository-content tools (`read`, `glob`, `grep` and equivalent source
+inspection) may target `repositories/<repo>/**` only when `<repo>` belongs to
+`analysis_scope`.
+
+For repositories in `outside_scope`:
+
+- do not read README files, manifests, configuration, source code or tests;
+- do not grep or glob inside their directories;
+- do not create or deepen repository-local knowledge from their content;
+- do not follow a discovered relationship into their checkout to confirm or
+  enrich that relationship;
+- use only inventory/Git identity already returned by `repository_inventory`,
+  evidence found in `analysis_scope`, relevant workspace-level sources, and
+  previously validated knowledge.
+
+This restriction also applies to nested duplicate/submodule checkouts. If an
+in-scope orchestrator contains a nested checkout that represents an
+out-of-scope canonical repository, inspect orchestration metadata such as the
+orchestrator's `.gitmodules` or deployment configuration, but do not inspect the
+nested repository's own files.
+
+Before every repository-content read/search, verify that the target path belongs
+to `analysis_scope`. A cross-scope reference is never permission to cross this
+barrier.
+
 ## Completion policy
 
-This command performs a complete workspace knowledge-base initialization.
+This command performs a complete initialization of the requested repository
+scope. Without arguments, that scope is the complete workspace.
 
 The repository inventory and overview creation are only the first phase of the
 task. They do not constitute completion.
@@ -58,27 +146,39 @@ continue with the next repository or phase.
 ## Workflow
 
 1. invoke `repository_inventory`;
-2. create and persist repository overview documents;
-3. document orchestrator and submodule relationships returned by
-   `repository_inventory`;
-4. identify repository roles and primary components;
-5. identify compile-time, runtime and deployment relationships;
-6. analyse each repository for:
+2. resolve and validate the optional repository scope;
+3. read existing knowledge before writing so valid knowledge from earlier slices
+   is preserved;
+4. create or update repository overview documents for repositories in the
+   detailed analysis scope;
+5. document orchestrator and submodule relationships supported by evidence,
+   without treating out-of-scope repositories as fully analysed;
+6. identify repository roles and primary components for repositories in scope;
+7. identify compile-time, runtime and deployment relationships supported by the
+   selected repositories;
+8. analyse each repository in scope for:
    - principal execution flows;
    - principal data flows;
    - business and domain rules;
-7. persist repository-local knowledge before moving to the next repository;
-8. perform cross-repository reconciliation;
-9. identify workspace-level execution flows;
-10. identify workspace-level data flows;
-11. identify workspace-level business rules when supported;
-12. analyse architecture and architectural patterns;
-13. validate knowledge coverage and Markdown links.
+9. persist repository-local knowledge before moving to the next repository;
+10. perform cross-repository reconciliation limited to relationships supported by
+    the current scope plus existing validated knowledge, without reading
+    `outside_scope` repository content;
+11. identify or refine workspace-level execution flows when supported, using
+    only in-scope evidence, permitted workspace-level sources and existing
+    validated knowledge;
+12. identify or refine workspace-level data flows when supported;
+13. identify or refine workspace-level business rules when supported;
+14. analyse architecture and architectural patterns only to the extent justified
+    by accumulated workspace evidence;
+15. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links.
 
 Do not limit knowledge generation to repositories declared as submodules.
 
-Repositories not referenced by an orchestrator must still receive their own
-repository-specific knowledge.
+During full-workspace initialization, repositories not referenced by an
+orchestrator must still receive their own repository-specific knowledge. During
+scoped initialization, this applies only to repositories in the requested
+detailed analysis scope.
 
 Do not classify an unreferenced repository as irrelevant, secondary or outside
 the workspace.
@@ -104,7 +204,7 @@ Do not generate the complete knowledge base in one large patch.
 
 ## Repository analysis phase
 
-Process every canonical non-orchestrator repository one at a time.
+Process every canonical non-orchestrator repository in the detailed analysis scope one at a time.
 
 For each repository:
 
@@ -116,8 +216,13 @@ For each repository:
 6. analyse principal execution flows when meaningful;
 7. analyse principal data flows when meaningful;
 8. use `business-rule-analysis` to identify evidence-backed business rules;
-9. persist the repository knowledge before moving to the next repository;
-10. mark the repository as:
+9. when a claim remains inferred but can reasonably be confirmed by selective
+   inspection of files inside the current in-scope repository, inspect those
+   files before persisting the claim;
+10. do not create inferred execution-flow or business-rule documents merely to
+    avoid deeper in-scope inspection;
+11. persist the repository knowledge before moving to the next repository;
+12. mark the repository as:
 
 - analysed;
 - partially analysed;
@@ -135,9 +240,65 @@ Do not repeat the source-level analysis of repositories already represented
 by their submodule or canonical checkouts.
 
 Do not proceed to cross-repository reconciliation until every canonical
-non-orchestrator repository has one of the states above and every
-orchestrator repository has been assessed for its orchestration
-responsibilities.
+non-orchestrator repository in the detailed analysis scope has one of the states
+above and every in-scope orchestrator repository has been assessed for its
+orchestration responsibilities.
+
+Do not create repository-local overview or analysis documents for an
+out-of-scope repository solely to represent a discovered reference. Represent
+such relationships in workspace knowledge and coverage instead.
+
+## Coverage awareness
+
+Maintain repository coverage in `knowledge-base/workspace/overview.md` through
+`knowledge_coverage`. Do not create or update coverage rows manually.
+
+Coverage states are:
+
+- `analysed`: detailed analysis completed in this or a previous initialization;
+- `partially analysed`: detailed analysis started but incomplete or blocked;
+- `referenced, not analysed`: known through a supported relationship but not
+  deeply inspected;
+- `not analysed`: present in the authoritative inventory but not yet deeply
+  inspected.
+
+For `analysed` and `partially analysed`, retain traceability to repository-local
+knowledge and source evidence. A repository must never become `analysed` merely
+because another repository references it.
+
+After repository-local analysis and cross-repository reconciliation:
+
+1. invoke `knowledge_coverage` once with the current slice's evidence-backed
+   coverage updates;
+2. include selected repositories as `analysed` or `partially analysed` according
+   to the work actually completed;
+3. include out-of-scope repositories as `referenced, not analysed` only when the
+   current in-scope evidence establishes a relationship and no stronger state is
+   already known;
+4. do not send `not analysed` updates merely because a repository is outside the
+   current slice; the tool derives the authoritative canonical repository set and
+   preserves stronger previous states;
+5. pass repository-local knowledge paths and concise evidence notes when useful;
+6. rely on the tool's monotonic merge and canonical deduplication; never append,
+   edit or patch the Markdown coverage table yourself;
+7. read `knowledge-base/workspace/overview.md` after the tool call and verify that
+   the persisted table agrees with the tool result.
+
+`knowledge_coverage` owns the exact ATX `## Repository coverage` section. It
+collapses stale duplicate rows, preserves the strongest valid prior state, adds
+new canonical repositories as `not analysed`, and replaces the complete section
+deterministically. If its validation fails, treat that as a tool blocker rather
+than attempting a manual coverage repair.
+
+Workspace overview prose represents cumulative current state, not execution
+history. Do not accumulate `Scope of this run` lines or other stale run-specific
+claims. Report the current requested scope only in the command's final response.
+
+State progression is monotonic unless evidence invalidates previously stored
+knowledge:
+
+`not analysed` -> `referenced, not analysed` -> `partially analysed` ->
+`analysed`.
 
 ## Final report
 
@@ -145,8 +306,8 @@ Keep the final response concise.
 
 Report:
 
-- repositories covered;
-- repositories not fully analysed;
+- repositories covered in the requested scope;
+- workspace repository coverage, including repositories not fully analysed;
 - knowledge files created or updated;
 - major workspace-level findings;
 - unresolved blockers;
@@ -154,13 +315,13 @@ Report:
 
 ## Completion criteria
 
-The initialization is complete only when:
+The initialization of the requested scope is complete only when:
 
-- every canonical repository has an overview;
-- every canonical non-orchestrator repository has been inspected beyond
-  inventory-level metadata;
-- every orchestrator repository has been assessed for orchestration,
-  composition, deployment and configuration responsibilities;
+- every canonical repository in the detailed analysis scope has an overview;
+- every canonical non-orchestrator repository in the detailed analysis scope has
+  been inspected beyond inventory-level metadata;
+- every orchestrator repository in the detailed analysis scope has been assessed
+  for orchestration, composition, deployment and configuration responsibilities;
 - repository roles and principal components have been assessed;
 - compile-time relationships have been assessed;
 - repository-local execution flows have been assessed;
@@ -170,7 +331,14 @@ The initialization is complete only when:
 - workspace-level execution and data flows have been assessed;
 - workspace-level business rules have been assessed when supported;
 - architectural analysis has been attempted when sufficient evidence exists;
-- generated knowledge has been validated for duplication and broken links.
+- generated knowledge has been validated for duplication and broken links;
+- `knowledge_coverage` has merged repository states successfully and its
+  persisted `## Repository coverage` section contains one canonical current-state
+  entry per logical repository with no contradictory stale states;
+- after the coverage tool call, `knowledge-base/workspace/overview.md` has been
+  read back and checked against the tool result;
+- repository coverage reflects the authoritative workspace inventory and does
+  not overstate analysis of out-of-scope repositories.
 
 "Assessed" does not mean that a document must always be created.
 
@@ -182,8 +350,8 @@ Do not finish the command after inventory or overview generation alone.
 A command is not complete merely because every planned phase has been
 attempted.
 
-It is complete only when every repository and every applicable
-workspace-level analysis has either:
+It is complete only when every repository in the requested detailed analysis
+scope and every applicable workspace-level analysis has either:
 
 - produced knowledge;
 - been explicitly marked as not applicable;

@@ -71,7 +71,44 @@ PowerShell or Git commands.
 Filesystem and Git commands may be used only to investigate details that are
 not already provided by the tool or to diagnose a tool failure.
 
-Never replace or narrow the repository set returned by `repository_inventory`.
+Never replace or narrow the authoritative repository set returned by
+`repository_inventory`. A command may define a smaller detailed-analysis scope,
+but the remaining inventory entries must stay visible as workspace repositories
+for validation, relationship awareness and coverage reporting.
+
+For `knowledge-init`, repository identifiers supplied by the user refer to
+immediate child directories under `repositories/`. Validate those identifiers
+against the filesystem and authoritative inventory before detailed inspection.
+Do not reinterpret a nested repository name or a similarly named checkout as an
+explicitly selected top-level repository.
+
+For scoped initialization, materialize the validated canonical repository set
+before source inspection and use it as a hard read allowlist. Repository
+identity discovery may remain workspace-wide through `repository_inventory`,
+but subsequent content inspection must not cross from an allowed repository
+into an unselected one.
+
+In particular:
+
+- do not inspect an out-of-scope repository's README, manifests, configuration,
+  source or tests;
+- do not use `grep` or `glob` under an out-of-scope repository path;
+- do not follow compile-time, runtime or deployment references into the
+  referenced repository unless it is independently in scope;
+- nested duplicate/submodule checkouts inherit the canonical repository's scope
+  state rather than the parent directory's state.
+
+Relationships to out-of-scope repositories may still be recorded from evidence
+owned by in-scope repositories, orchestrator metadata, workspace-level sources
+or existing validated knowledge. Such evidence changes relationship awareness,
+not repository analysis coverage.
+
+The scoped allowlist limits breadth only. For repositories inside the allowlist,
+retain normal repository-analysis depth. Start with README and primary manifests
+but continue selectively into configuration, entry points, representative
+implementation files and tests when needed to substantiate the requested
+knowledge. Do not stop at README/inventory metadata merely because the
+initialization is scoped.
 
 ## Repository identity
 

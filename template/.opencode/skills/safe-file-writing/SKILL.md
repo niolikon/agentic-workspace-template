@@ -21,6 +21,22 @@ Never assume that a file-editing tool creates missing parent directories.
 
 ## Writing strategy
 
+### Mandatory whole-file replacement
+
+When another loaded workflow designates a file as requiring whole-file
+replacement, tool choice is part of correctness:
+
+- use the `write` tool with the complete desired file contents;
+- do not use `edit`, patch, row insertion or diff-style replacement for that
+  operation, even if the edit tool could theoretically replace the whole file;
+- if `write` is unavailable or denied, report the blocker instead of silently
+  falling back to `edit`;
+- after `write`, re-read the complete file and validate the persisted structure.
+
+For scoped `knowledge-init`, an existing
+`knowledge-base/workspace/overview.md` is such a mandatory whole-file
+replacement target during cumulative coverage reconciliation.
+
 - Prefer one file-modification operation per document.
 - Prefer small localized edits over complete rewrites.
 - When the intended change replaces multiple major sections, prepends a new
@@ -162,3 +178,12 @@ Reserve enough execution steps for:
 Do not report a modified file as successfully completed unless its final state
 was validated after the last write. If validation fails, do not continue with
 dependent destructive edits that assume the knowledge base is coherent.
+
+
+## Tool-owned knowledge coverage
+
+`knowledge-base/workspace/overview.md` may contain a tool-owned
+`## Repository coverage` section. During `knowledge-init`, do not use `edit` or
+`write` to mutate that section. Use `knowledge_coverage`; it performs the
+validated deterministic replacement. Other overview sections remain subject to
+normal safe-file-writing rules.

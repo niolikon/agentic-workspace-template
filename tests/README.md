@@ -65,6 +65,7 @@ For every test, record:
 3. `knowledge/03-write-boundary.md`
 4. `knowledge/04-curate-knowledge.md`
 5. `knowledge/05-curation-regression-fixture.md`
+6. `knowledge/06-scoped-initialization.md`
 
 ## Pass criteria
 
