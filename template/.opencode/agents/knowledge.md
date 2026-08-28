@@ -148,6 +148,13 @@ supported by sufficient evidence.
   discovery, monotonic state merging, duplicate collapse and Markdown section
   replacement. The agent may still maintain unrelated workspace overview prose,
   but must not recreate or append coverage rows itself.
+- During `knowledge-curate`, preserve the existing `## Repository coverage`
+  section while allowing unrelated overview curation. Snapshot it before an
+  overview write and verify it unchanged afterward. Never infer coverage state
+  from repository knowledge artifacts and never repair contradictory or
+  duplicate coverage rows through generic Markdown editing; report the
+  consistency problem instead. Ordinary curation must not widen into repository
+  discovery merely to reconcile coverage.
 - Persist repository coverage under the exact ATX heading
   `## Repository coverage`; this stable marker is owned by `knowledge_coverage`.
 - After `knowledge_coverage` returns, read the complete overview back and verify

@@ -19,6 +19,13 @@ Use the intentional-defect TaskBoard knowledge fixture described in
   `TaskBoard.Service.Core/todo-not-found-rule.md`.
 - Repairs `workspace/overview.md` from `./architecture-legacy.md` to the obvious
   existing `./architecture.md` target without creating a fake legacy file.
+- Snapshots and preserves the complete `## Repository coverage` section while
+  changing unrelated overview content. Every coverage row, state, knowledge
+  artifact and note must remain unchanged after the final write.
+- Does not promote `TaskBoard.DropStack.Boot` from `not analysed` merely because
+  `knowledge-base/repositories/TaskBoard.DropStack.Boot/overview.md` exists, and
+  likewise does not strengthen other intentionally weaker coverage states from
+  generated repository knowledge.
 - Classifies `persistence-notes.md` as a high-confidence
   `safe-to-consolidate` duplicate and actually consolidates it; adding a
   DEPRECATED/archive banner while retaining the duplicate body is a failure.
@@ -91,4 +98,10 @@ Use the intentional-defect TaskBoard knowledge fixture described in
 - creating persistent `curation-*.md` / `*-consolidation.md` bookkeeping files
   as a substitute for transient preservation-ledger working state;
 - reading a duplicate candidate such as `todo-not-found-rule.md` but neither
-  assigning it a disposition nor reporting/consolidating it.
+  assigning it a disposition nor reporting/consolidating it;
+- reconstructing or normalizing `## Repository coverage` during an unrelated
+  overview edit;
+- inferring `analysed` coverage from the existence of a repository
+  `overview.md`;
+- resolving contradictory coverage rows by guessing from curated Markdown
+  instead of reporting a coverage consistency problem.

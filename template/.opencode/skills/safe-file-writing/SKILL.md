@@ -185,5 +185,15 @@ dependent destructive edits that assume the knowledge base is coherent.
 `knowledge-base/workspace/overview.md` may contain a tool-owned
 `## Repository coverage` section. During `knowledge-init`, do not use `edit` or
 `write` to mutate that section. Use `knowledge_coverage`; it performs the
-validated deterministic replacement. Other overview sections remain subject to
-normal safe-file-writing rules.
+validated deterministic replacement.
+
+During `knowledge-curate`, the same section is a preservation boundary rather
+than a curation target. Before any generic edit/write of the containing overview,
+snapshot the complete existing coverage section. Modify only unrelated content
+and, after the write, re-read the overview and require the extracted coverage
+section to match the snapshot unchanged. Do not reconstruct coverage from
+repository knowledge, do not infer state from repository artifacts, and do not
+repair inconsistent coverage through free-form Markdown editing. Report such
+inconsistencies for deterministic coverage reconciliation instead.
+
+Other overview sections remain subject to normal safe-file-writing rules.

@@ -18,6 +18,49 @@ the user explicitly requests source validation or source reanalysis.
 Existing evidence paths are metadata to preserve. Their presence does not by
 itself authorize reopening the referenced source file during curation.
 
+## Repository coverage preservation
+
+Treat the exact `## Repository coverage` section in
+`knowledge-base/workspace/overview.md` as structured cumulative state, not as
+ordinary prose to curate.
+
+During ordinary curation:
+
+- snapshot the complete existing coverage section before modifying the workspace
+  overview;
+- exclude coverage rows and their state from duplicate consolidation,
+  normalization, navigation cleanup and other free-form curation decisions;
+- do not add, remove, reorder, merge or rewrite coverage rows with `edit` or
+  `write`;
+- do not change repository state, knowledge-artifact references or notes;
+- do not reconstruct the table from repository knowledge files;
+- never infer `analysed`, `partially analysed` or any other coverage state from
+  the existence or contents of `knowledge-base/repositories/<repository>/`.
+
+The presence of a repository `overview.md` is knowledge navigation evidence,
+not repository-coverage evidence.
+
+Curation may still improve any non-coverage part of the workspace overview. Use
+localized edits outside the protected section whenever practical. If a broader
+rewrite of the overview is genuinely necessary, carry the snapshotted coverage
+section into the replacement unchanged.
+
+After every curation write to `knowledge-base/workspace/overview.md`, re-read the
+complete file, extract the exact `## Repository coverage` section again and
+verify that it is unchanged from the pre-write snapshot. A successful write is
+not valid if coverage changed as a side effect; stop further dependent edits and
+report the preservation failure rather than attempting to reconstruct the table
+from surrounding knowledge.
+
+If inspection reveals an obvious coverage inconsistency, such as duplicate rows
+for the same repository, contradictory states, or malformed coverage entries,
+report it as a repository-coverage consistency problem. Do not choose a
+replacement state from the Markdown being curated and do not use generic
+Markdown editing to repair it. Coverage reconciliation belongs to the existing
+deterministic `knowledge_coverage` mechanism in a coverage-specific workflow;
+ordinary curation must not invoke source discovery merely to guess the intended
+state.
+
 ## Complete inventory before curation
 
 Treat the Markdown inventory as a coverage obligation, not only as discovery.
