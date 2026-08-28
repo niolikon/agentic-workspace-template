@@ -45,8 +45,40 @@ the current slice.
 
 When `$ARGUMENTS` is empty:
 
-- preserve the existing full-workspace initialization behavior;
-- every canonical repository is in the detailed analysis scope.
+- invoke `repository_inventory` before any repository-local source inspection;
+- retain the complete canonical repository inventory as authoritative workspace
+  context;
+- do not assume that every repository belongs to the detailed analysis scope;
+- ask the user how to continue by using the built-in `question` tool when it is
+  available to the current OpenCode runtime/client;
+- first offer these mutually exclusive modes:
+  - `Select repositories`;
+  - `Initialize all`;
+  - `Inventory only`;
+- when `Select repositories` is chosen, ask a second question with
+  `multiple: true` and one option per canonical repository identifier returned
+  by `repository_inventory`;
+- use exact canonical repository identifiers as option labels so the selected
+  values can be validated directly against the authoritative inventory;
+- if `Initialize all` is chosen, place every canonical repository in
+  `analysis_scope` and continue with normal full-workspace initialization;
+- if `Inventory only` is chosen, report the canonical repository identifiers
+  and stop without repository-local source inspection or knowledge-base writes;
+- if the user supplies a custom answer instead of one of the mode options,
+  accept it as a repository selection only when every supplied identifier
+  resolves exactly and unambiguously against the canonical inventory;
+- if the `question` tool is unavailable, unsupported by the active client, or
+  fails before a selection is obtained, do not retry it repeatedly and do not
+  start detailed analysis. Instead, list the canonical repository identifiers,
+  show an immediately executable scoped `/knowledge-init ...` example, mention
+  that rerunning `/knowledge-init` can be used to choose the full workspace in
+  an interactive-capable client, and stop.
+
+The no-argument pre-selection phase is discovery-only. Before the user has
+chosen the detailed scope, do not `read`, `glob`, `grep` or otherwise inspect
+`repositories/<repo>/**`, and do not create repository-local knowledge. The
+only repository information used during this phase must come from
+`repository_inventory`.
 
 When `$ARGUMENTS` contains repositories:
 
@@ -117,8 +149,10 @@ barrier.
 
 ## Completion policy
 
-This command performs a complete initialization of the requested repository
-scope. Without arguments, that scope is the complete workspace.
+This command performs a complete initialization of the resolved repository
+scope. With explicit repository arguments, that scope is supplied directly by
+the user. Without arguments, detailed scope is resolved only after repository
+inventory and the repository-selection decision described above.
 
 The repository inventory and overview creation are only the first phase of the
 task. They do not constitute completion.
@@ -133,8 +167,9 @@ Reading repository manifests, configuration, source code and tests under the
 workspace is already authorized and does not require additional user
 confirmation.
 
-Do not ask the user which repository or analysis phase should be processed
-next.
+After the initial no-argument repository-selection decision has resolved
+`analysis_scope`, do not ask the user which repository or analysis phase should
+be processed next.
 
 Choose the next repository and next analysis phase automatically.
 
@@ -146,32 +181,36 @@ continue with the next repository or phase.
 ## Workflow
 
 1. invoke `repository_inventory`;
-2. resolve and validate the optional repository scope;
-3. read existing knowledge before writing so valid knowledge from earlier slices
-   is preserved;
-4. create or update repository overview documents for repositories in the
+2. when repository arguments are present, resolve and validate them without any
+   selection interaction;
+3. when repository arguments are absent, resolve the detailed scope through the
+   repository-selection flow above, or stop after inventory for `Inventory only`
+   or textual fallback;
+4. only after `analysis_scope` is resolved, read existing knowledge before
+   writing so valid knowledge from earlier slices is preserved;
+5. create or update repository overview documents for repositories in the
    detailed analysis scope;
-5. document orchestrator and submodule relationships supported by evidence,
+6. document orchestrator and submodule relationships supported by evidence,
    without treating out-of-scope repositories as fully analysed;
-6. identify repository roles and primary components for repositories in scope;
-7. identify compile-time, runtime and deployment relationships supported by the
+7. identify repository roles and primary components for repositories in scope;
+8. identify compile-time, runtime and deployment relationships supported by the
    selected repositories;
-8. analyse each repository in scope for:
+9. analyse each repository in scope for:
    - principal execution flows;
    - principal data flows;
    - business and domain rules;
-9. persist repository-local knowledge before moving to the next repository;
-10. perform cross-repository reconciliation limited to relationships supported by
+10. persist repository-local knowledge before moving to the next repository;
+11. perform cross-repository reconciliation limited to relationships supported by
     the current scope plus existing validated knowledge, without reading
     `outside_scope` repository content;
-11. identify or refine workspace-level execution flows when supported, using
+12. identify or refine workspace-level execution flows when supported, using
     only in-scope evidence, permitted workspace-level sources and existing
     validated knowledge;
-12. identify or refine workspace-level data flows when supported;
-13. identify or refine workspace-level business rules when supported;
-14. analyse architecture and architectural patterns only to the extent justified
+13. identify or refine workspace-level data flows when supported;
+14. identify or refine workspace-level business rules when supported;
+15. analyse architecture and architectural patterns only to the extent justified
     by accumulated workspace evidence;
-15. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links.
+16. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links.
 
 Do not limit knowledge generation to repositories declared as submodules.
 
