@@ -147,3 +147,14 @@ Use:
 - Low — plausible interpretation requiring confirmation.
 
 Prefer leaving a rule unresolved over documenting unsupported behaviour.
+
+Low confidence is not permission to persist a merely plausible rule. A `Low`
+rule still requires concrete workspace evidence that points toward the rule.
+Common domain semantics, repository names, CRUD conventions, generic workflow
+expectations and framework defaults are not evidence by themselves.
+
+If repository inspection is blocked or the available evidence cannot establish
+business behaviour, return `insufficient evidence` for this analysis phase and
+do not create a business-rule document solely to represent the missing result.
+Existing evidence-backed business rules must be preserved rather than diluted or
+replaced by speculative candidates.

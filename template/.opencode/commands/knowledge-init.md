@@ -176,7 +176,74 @@ Choose the next repository and next analysis phase automatically.
 Do not stop merely because deeper repository inspection is required.
 
 When a phase cannot produce meaningful knowledge, record that outcome and
-continue with the next repository or phase.
+continue with the next repository or phase. A phase is considered assessed when
+its result is `insufficient evidence`; it does not need to produce a knowledge
+document to count as completed.
+
+### Evidence-limited initialization
+
+Repository inventory, repository names, primary manifest metadata and generic
+framework or domain conventions are not sufficient behavioural evidence.
+
+When repository-content inspection is blocked, unavailable or insufficient:
+
+- do not compensate by inventing expected execution flows, business rules,
+  authorization semantics, lifecycle/state transitions, persistence guarantees
+  or runtime integrations;
+- preserve any existing validated knowledge instead of replacing, weakening or
+  diluting it with lower-confidence inference;
+- record the affected phase as `insufficient evidence` and state the concrete
+  blocker or missing evidence in the command report;
+- use `partially analysed` coverage for an in-scope repository when detailed
+  analysis started but could not be completed, unless a stronger validated
+  coverage state already exists;
+- do not create `execution-flows.md`, `business-rules.md` or another behavioural
+  knowledge document merely to represent the failed phase.
+
+Structural inference is allowed only when directly supported by observable
+structure. For example, project directories may support a statement that a
+repository appears layered, but they do not establish business behaviour or a
+runtime request path.
+
+Workspace reconciliation must inherit repository-local uncertainty. Do not turn
+repository names such as `Frontend`, `Authenticator` and `Service`, inventory
+metadata, or unsupported implementation candidates into a confirmed
+cross-repository flow.
+
+### Evidence acquisition gate
+
+Treat discovery and inspection as different operations.
+
+- `repository_inventory`, directory listings and `glob` establish that a
+  repository or path exists; they do not establish the contents or behaviour of
+  a discovered file.
+- A path returned by `glob` is `discovered`, not `inspected`.
+- A file contributes behavioural evidence only when its relevant contents were
+  actually observed in the current run through `read`, a focused `grep` whose
+  returned match contains the supporting content, or equivalent permitted
+  content inspection. Existing validated knowledge may also be reused as
+  evidence, subject to normal conflict checks.
+- A manifest or README contributes only the facts actually stated by that
+  artifact. Do not silently upgrade documentation evidence into source-code,
+  test, configuration or runtime evidence.
+- Never report a controller, service, test, configuration file, deployment file
+  or implementation as `inspected` merely because its path was discovered.
+
+Before persisting any repository-local or workspace-level behavioural artifact,
+perform an evidence checkpoint:
+
+1. enumerate the material behavioural claims that would be written;
+2. identify the concrete inspected evidence supporting each claim;
+3. remove or mark unresolved every claim whose support is only discovery,
+   naming, manifest metadata, generic conventions or an uninspected path;
+4. if no stable reusable behavioural claims remain for that document, do not
+   create the document;
+5. propagate the same evidence ceiling into workspace reconciliation. A
+   workspace flow, data flow or business rule cannot have stronger evidence than
+   the repository-local transitions on which it depends.
+
+This checkpoint applies especially before creating `execution-flows.md`,
+`data-flows.md` or `business-rules.md` at repository or workspace level.
 
 ## Workflow
 
@@ -203,11 +270,14 @@ continue with the next repository or phase.
 11. perform cross-repository reconciliation limited to relationships supported by
     the current scope plus existing validated knowledge, without reading
     `outside_scope` repository content;
-12. identify or refine workspace-level execution flows when supported, using
-    only in-scope evidence, permitted workspace-level sources and existing
-    validated knowledge;
-13. identify or refine workspace-level data flows when supported;
-14. identify or refine workspace-level business rules when supported;
+12. identify or refine workspace-level execution flows only after applying the
+    evidence acquisition gate, using only in-scope inspected evidence,
+    permitted workspace-level sources and existing validated knowledge;
+13. identify or refine workspace-level data flows only when their material
+    transitions are supported by inspected evidence;
+14. identify or refine workspace-level business rules only when concrete
+    inspected evidence supports the rule; do not create a workspace behavioural
+    artifact solely because the corresponding phase was assessed;
 15. analyse architecture and architectural patterns only to the extent justified
     by accumulated workspace evidence;
 16. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links.
@@ -300,6 +370,20 @@ Coverage states are:
   deeply inspected;
 - `not analysed`: present in the authoritative inventory but not yet deeply
   inspected.
+
+`analysed` requires evidence that the repository's material responsibilities and
+relevant behavioural surfaces were actually inspected, not merely discovered.
+README/manifest inspection plus a repository-wide `glob` is not sufficient by
+itself when source or configuration inspection is needed to substantiate the
+repository's behavioural knowledge. If the run stops at documentation,
+manifests or structural discovery while material implementation behaviour
+remains unverified, use `partially analysed` unless a stronger validated state
+already exists.
+
+Coverage notes must describe only evidence actually acquired. Do not write
+notes such as `controller inspected`, `tests inspected`, `configuration
+inspected` or equivalent unless those artifacts were content-inspected in the
+run (or are explicitly identified as preserved validated knowledge).
 
 For `analysed` and `partially analysed`, retain traceability to repository-local
 knowledge and source evidence. A repository must never become `analysed` merely
