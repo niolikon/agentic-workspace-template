@@ -245,6 +245,51 @@ perform an evidence checkpoint:
 This checkpoint applies especially before creating `execution-flows.md`,
 `data-flows.md` or `business-rules.md` at repository or workspace level.
 
+### Run evidence ledger and reconciliation
+
+Maintain a run-local evidence ledger while initialization is executing. The
+ledger is conceptual working state and does not need to be persisted as a new
+knowledge document. It must distinguish, at minimum:
+
+- repository/inventory facts returned by `repository_inventory`;
+- paths discovered by `glob` or directory enumeration;
+- focused content fragments observed through `grep`;
+- files whose contents were observed through `read` or an equivalent content
+  inspection;
+- preserved validated knowledge reused from a previous run.
+
+A `grep` match authorizes only claims supported by the returned matching
+content. It does not mean that the entire matching file, test suite, source
+package or configuration set was inspected. A `read` authorizes claims only
+from the content actually returned by that read.
+
+Before `knowledge_coverage`, before creating any workspace-level artifact, and
+again before the final response, reconcile every evidence statement against the
+run-local ledger:
+
+1. remove statements that claim inspection of an artifact or evidence category
+   absent from the ledger;
+2. replace aggregate wording such as `representative sources inspected`, `tests
+   inspected`, `configuration inspected` or `deployment evidence inspected`
+   with the exact observed artifacts or with narrower wording such as `matching
+   test content observed via grep` when that is what actually occurred;
+3. ensure coverage notes name only evidence actually acquired in the run or
+   explicitly preserved validated knowledge;
+4. ensure a repository is not promoted to `analysed` when material analysis
+   surfaces required for its generated knowledge remain merely discovered or
+   unresolved; use `partially analysed` for the new run unless a stronger
+   validated state already exists;
+5. ensure workspace-level findings and architecture claims cite evidence whose
+   contents were actually inspected. A discovered `docker-compose.yml`, gateway
+   config, deployment manifest or source path is not deployment/runtime evidence;
+6. if reconciliation removes the material support for a newly created artifact,
+   do not keep that artifact merely because it was already drafted in the run.
+   Omit it, or preserve an older validated version unchanged when one exists.
+
+The final report must be a projection of this reconciled ledger, not a narrative
+reconstruction of intended analysis steps. Never claim that a file or category
+was inspected because the workflow intended to inspect it.
+
 ## Workflow
 
 1. invoke `repository_inventory`;
@@ -279,8 +324,13 @@ This checkpoint applies especially before creating `execution-flows.md`,
     inspected evidence supports the rule; do not create a workspace behavioural
     artifact solely because the corresponding phase was assessed;
 15. analyse architecture and architectural patterns only to the extent justified
-    by accumulated workspace evidence;
-16. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links.
+    by content-inspected workspace evidence; apply the same evidence ledger and
+    reconciliation gate before creating or extending `architecture.md`;
+16. reconcile the run-local evidence ledger against repository artifacts,
+    workspace artifacts, proposed coverage states and coverage notes;
+17. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links;
+18. reconcile the final response against the same ledger before reporting what
+    was inspected or verified.
 
 Do not limit knowledge generation to repositories declared as submodules.
 
@@ -382,8 +432,12 @@ already exists.
 
 Coverage notes must describe only evidence actually acquired. Do not write
 notes such as `controller inspected`, `tests inspected`, `configuration
-inspected` or equivalent unless those artifacts were content-inspected in the
-run (or are explicitly identified as preserved validated knowledge).
+inspected`, `representative sources inspected` or equivalent unless the exact
+supporting artifacts were content-inspected in the run (or are explicitly
+identified as preserved validated knowledge). Prefer exact paths or exact
+artifact classes actually observed over broad evidence-category summaries. If a
+focused `grep` returned matching test content but no test file was read, describe
+that narrowly; do not say that tests were inspected.
 
 For `analysed` and `partially analysed`, retain traceability to repository-local
 knowledge and source evidence. A repository must never become `analysed` merely

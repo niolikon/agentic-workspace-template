@@ -304,6 +304,42 @@ Apply this gate independently to repository and workspace artifacts. Workspace
 reconciliation must not combine several weak structural signals into a stronger
 behavioural conclusion.
 
+## Evidence ledger reconciliation
+
+During `knowledge-init`, keep a run-local ledger of the evidence actually
+acquired. Treat these evidence classes differently:
+
+- `repository_inventory`: identity/topology metadata only;
+- `glob` or directory enumeration: discovered paths/structure only;
+- focused `grep`: only the returned matching content;
+- `read`: only the returned file content;
+- existing validated knowledge: reusable evidence, clearly distinguished from
+  evidence newly inspected in the current run.
+
+Before persisting workspace artifacts, before submitting coverage updates, and
+before writing the final report, reconcile all provenance wording against that
+ledger. Never use broad phrases such as `representative sources inspected`,
+`tests inspected`, `configuration inspected` or `docker-compose evidence`
+unless the ledger contains the corresponding content inspections.
+
+A test-class path discovered by `glob` is not a test inspection. A matching line
+returned by `grep` may support the specific rule expressed by that line, but it
+must be reported as matching test content rather than as inspection of the test
+suite unless the relevant test file was actually read.
+
+Architecture artifacts are subject to the same rule. Repository names,
+`.gitmodules`, manifests and discovered deployment paths may establish
+structural topology, but runtime/deployment architecture claims that depend on
+`docker-compose`, gateway configuration or deployment manifests require those
+contents to have been inspected. Do not create or strengthen `architecture.md`
+when its material claims would exceed that evidence ceiling.
+
+Coverage is also reconciled against the ledger. A repository whose README and
+manifest were read but whose material implementation/configuration surfaces
+remain merely discovered is normally `partially analysed`, not `analysed`, for
+the current slice. Preserve a stronger validated prior state rather than
+regressing it.
+
 ## Document responsibility
 
 Each knowledge document has a specific responsibility.

@@ -103,3 +103,47 @@ During the blocked/limited-evidence scenarios, explicitly verify that:
   uninspected implementation candidates;
 - the final response and `knowledge_coverage` notes list only artifacts actually
   inspected in the run.
+
+## Scenario D — provenance reconciliation after selective source reads
+
+Use the TaskBoard fixture and select a mixed scope containing repositories where
+some behavioural sources are read and other repositories stop at README,
+manifest or structural evidence.
+
+A representative run may read `TodoService.java` / `TodoController.java` and
+`DocumentService.java` / `DocumentController.java`, while a framework or
+orchestrator repository receives only README, `pom.xml` and/or `.gitmodules`
+inspection.
+
+### Expected behavior
+
+- behavioural documents may be created for repositories whose material claims
+  are supported by the source content actually read;
+- repositories that stop at README/manifest/structure are not described as
+  having `representative sources inspected` unless such source reads really
+  occurred;
+- a `grep` match in tests may support the matched claim, but the report must not
+  say `tests inspected` unless the relevant test contents were actually read;
+- coverage notes contain only exact evidence acquired by the run;
+- repositories with material implementation/configuration surfaces still
+  uninspected remain `partially analysed` unless a stronger validated previous
+  state is being preserved;
+- `architecture.md` is not created or strengthened from discovered deployment
+  paths alone; claims depending on Docker Compose, gateway or deployment
+  configuration require those file contents to be read;
+- the final report does not list source files, tests, configuration or deployment
+  evidence that is absent from the actual tool trace.
+
+### Regression indicators
+
+The scenario fails if the final output or coverage contains statements such as:
+
+```text
+representative sources inspected
+tests inspected
+docker-compose evidence
+configuration inspected
+```
+
+when the corresponding content inspection is not visible in the run evidence.
+

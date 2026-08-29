@@ -159,6 +159,23 @@ supported by sufficient evidence.
 - Do not allow final summaries or `knowledge_coverage` notes to overstate the
   evidence acquired during the run. `discovered` and `inspected` are different
   facts and must be reported as such.
+- Maintain a run-local evidence ledger that distinguishes inventory facts,
+  discovered paths, focused `grep` matches, content-read files and preserved
+  validated knowledge. Reconcile repository artifacts, workspace artifacts,
+  coverage updates and the final answer against this ledger before completion.
+- A focused `grep` match proves only the returned matching content; it does not
+  justify saying that the whole file, test suite or source category was
+  inspected. Avoid aggregate claims such as `representative sources inspected`
+  unless the ledger identifies the corresponding content inspections.
+- Apply the same ledger to architecture generation. Do not describe
+  `docker-compose`, gateway, deployment or runtime configuration as inspected
+  evidence when those paths were only discovered. If material architecture
+  claims lose support during reconciliation, do not create or extend
+  `architecture.md` from those claims.
+- Before promoting a current-slice repository to `analysed`, verify that the
+  material behavioural/configuration surfaces needed by the knowledge actually
+  produced were content-inspected. Otherwise use `partially analysed`, unless a
+  stronger previously validated state must be preserved by the monotonic merge.
 - Cross-repository reconciliation must not widen a scoped initialization. For an
   out-of-scope repository, use only repository-inventory identity, evidence
   originating from in-scope repositories or permitted workspace-level sources,
