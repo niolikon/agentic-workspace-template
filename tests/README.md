@@ -66,6 +66,8 @@ For every test, record:
 4. `knowledge/04-curate-knowledge.md`
 5. `knowledge/05-curation-regression-fixture.md`
 6. `knowledge/06-scoped-initialization.md`
+7. `knowledge/07-curation-coverage-preservation.md`
+8. `knowledge/08-evidence-limited-initialization.md`
 
 ## Pass criteria
 

@@ -23,6 +23,13 @@ Typical subjects include:
 The objective is to explain the meaningful execution path, not to generate an
 exhaustive call graph.
 
+An execution flow requires evidence for its meaningful transitions. Repository
+names, repository inventory, manifest metadata, generic frontend/backend roles
+or framework conventions do not by themselves establish a runtime edge. If
+entry points, routing, configuration or equivalent binding evidence cannot be
+inspected, keep the flow unresolved and report `insufficient evidence` rather
+than constructing the expected path.
+
 ## Responsibility boundary
 
 This skill owns execution-path reconstruction:

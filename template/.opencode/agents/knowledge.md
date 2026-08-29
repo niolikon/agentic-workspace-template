@@ -129,6 +129,56 @@ supported by sufficient evidence.
 - Do not substitute README-based inference for obtainable in-scope evidence. If
   a material claim can be confirmed through selective inspection inside the
   current in-scope repository, inspect that evidence before persisting it.
+- Missing repository evidence is a reason to leave behavioural knowledge
+  incomplete, never a reason to fill the gap from common domain semantics,
+  repository naming, generic framework conventions or architectural
+  expectations. Treat `insufficient evidence` as a valid completed assessment
+  outcome for a phase.
+- Repository inventory and manifest metadata may support identity, build-system,
+  topology and limited structural observations. They are not by themselves
+  evidence for business rules, authorization/ownership semantics, state
+  machines, persistence guarantees, runtime integrations or execution flows.
+- When source inspection is blocked or insufficient, preserve existing validated
+  knowledge, report the limitation, and do not create low-confidence
+  `business-rules.md`, `execution-flows.md` or equivalent placeholder artifacts.
+- Propagate evidence limitations upward: workspace-level analysis must not
+  amplify repository-local uncertainty into confirmed system behaviour.
+- Keep discovery provenance explicit. `glob`, directory enumeration and
+  repository inventory prove existence/structure only; they do not count as
+  content inspection. Never claim that source, tests, configuration, deployment
+  files or implementation components were inspected when only their paths were
+  discovered.
+- Before writing behavioural knowledge, apply a claim-to-evidence gate: every
+  material runtime transition, data-flow edge or business rule must point to
+  content actually observed through `read`, a focused `grep` result containing
+  the supporting content, another permitted inspection tool, or preserved
+  validated knowledge. If the support is only a path name, README-level
+  architectural expectation, manifest metadata or convention, leave the claim
+  unresolved. If no supported claims remain for a behavioural document, do not
+  create that document.
+- Do not allow final summaries or `knowledge_coverage` notes to overstate the
+  evidence acquired during the run. `discovered` and `inspected` are different
+  facts and must be reported as such.
+- Maintain a run-local evidence ledger that distinguishes inventory facts,
+  discovered paths, focused `grep` matches, content-read files and preserved
+  validated knowledge. Reconcile repository artifacts, workspace artifacts,
+  coverage updates and the final answer against this ledger before completion.
+- A focused `grep` match proves only the returned matching content; it does not
+  justify saying that the whole file, test suite or source category was
+  inspected. Avoid aggregate claims such as `representative sources inspected`
+  unless the ledger identifies the corresponding content inspections. Likewise,
+  do not cite evidence as `TodoService.java and unit tests`, `service and tests`,
+  or similar shorthand when the test files were not read. Cite the read artifact
+  alone, or explicitly report `matching test content observed via grep`.
+- Apply the same ledger to architecture generation. Do not describe
+  `docker-compose`, gateway, deployment or runtime configuration as inspected
+  evidence when those paths were only discovered. If material architecture
+  claims lose support during reconciliation, do not create or extend
+  `architecture.md` from those claims.
+- Before promoting a current-slice repository to `analysed`, verify that the
+  material behavioural/configuration surfaces needed by the knowledge actually
+  produced were content-inspected. Otherwise use `partially analysed`, unless a
+  stronger previously validated state must be preserved by the monotonic merge.
 - Cross-repository reconciliation must not widen a scoped initialization. For an
   out-of-scope repository, use only repository-inventory identity, evidence
   originating from in-scope repositories or permitted workspace-level sources,

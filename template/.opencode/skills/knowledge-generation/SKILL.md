@@ -56,6 +56,37 @@ Create only when supported by evidence:
 
 Do not create every possible document automatically.
 
+## Evidence threshold for persistent knowledge
+
+Persistent knowledge must be supported by workspace evidence appropriate to the
+kind of claim being recorded. Plausibility is not evidence.
+
+Treat repository inventory, repository names, manifest presence, language/build
+metadata, submodule identity and directory layout as structural evidence only.
+They may support repository classification, topology, build-system facts and
+limited architectural observations, but do not establish behavioural or domain
+knowledge by themselves.
+
+Do not persist behavioural claims derived only from:
+
+- common domain semantics;
+- repository or component names;
+- generic framework conventions;
+- expected architectural patterns;
+- the existence of candidate controllers, services or manifests without a
+  demonstrated runtime binding.
+
+This restriction includes assumed authorization or ownership rules, lifecycle
+or state-machine transitions, API contracts, persistence/atomicity guarantees,
+runtime integrations and execution flows.
+
+When evidence for a knowledge category is unavailable, blocked or insufficient,
+prefer an explicit incomplete assessment over a placeholder document. Do not
+create `business-rules.md`, `execution-flows.md` or another category document
+whose durable content would consist only of hypotheses, conventions or
+low-confidence guesses. Preserve any existing confirmed content unchanged unless
+new evidence supports a safe update.
+
 ## Scope rules
 
 - Repository-local information stays in the repository directory.
@@ -117,9 +148,11 @@ being generated.
 
 Do not create repository execution-flow, data-flow or business-rule knowledge
 from README-level inference alone when stronger evidence is available through
-reasonable selective inspection of the same in-scope repository. Preserve
-uncertainty only when the supporting implementation evidence does not exist, is
-not discoverable selectively, or cannot be read because of an actual blocker.
+reasonable selective inspection of the same in-scope repository. If the
+supporting implementation evidence does not exist, is not discoverable
+selectively, or cannot be read because of an actual blocker, preserve the
+uncertainty and record `insufficient evidence`; do not replace the missing
+evidence with convention-based inference.
 
 Repository documentation, when the repository is in the detailed analysis
 scope, is required regardless of whether the repository:
@@ -151,6 +184,19 @@ Coverage is cumulative across initialization runs. Preserve prior validated
 coverage and strengthen it only when new evidence supports the stronger state.
 A discovered relationship is evidence for `referenced, not analysed`, never by
 itself for `analysed`.
+
+Do not equate repository discovery with repository analysis. Repository
+inventory, directory enumeration and `glob` results prove identity or structure;
+they do not prove the contents of discovered source/configuration/test files.
+README and manifest reads prove only what those artifacts state. When material
+repository behaviour remains dependent on uninspected implementation or
+configuration, the strongest new coverage state for that run is normally
+`partially analysed`, unless a stronger validated state already exists.
+
+Coverage notes must be provenance-accurate. Never state that controllers,
+services, tests, configuration, deployment descriptors or other implementation
+artifacts were inspected unless their contents were actually inspected or the
+note explicitly refers to preserved validated knowledge.
 
 Treat coverage as a canonical current-state projection, not a history of
 initialization runs.
@@ -234,6 +280,69 @@ strongest state, applies monotonic transitions and replaces the complete
 Do not compensate for a failed coverage-tool update with `edit` or `write`. Read
 the persisted overview after the tool call and report a blocker if it does not
 match the tool result.
+
+## Behavioural artifact evidence gate
+
+Before creating or materially extending a behavioural knowledge artifact:
+
+1. list the material claims that the artifact would persist;
+2. associate every claim with content-inspected evidence from the current run or
+   existing validated knowledge;
+3. reject claims supported only by repository inventory, directory enumeration,
+   `glob`, filenames, repository names, manifest metadata or generic conventions;
+4. keep README/documentation claims scoped to exactly what the documentation
+   states; do not report them as source-code, test or runtime verification;
+5. if no stable reusable claims survive this check, return `insufficient
+   evidence` for the phase and do not create the artifact.
+
+A `glob` result is discovery evidence only. The presence of paths such as
+`TodoController.java`, `application.yml`, `docker-compose.yml` or a test class
+must never be described as inspection of those artifacts unless relevant file
+content was actually observed.
+
+Apply this gate independently to repository and workspace artifacts. Workspace
+reconciliation must not combine several weak structural signals into a stronger
+behavioural conclusion.
+
+## Evidence ledger reconciliation
+
+During `knowledge-init`, keep a run-local ledger of the evidence actually
+acquired. Treat these evidence classes differently:
+
+- `repository_inventory`: identity/topology metadata only;
+- `glob` or directory enumeration: discovered paths/structure only;
+- focused `grep`: only the returned matching content;
+- `read`: only the returned file content;
+- existing validated knowledge: reusable evidence, clearly distinguished from
+  evidence newly inspected in the current run.
+
+Before persisting workspace artifacts, before submitting coverage updates, and
+before writing the final report, reconcile all provenance wording against that
+ledger. Never use broad phrases such as `representative sources inspected`,
+`tests inspected`, `configuration inspected` or `docker-compose evidence`
+unless the ledger contains the corresponding content inspections.
+
+A test-class path discovered by `glob` is not a test inspection. A matching line
+returned by `grep` may support the specific rule expressed by that line, but it
+must be reported as matching test content rather than as inspection of the test
+suite unless the relevant test file was actually read. This applies to evidence
+lists as well as prose: do not write `X.java and unit tests`, `source + tests`,
+or equivalent shorthand unless those test files were content-read. Prefer the
+read source alone when it is sufficient; otherwise say `matching test content
+observed via grep` and name the matched test file when the tool result exposes it.
+
+Architecture artifacts are subject to the same rule. Repository names,
+`.gitmodules`, manifests and discovered deployment paths may establish
+structural topology, but runtime/deployment architecture claims that depend on
+`docker-compose`, gateway configuration or deployment manifests require those
+contents to have been inspected. Do not create or strengthen `architecture.md`
+when its material claims would exceed that evidence ceiling.
+
+Coverage is also reconciled against the ledger. A repository whose README and
+manifest were read but whose material implementation/configuration surfaces
+remain merely discovered is normally `partially analysed`, not `analysed`, for
+the current slice. Preserve a stronger validated prior state rather than
+regressing it.
 
 ## Document responsibility
 
