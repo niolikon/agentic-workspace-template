@@ -325,7 +325,11 @@ unless the ledger contains the corresponding content inspections.
 A test-class path discovered by `glob` is not a test inspection. A matching line
 returned by `grep` may support the specific rule expressed by that line, but it
 must be reported as matching test content rather than as inspection of the test
-suite unless the relevant test file was actually read.
+suite unless the relevant test file was actually read. This applies to evidence
+lists as well as prose: do not write `X.java and unit tests`, `source + tests`,
+or equivalent shorthand unless those test files were content-read. Prefer the
+read source alone when it is sufficient; otherwise say `matching test content
+observed via grep` and name the matched test file when the tool result exposes it.
 
 Architecture artifacts are subject to the same rule. Repository names,
 `.gitmodules`, manifests and discovered deployment paths may establish

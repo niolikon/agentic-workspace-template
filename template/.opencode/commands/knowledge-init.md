@@ -274,7 +274,12 @@ run-local ledger:
    with the exact observed artifacts or with narrower wording such as `matching
    test content observed via grep` when that is what actually occurred;
 3. ensure coverage notes name only evidence actually acquired in the run or
-   explicitly preserved validated knowledge;
+   explicitly preserved validated knowledge. Do not append broad evidence labels
+   such as `unit tests`, `tests`, `source files` or `configuration` after naming a
+   read file unless those additional artifacts were themselves content-inspected.
+   If grep returned a relevant match from a test, say `matching test content
+   observed via grep` (optionally naming the matched file when known), not simply
+   `unit tests` or `tests`;
 4. ensure a repository is not promoted to `analysed` when material analysis
    surfaces required for its generated knowledge remain merely discovered or
    unresolved; use `partially analysed` for the new run unless a stronger

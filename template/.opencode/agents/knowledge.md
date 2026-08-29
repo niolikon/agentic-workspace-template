@@ -166,7 +166,10 @@ supported by sufficient evidence.
 - A focused `grep` match proves only the returned matching content; it does not
   justify saying that the whole file, test suite or source category was
   inspected. Avoid aggregate claims such as `representative sources inspected`
-  unless the ledger identifies the corresponding content inspections.
+  unless the ledger identifies the corresponding content inspections. Likewise,
+  do not cite evidence as `TodoService.java and unit tests`, `service and tests`,
+  or similar shorthand when the test files were not read. Cite the read artifact
+  alone, or explicitly report `matching test content observed via grep`.
 - Apply the same ledger to architecture generation. Do not describe
   `docker-compose`, gateway, deployment or runtime configuration as inspected
   evidence when those paths were only discovered. If material architecture

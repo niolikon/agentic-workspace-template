@@ -123,7 +123,9 @@ inspection.
   having `representative sources inspected` unless such source reads really
   occurred;
 - a `grep` match in tests may support the matched claim, but the report must not
-  say `tests inspected` unless the relevant test contents were actually read;
+  say `tests inspected`, `unit tests`, `X.java and unit tests`, or equivalent
+  shorthand unless the relevant test files were actually read; when only grep
+  evidence exists, use wording such as `matching test content observed via grep`;
 - coverage notes contain only exact evidence acquired by the run;
 - repositories with material implementation/configuration surfaces still
   uninspected remain `partially analysed` unless a stronger validated previous
@@ -141,6 +143,7 @@ The scenario fails if the final output or coverage contains statements such as:
 ```text
 representative sources inspected
 tests inspected
+TodoService.java and unit tests
 docker-compose evidence
 configuration inspected
 ```
