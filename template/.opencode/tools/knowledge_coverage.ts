@@ -3,7 +3,7 @@ import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { spawn } from "node:child_process"
 
-type CoverageState = "not analysed" | "referenced, not analysed" | "partially analysed" | "analysed"
+type CoverageState = "not analysed" | "referenced, not analysed" | "blocked" | "partially analysed" | "analysed"
 type CoverageEntry = { state: CoverageState; knowledgeArtifact?: string; notes?: string }
 type GitResult = { ok: boolean; stdout: string }
 type RepositoryIdentity = { name: string; remoteUrl: string | null; path: string; depth: number }
@@ -11,8 +11,9 @@ type RepositoryIdentity = { name: string; remoteUrl: string | null; path: string
 const STATE_RANK: Record<CoverageState, number> = {
   "not analysed": 0,
   "referenced, not analysed": 1,
-  "partially analysed": 2,
-  analysed: 3,
+  blocked: 2,
+  "partially analysed": 3,
+  analysed: 4,
 }
 
 function toPosix(value: string): string { return value.split(path.sep).join("/") }
@@ -163,7 +164,7 @@ function parseUpdates(value: string): Record<string, CoverageEntry> {
 export default tool({
   description: "Deterministically merge knowledge-base repository coverage. Discovers canonical logical repositories, preserves the strongest prior state, collapses duplicate stale rows and replaces the complete ## Repository coverage section. Use this during knowledge-init instead of editing coverage Markdown directly.",
   args: {
-    updates: tool.schema.string().describe('JSON object keyed by canonical repository name. Values: {"state":"analysed|partially analysed|referenced, not analysed|not analysed","knowledgeArtifact"?:string,"notes"?:string}.'),
+    updates: tool.schema.string().describe('JSON object keyed by canonical repository name. Values: {"state":"analysed|partially analysed|blocked|referenced, not analysed|not analysed","knowledgeArtifact"?:string,"notes"?:string}.'),
     repositoryRoot: tool.schema.string().optional().describe("Workspace-relative repositories root. Defaults to repositories."),
     overviewPath: tool.schema.string().optional().describe("Workspace-relative overview path. Defaults to knowledge-base/workspace/overview.md."),
   },

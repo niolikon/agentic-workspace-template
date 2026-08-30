@@ -97,6 +97,39 @@ When `$ARGUMENTS` contains repositories:
 Repository slices are execution scopes, not separate knowledge bases. All
 knowledge continues to be created or updated under `knowledge-base/`.
 
+### Resumable scoped initialization
+
+Treat an explicit repository selection as a request to initialize **or continue**
+detailed initialization for that repository. A selected repository is never
+considered complete merely because repository-local knowledge artifacts already
+exist or because coverage from an earlier run is non-empty.
+
+Before analysing each selected repository:
+
+1. read its existing repository knowledge and relevant workspace knowledge;
+2. read its persisted repository coverage state from the workspace overview;
+3. preserve validated evidence-backed content as cumulative current state;
+4. identify gaps, blockers or stale claims that the current run can resolve;
+5. perform the normal initialization-depth inspection for the selected
+   repository, even when an `overview.md` already exists;
+6. merge newly supported knowledge into the existing artifacts rather than
+   regenerating them from scratch.
+
+Coverage is workflow state, not a skip condition. In particular, `not analysed`,
+`referenced, not analysed`, `blocked` and `partially analysed` indicate that
+additional
+detailed initialization may still be useful. An explicit selection of an
+`analysed` repository also remains actionable: inspect it to normal initialization
+depth as required by the user request, preserve unchanged validated knowledge and
+refine it only when stronger current evidence supports the change.
+
+A limitation from an earlier run does not constrain a later continuation run. If
+source inspection, permissions or execution budget previously prevented detailed
+analysis, retry the normally required evidence surfaces when they are available
+now, including README/manifests, configuration, entry points, representative
+implementation, tests where useful, execution/data flows and evidence-backed
+business rules.
+
 A cross-scope relationship may be recorded when evidence from the selected
 repositories or relevant workspace-level sources supports it. Record the
 external repository as referenced but not analysed unless it was already
@@ -194,9 +227,10 @@ When repository-content inspection is blocked, unavailable or insufficient:
   diluting it with lower-confidence inference;
 - record the affected phase as `insufficient evidence` and state the concrete
   blocker or missing evidence in the command report;
-- use `partially analysed` coverage for an in-scope repository when detailed
-  analysis started but could not be completed, unless a stronger validated
-  coverage state already exists;
+- use `blocked` coverage when detailed repository inspection could not start
+  because of a concrete tool, permission or source-access blocker; use
+  `partially analysed` when detailed analysis started but could not be completed,
+  unless a stronger validated coverage state already exists;
 - do not create `execution-flows.md`, `business-rules.md` or another behavioural
   knowledge document merely to represent the failed phase.
 
@@ -303,8 +337,10 @@ was inspected because the workflow intended to inspect it.
 3. when repository arguments are absent, resolve the detailed scope through the
    repository-selection flow above, or stop after inventory for `Inventory only`
    or textual fallback;
-4. only after `analysis_scope` is resolved, read existing knowledge before
-   writing so valid knowledge from earlier slices is preserved;
+4. only after `analysis_scope` is resolved, read existing repository and
+   workspace knowledge plus persisted coverage before writing so valid knowledge
+   from earlier slices is preserved and incomplete selected repositories can be
+   resumed deliberately;
 5. create or update repository overview documents for repositories in the
    detailed analysis scope;
 6. document orchestrator and submodule relationships supported by evidence,
@@ -420,7 +456,9 @@ Maintain repository coverage in `knowledge-base/workspace/overview.md` through
 Coverage states are:
 
 - `analysed`: detailed analysis completed in this or a previous initialization;
-- `partially analysed`: detailed analysis started but incomplete or blocked;
+- `blocked`: detailed repository inspection could not start because of a
+  concrete access, permission or tool blocker;
+- `partially analysed`: detailed analysis started but remains incomplete;
 - `referenced, not analysed`: known through a supported relationship but not
   deeply inspected;
 - `not analysed`: present in the authoritative inventory but not yet deeply
@@ -479,8 +517,62 @@ claims. Report the current requested scope only in the command's final response.
 State progression is monotonic unless evidence invalidates previously stored
 knowledge:
 
-`not analysed` -> `referenced, not analysed` -> `partially analysed` ->
-`analysed`.
+`not analysed` -> `referenced, not analysed` -> `blocked` ->
+`partially analysed` -> `analysed`.
+
+Do not use the current coverage state as a reason to skip an explicitly selected
+repository. Coverage describes cumulative validated progress; it does not replace
+the requested initialization work.
+
+### Explicit scoped re-inspection gate
+
+When repository arguments were supplied explicitly, successful completion requires
+fresh repository evidence from the current run. Reading inventory, persisted
+coverage and existing knowledge is preparation for re-initialization, not evidence
+that the requested repository still matches that knowledge.
+
+Before concluding that an explicitly selected repository needs no knowledge
+changes:
+
+1. perform fresh discovery inside that repository in the current run;
+2. content-inspect the normal initialization evidence surfaces that are material to
+   its current responsibilities, such as manifests, configuration, entry points,
+   representative implementation and tests where useful;
+3. compare that current evidence with the preserved knowledge;
+4. only then leave unchanged artifacts untouched when no evidence-backed update is
+   needed.
+
+An `analysed` coverage state, unchanged repository knowledge, or the mere presence
+of repository artifacts must never satisfy this gate by itself. Do not finish an
+explicit scoped run after only `repository_inventory` plus reads under
+`knowledge-base/`. A no-change result is valid only after current-run repository
+inspection, or after reporting a concrete blocker that prevented that inspection.
+
+If the current run has weaker or unavailable source evidence, preserve stronger
+validated knowledge unchanged and report the limitation. Do not rewrite stronger
+artifacts from the weaker evidence merely to demonstrate that re-inspection was
+attempted.
+
+Fresh inspection does not itself justify a knowledge change. Treat the existing
+validated artifacts as the baseline and require a material evidence delta before
+writing: a newly observed responsibility, flow, rule, relationship, contradiction,
+stale statement, or materially stronger detail that is not already represented.
+If current evidence merely confirms the baseline, leave the repository knowledge
+byte-stable where practical and report that re-inspection found no material delta.
+Do not rewrite, reformat, reorder, or expand documents merely to prove that the
+repository was re-inspected.
+
+Do not create an additional repository knowledge artifact during re-initialization
+solely because an analytical phase is available. Add a new artifact only when the
+current inspection reveals a material, evidence-backed knowledge gap that belongs in
+that artifact and is not adequately represented by existing repository knowledge.
+
+Before persisting a newly observed defect, contradiction, or stale statement, verify
+that the conclusion is supported by the repository's actual language/toolchain and
+relevant configuration. Do not record a syntax/build defect from surface syntax alone
+when its validity depends on language version, compiler settings, generated-code
+semantics, or another inspectable context. If that context is not confirmed, leave the
+claim unresolved rather than mutating validated knowledge.
 
 ## Final report
 
@@ -494,6 +586,30 @@ Report:
 - major workspace-level findings;
 - unresolved blockers;
 - phases that could not be completed.
+
+After `knowledge_coverage` has persisted the canonical current state, derive
+continuation guidance from that actual coverage. If any canonical repository is
+`partially analysed`, `blocked`, `referenced, not analysed` or `not analysed`,
+list the
+repositories for which detailed initialization remains incomplete and provide a
+copyable command for each immediate-child repository that can be continued, for
+example:
+
+```text
+Detailed initialization remains incomplete for:
+
+- RepositoryB — partially analysed
+- RepositoryC — blocked
+
+Continue individually with:
+
+/knowledge-init RepositoryB
+/knowledge-init RepositoryC
+```
+
+Do not emit generic resume advice when coverage already identifies the concrete
+repositories. Do not suggest `knowledge-update` for the purpose of completing an
+incomplete initialization.
 
 ## Completion criteria
 
