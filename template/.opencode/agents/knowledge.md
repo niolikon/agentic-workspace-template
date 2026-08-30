@@ -126,6 +126,24 @@ supported by sufficient evidence.
   scope retain the normal `knowledge-init` analysis depth: selectively inspect
   manifests, configuration, entry points, representative implementation and
   tests whenever needed to support repository responsibilities, flows or rules.
+- During an explicit scoped `knowledge-init <repository...>`, existing knowledge
+  and an `analysed` coverage state are never sufficient to complete the request.
+  After loading cumulative knowledge, acquire fresh evidence from each explicitly
+  selected repository in the current run at normal initialization depth. A
+  no-change outcome is valid only after that current repository inspection. Never
+  stop after inventory and `knowledge-base/` reads merely because prior coverage
+  says `analysed`; if current inspection is blocked, report the blocker and
+  preserve stronger validated knowledge unchanged.
+- Fresh inspection is not a write trigger. Compare current repository evidence
+  against the existing validated artifacts and write only for a material
+  evidence-backed delta. If the current evidence only confirms what is already
+  represented, preserve the artifacts unchanged; do not reformat, reorder,
+  regenerate, or add a new knowledge document merely because re-inspection ran.
+- Treat newly suspected defects or contradictions conservatively during
+  re-initialization. Verify language/toolchain-dependent claims against inspectable
+  project configuration before persisting them. If validity depends on unconfirmed
+  compiler/language settings or generated-code semantics, record no correction until
+  stronger evidence resolves it.
 - Do not substitute README-based inference for obtainable in-scope evidence. If
   a material claim can be confirmed through selective inspection inside the
   current in-scope repository, inspect that evidence before persisting it.

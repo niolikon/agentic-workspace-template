@@ -8,6 +8,11 @@ Update the knowledge base for:
 
 $ARGUMENTS
 
+This command is for a focused update caused by a known change, topic or
+investigation. It is not the continuation mechanism for incomplete repository
+initialization. To complete or revisit detailed initialization of a repository,
+use `/knowledge-init <repository...>` instead.
+
 Load:
 
 - `knowledge-generation`;

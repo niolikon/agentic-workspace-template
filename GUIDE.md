@@ -291,7 +291,7 @@ The agents use the model configured in `opencode.jsonc` unless a model is explic
 Available slash commands:
 
 ```text
-/knowledge-init
+/knowledge-init [repository...]
 /knowledge-update <topic>
 /knowledge-curate [focus]
 /project-help
@@ -299,6 +299,25 @@ Available slash commands:
 /repository-dependencies
 /workspace-inventory
 ```
+
+Knowledge maintenance is intentionally incremental:
+
+- `/knowledge-init` discovers the workspace and lets you select repositories,
+  initialize all repositories, or stop after inventory;
+- `/knowledge-init <repository...>` initializes or continues detailed knowledge
+  for the selected repositories using the existing knowledge base as cumulative
+  validated state;
+- `/knowledge-update <topic>` performs a focused update after a specific known
+  change or investigation; it is not required to resume incomplete repository
+  initialization;
+- `/knowledge-curate [focus]` consolidates and maintains generated knowledge.
+
+For large workspaces, initialize repositories progressively across separate runs.
+Each scoped run preserves prior validated knowledge, reconciles supported
+cross-repository findings and advances repository coverage when the new evidence
+justifies it. A repository that is `partially analysed`, `blocked`, `referenced, not
+analysed` or `not analysed` can be continued directly with
+`/knowledge-init <repository>`.
 
 ## 12. Validate the workspace
 

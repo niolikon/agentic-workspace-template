@@ -68,6 +68,7 @@ For every test, record:
 6. `knowledge/06-scoped-initialization.md`
 7. `knowledge/07-curation-coverage-preservation.md`
 8. `knowledge/08-evidence-limited-initialization.md`
+9. `knowledge/09-resumable-initialization.md`
 
 ## Pass criteria
 
