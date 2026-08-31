@@ -87,6 +87,87 @@ whose durable content would consist only of hypotheses, conventions or
 low-confidence guesses. Preserve any existing confirmed content unchanged unless
 new evidence supports a safe update.
 
+## Claim-strength validation
+
+Evidence provenance and evidence sufficiency are separate gates. Observing a
+source establishes only what that observation directly supports; it does not
+automatically validate every interpretation that can be derived from it.
+
+Before a new or revised finding becomes persistent validated knowledge:
+
+1. identify the direct observation;
+2. state the candidate persistent claim at the strength it would have in the
+   artifact;
+3. determine whether the claim follows directly from the observed content or
+   depends on additional language, compiler, framework, build, runtime,
+   serialization, deployment or other external semantics;
+4. identify the minimum additional evidence required for any such semantic
+   dependency;
+5. persist the claim as confirmed only when the run-local evidence ledger or
+   preserved validated knowledge contains sufficient support;
+6. otherwise keep the observation explicitly qualified or unresolved, or omit it
+   when it would not provide durable value.
+
+Use proportional verification. Direct declarations normally need no unrelated
+verification. For example, an inspected manifest containing
+`<java.version>17</java.version>` is sufficient to record that the manifest
+declares Java 17. An explicit inspected security rule can support the behaviour
+that the rule directly expresses.
+
+Apply a stronger gate to outcome claims such as:
+
+- `does not compile`;
+- `fails at runtime`;
+- `is rejected by the framework`;
+- `cannot deserialize`;
+- `will cause deployment failure`;
+- compatibility or incompatibility claims whose truth depends on a particular
+  language, compiler, framework or toolchain version.
+
+Source appearance alone is insufficient for these conclusions. Inspect relevant
+repository context first, such as project manifests, explicit language version,
+target framework, compiler/toolchain configuration, framework versions, enabled
+features, generated-source context, diagnostics, build output or test results.
+Acquire only the evidence needed for the candidate claim; do not build or test a
+repository merely because stronger evidence could theoretically be obtained.
+
+When the missing semantics belong to an external library, framework or package
+and cannot be established efficiently from repository evidence, load
+`dependency-inspection` and use its local-first, repository-native inspection
+policy. Resolving a dependency, framework, target-framework or toolchain version
+is context, not by itself proof of the semantics attributed to that version.
+If the required semantic evidence remains unavailable, preserve uncertainty
+instead of guessing.
+
+Qualified findings must retain their uncertainty across persistence and later
+runs. Do not silently promote `unresolved`, `requires verification`, `may` or
+equivalent tentative content to confirmed knowledge without new supporting
+evidence. Prefer wording that separates observation from unverified consequence,
+for example:
+
+```text
+The claims collection uses square-bracket syntax. Compilation validity was not
+verified against the repository's configured C# language/toolchain context.
+```
+
+over an unverified conclusion such as:
+
+```text
+The claims collection contains invalid C# syntax.
+```
+
+Existing validated knowledge is a baseline, not an authority over stronger
+current evidence. When current evidence materially contradicts an existing
+claim, apply this same claim-strength gate to both sides, prefer the better
+supported conclusion, and reconcile the affected canonical artifact. Correcting
+or removing an individual stale finding does not by itself require downgrading
+repository coverage.
+
+Run this validation before deciding that a material knowledge delta exists and
+before canonical artifact replacement. `knowledge_artifact_refresh` governs safe
+artifact reconciliation; it does not validate compiler, framework, runtime or
+domain semantics.
+
 ## Scope rules
 
 - Repository-local information stays in the repository directory.

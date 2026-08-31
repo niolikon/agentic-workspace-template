@@ -69,6 +69,7 @@ For every test, record:
 7. `knowledge/07-curation-coverage-preservation.md`
 8. `knowledge/08-evidence-limited-initialization.md`
 9. `knowledge/09-resumable-initialization.md`
+10. `knowledge/10-claim-strength-validation.md`
 
 ## Pass criteria
 
