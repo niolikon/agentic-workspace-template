@@ -37,6 +37,29 @@ For scoped `knowledge-init`, an existing
 `knowledge-base/workspace/overview.md` is such a mandatory whole-file
 replacement target during cumulative coverage reconciliation.
 
+For `knowledge-init`, an existing structured repository knowledge artifact is
+also a mandatory canonical replacement target when the run materially refreshes
+its provenance or multiple major sections. This includes repository
+`overview.md` refreshes that combine prior validated knowledge with new evidence.
+For these refreshes, generic file mutation is not allowed: use the dedicated
+`knowledge_artifact_refresh` tool.
+
+The workflow must:
+
+1. call `knowledge_artifact_refresh(action=inspect)` and use the returned complete
+   content plus `revision` token as the only artifact snapshot eligible for reuse;
+2. compute the complete replacement from persistent validated knowledge plus the
+   current run-local evidence ledger;
+3. call `knowledge_artifact_refresh(action=replace)` with the complete desired
+   document and the exact `expectedRevision` returned by the inspect call;
+4. require the tool's persisted-content verification to succeed. For repository
+   `overview.md`, the tool also rejects duplicate exact Markdown headings.
+
+Do not use `write`, `edit`/patch, append or diff-style replacement for this
+refresh. If the trace shows generic mutation of the artifact instead of the
+inspect/replace protocol, the refresh procedure failed and must not be reported
+as a canonical rewrite. A post-edit read cannot repair the failure.
+
 - Prefer one file-modification operation per document.
 - Prefer small localized edits over complete rewrites.
 - When the intended change replaces multiple major sections, prepends a new
@@ -57,8 +80,11 @@ replacement target during cumulative coverage reconciliation.
 ## Existing files
 
 - Preserve validated content.
-- Update only affected sections whenever practical.
-- Do not regenerate a complete document when a localized edit is sufficient.
+- Update only affected sections whenever practical, except for targets explicitly
+  designated above as mandatory whole-file replacements.
+- Do not regenerate a complete document when a localized edit is sufficient, but
+  do regenerate it when the loaded workflow requires canonical whole-file
+  replacement for correctness.
 - Preserve relative links and source references.
 
 ## Post-write validation
