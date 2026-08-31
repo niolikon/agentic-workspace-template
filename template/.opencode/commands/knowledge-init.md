@@ -112,8 +112,10 @@ Before analysing each selected repository:
 4. identify gaps, blockers or stale claims that the current run can resolve;
 5. perform the normal initialization-depth inspection for the selected
    repository, even when an `overview.md` already exists;
-6. merge newly supported knowledge into the existing artifacts rather than
-   regenerating them from scratch.
+6. reconcile newly supported knowledge with the existing artifacts; when a
+   structured repository artifact is materially refreshed, regenerate its
+   complete canonical content from the observed prior artifact plus the current
+   run-local ledger instead of incrementally patching run-relative sections.
 
 Coverage is workflow state, not a skip condition. In particular, `not analysed`,
 `referenced, not analysed`, `blocked` and `partially analysed` indicate that
@@ -283,14 +285,113 @@ This checkpoint applies especially before creating `execution-flows.md`,
 
 Maintain a run-local evidence ledger while initialization is executing. The
 ledger is conceptual working state and does not need to be persisted as a new
-knowledge document. It must distinguish, at minimum:
+knowledge document. Build it from completed tool results, not from the analysis
+plan or from repository expectations.
+
+Record evidence immediately after each successful acquisition and retain the
+exact repository/path plus the acquisition event that actually occurred. The
+ledger must distinguish, at minimum:
 
 - repository/inventory facts returned by `repository_inventory`;
-- paths discovered by `glob` or directory enumeration;
-- focused content fragments observed through `grep`;
-- files whose contents were observed through `read` or an equivalent content
+- exact paths discovered by `glob` or directory enumeration;
+- exact files/fragments whose matching content was returned by focused `grep`;
+- exact files whose contents were returned by `read` or an equivalent content
   inspection;
-- preserved validated knowledge reused from a previous run.
+- preserved validated knowledge reused from a previous run, but only after the
+  existing knowledge artifact itself has been content-read in the current run.
+
+`existing validated knowledge` is not implicit workspace memory. Before an
+existing artifact can contribute evidence, confidence or claims to the current
+run, read that artifact and record the read as the acquisition event establishing
+its reusable validated-knowledge basis. Merely knowing that the file exists,
+patching it, seeing it in persisted coverage, or remembering assertions from a
+prior run does not establish `existing validated knowledge`. If the artifact
+cannot be read, preserve it unchanged when safe to do so but do not use its
+contents as evidence for new or rewritten claims.
+
+When refreshing an existing knowledge artifact, distinguish persistent validated
+knowledge from run-relative diagnostics. Persistent facts and claims that remain
+supported may be preserved. Run-relative material must be regenerated from the
+current run-local ledger and current analysis state rather than copied forward.
+Treat as run-relative, at minimum:
+
+- sections labelled `Evidence acquired during this run`, `this run`, `current
+  run`, or equivalent;
+- statements that a source/category was or was not read, inspected, discovered
+  or matched in a particular run;
+- current-run evidence ledgers, acquisition summaries and provenance lists;
+- limitations or `insufficient evidence` rationales whose reason is that a
+  source/category was not inspected in that run;
+- current-run confidence rationales and `next steps` that exist only because a
+  particular source was not inspected.
+
+Before writing the refreshed artifact, remove or replace stale run-relative
+material that conflicts with the current ledger. New acquisitions may invalidate
+old diagnostics even when the underlying persistent facts remain valid. For
+example, after reading `AuthController.java` and `application.yml` in the current
+run, an existing overview must not retain statements such as `no source files
+were read`, `HTTP endpoints are insufficient evidence because source was not
+inspected`, or `runtime configuration was not inspected`. An embedded
+`Evidence acquired during this run` section must be rebuilt from all relevant
+current-run ledger entries, not incrementally patched from the previous run.
+
+For structured knowledge artifacts such as repository `overview.md`, a material
+refresh of an existing artifact is a **tool-enforced canonical replacement**.
+Do not use generic `write` or `edit`/patch for this operation. Use the dedicated
+`knowledge_artifact_refresh` tool so that inspection ordering, stale-revision
+protection, whole-file replacement and persisted-content verification are
+mechanically enforced.
+
+The required sequence is:
+
+1. invoke `knowledge_artifact_refresh` with `action: inspect` for the complete
+   existing artifact before any modification and before using its assertions as
+   validated input. Treat the returned content as the content-inspection event
+   that establishes `existing validated knowledge`, and retain the returned
+   `revision` token;
+2. snapshot only persistent validated facts and their prior provenance. Text in
+   the old artifact that says `read`, `discovered`, `inventory`, `this run`,
+   `not inspected`, or equivalent remains prior-run provenance and must never be
+   copied into the current run-local ledger;
+3. acquire current-run repository evidence and populate the run-local ledger only
+   from completed acquisition results in the current trace;
+4. reconcile persistent facts with that ledger and recompute all run-relative
+   evidence, limitations, confidence and unresolved items;
+5. render the complete desired canonical artifact in memory;
+6. invoke `knowledge_artifact_refresh` with `action: replace`, the complete
+   replacement content and the exact `expectedRevision` returned by step 1.
+   Generic `write`, `edit`, patch, diff-style replacement, append-only merge and
+   repeated localized edits are forbidden for this refresh;
+7. require the tool result to report successful exact-content verification. The
+   tool performs the persisted readback and rejects stale revision tokens or
+   invalid duplicate Markdown headings in repository `overview.md` files.
+
+If the dedicated tool is unavailable, denied, rejects the revision, or reports a
+verification failure, report the refresh as blocked and preserve/re-read the
+current artifact before deciding whether a new attempt is safe. Do not silently
+fall back to generic `write` or patching. A generic `Read` performed only after a
+mutation does not satisfy this protocol. `inspect -> reconcile -> replace`
+applies only to the individual artifact being refreshed; it does not authorize
+rewriting unrelated knowledge artifacts or regenerating the whole knowledge
+base.
+
+The final response must describe the operations that are actually visible in the
+tool trace. Do not claim `read before update`, `fully rewritten`, inventory
+discovery, or a current-run source read unless the corresponding current-run
+tool event occurred in that order.
+
+Do not pre-populate the ledger with files the workflow intends to inspect, common
+framework files, paths mentioned by another document, paths represented in
+generated knowledge, or sources that would normally be expected in the
+repository. A source enters the ledger only after the corresponding acquisition
+result has actually been observed.
+
+Track acquisition events independently. If `glob` discovers `application.yml`
+and no later content operation observes it, its state is only `discovered`. If a
+focused `grep` later returns matching content from that file, add `matched via
+grep`; this still does not imply a complete-file read. If `read` later returns
+the file content, add `read`. Never synthesize `read`, `inspected` or `observed`
+from an earlier discovery event.
 
 A `grep` match authorizes only claims supported by the returned matching
 content. It does not mean that the entire matching file, test suite, source
@@ -299,7 +400,9 @@ from the content actually returned by that read.
 
 Before `knowledge_coverage`, before creating any workspace-level artifact, and
 again before the final response, reconcile every evidence statement against the
-run-local ledger:
+run-local ledger. Reconciliation is subtractive: it may remove, narrow or
+relabel reported evidence, but it must never add a source merely because that
+source would make the explanation more complete.
 
 1. remove statements that claim inspection of an artifact or evidence category
    absent from the ledger;
@@ -323,11 +426,57 @@ run-local ledger:
    config, deployment manifest or source path is not deployment/runtime evidence;
 6. if reconciliation removes the material support for a newly created artifact,
    do not keep that artifact merely because it was already drafted in the run.
-   Omit it, or preserve an older validated version unchanged when one exists.
+   Omit it, or preserve an older validated version unchanged when one exists;
+7. construct each `knowledge_coverage` note from the reconciled ledger for that
+   repository. Name exact read sources when useful, describe grep-only evidence
+   as `matching content observed via grep`, and keep preserved validated
+   knowledge explicitly separate from evidence newly acquired in this run. The
+   `knowledgeArtifact` field is not an evidence-description field: when supplied,
+   it must be the path of an actual knowledge Markdown artifact under
+   `knowledge-base/` (for example
+   `knowledge-base/repositories/RepositoryA/overview.md` or the equivalent
+   knowledge-base-relative `repositories/RepositoryA/overview.md`). Put phrases
+   such as `pom.xml read` or `existing validated overview preserved` in `notes`,
+   never in `knowledgeArtifact`;
+8. before writing or updating any knowledge artifact, derive every `Evidence`,
+   `Sources`, provenance or confidence-support statement in that artifact from
+   the same reconciled ledger. Generated artifact prose must not create its own
+   evidence inventory. In particular, never claim that a README, manifest,
+   nested checkout, source file or configuration file was read merely because it
+   exists, was discovered, is conventional for the repository, or is mentioned
+   by another read source. If an artifact needs to cite a source whose current-run
+   acquisition is absent from the ledger, omit that source or label it only as
+   `existing validated knowledge` when that status is actually established.
+   When updating an existing artifact, preserve persistent validated claims but
+   replace its run-relative diagnostics with a fresh projection of the current
+   ledger. Do not leave stale `this run` evidence lists, absence-of-inspection
+   statements, unresolved questions, confidence rationales or next steps whose
+   stated evidence gap has been closed by current-run reads;
+9. if the final response exposes an evidence/provenance ledger, render only
+   ledger-backed source entries and use explicit acquisition labels:
+   `discovered`, `matched via grep`, `read`, or `existing validated knowledge`.
+   Do not use ambiguous slash labels such as `read/discovered`. If more than one
+   event actually occurred for the same source, report the events explicitly
+   (for example `discovered; read`) or report separate event entries.
 
 The final report must be a projection of this reconciled ledger, not a narrative
-reconstruction of intended analysis steps. Never claim that a file or category
-was inspected because the workflow intended to inspect it.
+reconstruction of intended analysis steps. This applies both to explicit
+provenance sections and to ordinary summary prose such as `README/manifests
+inspected`, `configuration reviewed`, `representative sources inspected` or
+similar descriptions of work performed. Never claim that a file or category was
+inspected because the workflow intended to inspect it. In particular, do not add
+`README.md`, `pom.xml`, `application.yml`, `docker-compose.yml` or another
+conventional repository file to the final evidence list or summary unless its
+reported acquisition event exists in the current-run ledger.
+
+Use only the canonical acquisition vocabulary when describing source provenance:
+`discovered`, `matched via grep`, `read`, and `existing validated knowledge`.
+Do not invent hybrid labels such as `matched via read`, `read/discovered`,
+`inspected/read`, or other ad-hoc states. When a relationship is learned by
+reading another file, describe the relationship separately from the provenance,
+for example: `Referenced by RepositoryA via .gitmodules. Evidence source:
+RepositoryA/.gitmodules (read).` This must not imply that the referenced
+repository itself was read.
 
 ## Workflow
 
@@ -338,9 +487,12 @@ was inspected because the workflow intended to inspect it.
    repository-selection flow above, or stop after inventory for `Inventory only`
    or textual fallback;
 4. only after `analysis_scope` is resolved, read existing repository and
-   workspace knowledge plus persisted coverage before writing so valid knowledge
-   from earlier slices is preserved and incomplete selected repositories can be
-   resumed deliberately;
+   workspace knowledge plus persisted coverage before using or rewriting that
+   knowledge, so valid knowledge from earlier slices is explicitly observed,
+   preserved and resumable. A pre-existing artifact must have a current-run
+   `read` before its contents may be classified as `existing validated
+   knowledge`; do not rely on patch context, file existence or prior-run memory
+   as a substitute for that read;
 5. create or update repository overview documents for repositories in the
    detailed analysis scope;
 6. document orchestrator and submodule relationships supported by evidence,
@@ -473,14 +625,18 @@ manifests or structural discovery while material implementation behaviour
 remains unverified, use `partially analysed` unless a stronger validated state
 already exists.
 
-Coverage notes must describe only evidence actually acquired. Do not write
-notes such as `controller inspected`, `tests inspected`, `configuration
-inspected`, `representative sources inspected` or equivalent unless the exact
-supporting artifacts were content-inspected in the run (or are explicitly
-identified as preserved validated knowledge). Prefer exact paths or exact
-artifact classes actually observed over broad evidence-category summaries. If a
-focused `grep` returned matching test content but no test file was read, describe
-that narrowly; do not say that tests were inspected.
+Coverage notes must describe only evidence actually acquired. Build each note
+from the reconciled run-local ledger rather than from repository contents,
+generated knowledge or the analysis plan. Do not write notes such as `controller
+inspected`, `tests inspected`, `configuration inspected`, `representative
+sources inspected` or equivalent unless the exact supporting artifacts were
+content-inspected in the run (or are explicitly identified as preserved
+validated knowledge). Prefer exact paths or exact artifact classes actually
+observed over broad evidence-category summaries. If a focused `grep` returned
+matching test content but no test file was read, describe that narrowly; do not
+say that tests were inspected. A file merely discovered by `glob` may be named
+as `discovered` when that distinction is useful, but it must not appear in the
+read/inspection portion of the note.
 
 For `analysed` and `partially analysed`, retain traceability to repository-local
 knowledge and source evidence. A repository must never become `analysed` merely
@@ -577,6 +733,15 @@ claim unresolved rather than mutating validated knowledge.
 ## Final report
 
 Keep the final response concise.
+
+Before drafting the response, build the final factual summary from the
+reconciled run-local ledger plus persisted coverage and the set of files actually
+written in the run. Do not summarize intended workflow steps as completed work.
+For example, do not say `README/manifests + selective source/config reads` unless
+README, manifest, source and configuration acquisition events supporting that
+phrase are all present. Prefer exact wording such as `read pom.xml for
+RepositoryA; read DocumentController.java and DocumentService.java for
+RepositoryB` when provenance detail is useful.
 
 Report:
 

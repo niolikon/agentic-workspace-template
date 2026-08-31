@@ -142,6 +142,19 @@ function renderCoverage(repositories: RepositoryIdentity[], states: Map<string, 
   ].join("\n")
 }
 
+function validateKnowledgeArtifact(value: string, repositoryName: string): string {
+  const artifact = value.trim().replace(/\\/g, "/")
+  if (!artifact) throw new Error(`knowledgeArtifact for ${repositoryName} must not be empty`)
+  const normalized = artifact.startsWith("knowledge-base/") ? artifact.slice("knowledge-base/".length) : artifact
+  const segments = normalized.split("/")
+  const validRoot = segments[0] === "repositories" || segments[0] === "workspace"
+  const safeSegments = segments.every((segment) => segment.length > 0 && segment !== "." && segment !== "..")
+  if (!validRoot || !safeSegments || !normalized.toLowerCase().endsWith(".md")) {
+    throw new Error(`knowledgeArtifact for ${repositoryName} must be a Markdown path under knowledge-base/: ${value}`)
+  }
+  return artifact
+}
+
 function parseUpdates(value: string): Record<string, CoverageEntry> {
   let parsed: unknown
   try { parsed = JSON.parse(value) } catch { throw new Error("updates must be valid JSON") }
@@ -154,7 +167,7 @@ function parseUpdates(value: string): Record<string, CoverageEntry> {
     if (!state) throw new Error(`Invalid coverage state for ${name}: ${String(item.state)}`)
     result[name] = {
       state,
-      knowledgeArtifact: typeof item.knowledgeArtifact === "string" ? item.knowledgeArtifact : undefined,
+      knowledgeArtifact: typeof item.knowledgeArtifact === "string" ? validateKnowledgeArtifact(item.knowledgeArtifact, name) : undefined,
       notes: typeof item.notes === "string" ? item.notes : undefined,
     }
   }
@@ -164,7 +177,7 @@ function parseUpdates(value: string): Record<string, CoverageEntry> {
 export default tool({
   description: "Deterministically merge knowledge-base repository coverage. Discovers canonical logical repositories, preserves the strongest prior state, collapses duplicate stale rows and replaces the complete ## Repository coverage section. Use this during knowledge-init instead of editing coverage Markdown directly.",
   args: {
-    updates: tool.schema.string().describe('JSON object keyed by canonical repository name. Values: {"state":"analysed|partially analysed|blocked|referenced, not analysed|not analysed","knowledgeArtifact"?:string,"notes"?:string}.'),
+    updates: tool.schema.string().describe('JSON object keyed by canonical repository name. Values: {"state":"analysed|partially analysed|blocked|referenced, not analysed|not analysed","knowledgeArtifact"?:string,"notes"?:string}. knowledgeArtifact, when supplied, must be a Markdown artifact path under knowledge-base/ (explicitly or relative as repositories/... or workspace/...); evidence descriptions belong in notes.'),
     repositoryRoot: tool.schema.string().optional().describe("Workspace-relative repositories root. Defaults to repositories."),
     overviewPath: tool.schema.string().optional().describe("Workspace-relative overview path. Defaults to knowledge-base/workspace/overview.md."),
   },
