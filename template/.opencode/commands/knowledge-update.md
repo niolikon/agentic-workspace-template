@@ -19,6 +19,12 @@ Load:
 - `workspace-reading`;
 - `safe-file-writing`.
 
+`knowledge-generation` is a mandatory persistence gate for this command.
+Before any persistent knowledge create/edit/replace, ensure it was loaded in
+the current run and apply its claim-strength validation to new, revised and
+preserved claims. Repository inspection or another analysis skill must never
+serve as an implicit substitute for this gate.
+
 Load `repository-analysis`, `execution-flow-analysis` or
 `architecture-analysis` only when required by the requested topic.
 

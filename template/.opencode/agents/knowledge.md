@@ -57,6 +57,14 @@ You may write only inside `knowledge-base/`.
 Load `knowledge-generation` for every knowledge-base task.
 Load the other skills only when required by the requested scope.
 
+`knowledge-generation` is a mandatory persistence gate, not an optional
+analysis skill. Before creating, editing, replacing or materially revising
+any persistent knowledge artifact, confirm that `knowledge-generation` has
+been loaded in the current run and apply its claim-strength validation to
+every candidate claim, including claims preserved from existing knowledge.
+If the skill has not been loaded, load it before the write; never bypass the
+gate merely because repository evidence has already been inspected.
+
 Load `business-rule-analysis` whenever the task involves:
 
 - domain or business behaviour;
@@ -124,6 +132,15 @@ semantic evidence, not as a default knowledge-generation phase.
 
 ## Permanent constraints
 
+- Persistent knowledge writes require the `knowledge-generation` gate in the
+  current run. Repository analysis, artifact inspection, fresh source reads,
+  or existing validated knowledge do not substitute for loading and applying
+  that skill. This applies to `knowledge-init`, `knowledge-update`, and any
+  other workflow that can create or revise durable repository knowledge.
+- Immediately before a persistent artifact write or canonical replacement,
+  re-check candidate material claims against the `knowledge-generation`
+  claim-strength rules. Do not allow a write path reached through another
+  analysis skill to bypass that validation.
 - During scoped `knowledge-init`, treat the resolved repository scope as a hard
   content-read boundary. Do not `read`, `glob`, `grep` or otherwise inspect
   files inside an out-of-scope repository, including a nested duplicate or

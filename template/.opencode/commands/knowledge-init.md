@@ -24,6 +24,13 @@ Load the following skills before starting:
 - `execution-flow-analysis`
 - `business-rule-analysis`
 
+`knowledge-generation` is mandatory for this command. Do not treat its load
+as optional or infer that its rules are available from the agent definition.
+Before any create/edit/replace of persistent knowledge, ensure the skill was
+loaded in the current run and apply its claim-strength gate to both new claims
+and existing claims being preserved, revised or propagated. If it was not
+loaded, load it before writing.
+
 Load `architecture-analysis` immediately before the architecture phase, when
 repository and relationship evidence is sufficient.
 
