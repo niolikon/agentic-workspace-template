@@ -6,6 +6,7 @@ steps: 120
 
 permission:
   repository_inventory: allow
+  knowledge_inventory: allow
   knowledge_coverage: allow
   question: allow
   
@@ -185,6 +186,13 @@ semantic evidence, not as a default knowledge-generation phase.
   preserve stronger validated knowledge unchanged.
 - During `knowledge-update`, existing validated knowledge must be inspected first
   and treated as the comparison baseline, never as current repository evidence.
+  Invoke `knowledge_inventory` after canonical repository resolution and use it as
+  the authoritative structural source for repository-knowledge existence and the
+  repository artifact inventory. Do not use `glob`, directory enumeration,
+  conversational memory or coverage alone to decide baseline existence.
+  For a full repository update, discover and canonically inspect every existing
+  repository-level knowledge artifact before concluding which concerns are
+  unaffected; interactive and argument-based full updates use the same workflow.
   A full repository update must acquire sufficient fresh repository content to
   revalidate affected claims; a targeted aspect update must acquire sufficient
   fresh content for that concern and any required supporting evidence. Git

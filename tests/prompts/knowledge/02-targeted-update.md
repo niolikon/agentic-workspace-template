@@ -28,6 +28,8 @@ Run:
 ### Expected behavior
 
 - Invokes canonical repository inventory before repository-local inspection.
+- Uses `knowledge_inventory` rather than `glob` as the authoritative source for
+  which canonical repositories have persisted repository knowledge.
 - Offers repository selection first, with `Select repository` as the recommended
   path.
 - Does not inspect repository-local source before the repository is selected.
@@ -48,6 +50,9 @@ Modify meaningful repository behaviour, then run:
 
 ### Expected behavior
 
+- Obtains the selected repository's canonical artifact inventory from
+  `knowledge_inventory` and canonically inspects every existing repository-level
+  artifact before concluding that it is preserved or affected.
 - Inspects existing validated repository knowledge before reconciliation.
 - Treats prior knowledge as a baseline, not as current repository evidence.
 - Acquires fresh current implementation evidence at enough depth to revalidate
@@ -175,6 +180,8 @@ The test fails if any of the following occurs:
 - interactive mode asks for a free-form topic before canonical repository
   selection;
 - a repository argument is not resolved through canonical inventory;
+- baseline eligibility or the repository artifact inventory is decided from
+  `glob`/directory enumeration instead of `knowledge_inventory`;
 - existing knowledge or Git diff is treated as sufficient current evidence;
 - a full update performs no fresh repository content inspection;
 - a targeted update rewrites unrelated artifacts without a material reason;
@@ -188,3 +195,16 @@ The test fails if any of the following occurs:
   inspecting that binding/consumer;
 - unsupported behavioural or toolchain-dependent claims bypass claim-strength
   validation.
+
+## Interactive/full workflow equivalence regression
+
+- With existing knowledge under `knowledge-base/repositories/Demo.AuthService/`, run `/knowledge-update` in a fresh session.
+- Select `Demo.AuthService` and `Full repository update`.
+- Verify every existing repository-level artifact is canonically inspected before the run concludes that it is preserved.
+- Verify the resulting reconciliation semantics match `/knowledge-update Demo.AuthService` rather than using an overview-only interactive path.
+
+## Baseline discovery regression
+
+- In a fresh session, keep existing repository knowledge on disk and run interactive `/knowledge-update`.
+- Verify repository eligibility is established through `knowledge_inventory`, independent of broad/one-level glob behavior.
+- The command must not report `baseline missing` while `knowledge_inventory` reports one or more artifacts under `knowledge-base/repositories/<repository>/`.

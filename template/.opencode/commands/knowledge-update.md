@@ -90,6 +90,10 @@ an aspect as a file or directory path.
 
 Always invoke `repository_inventory` before repository-local source inspection so
 repository identity is resolved against the canonical workspace inventory.
+Use `knowledge_inventory` as the authoritative structural inventory of persisted
+repository knowledge. `glob` may support non-authoritative exploration, but it
+must never decide baseline eligibility or which repository knowledge artifacts
+exist.
 
 ## Interactive mode
 
@@ -104,14 +108,18 @@ Ask the first question with mutually exclusive options:
 - `Select repository` (recommended/default);
 - `Cancel`.
 
-When `Select repository` is chosen, ask the repository-selection question with
-exactly one option for each canonical repository that has existing repository
-knowledge or a persisted analysed/partially-analysed coverage entry suitable for
-maintenance.
-Use exact canonical identifiers as labels and allow one repository selection.
-If no existing repository knowledge can be established from permitted
-knowledge-base reads, offer the canonical inventory but report that
-`knowledge-init` may be more appropriate for repositories without a baseline.
+When `Select repository` is chosen, invoke `knowledge_inventory` and intersect
+its repository entries with the canonical identifiers returned by
+`repository_inventory`. Ask the repository-selection question with exactly one
+option for each canonical repository whose knowledge inventory contains at least
+one repository artifact. Use exact canonical identifiers as labels and allow one
+repository selection.
+
+Persisted analysed/partially-analysed coverage may be shown as supporting state,
+but coverage alone does not make a repository eligible when no inspectable
+repository artifact exists. If no canonical repository has repository knowledge,
+report that `knowledge-init` is required rather than using `glob` as a fallback
+eligibility check.
 
 After a single repository is selected, ask the next question for the update
 aspect with these mutually exclusive options:
@@ -124,6 +132,12 @@ aspect with these mutually exclusive options:
 - `Configuration / runtime wiring`;
 - `Dependencies / integrations`.
 
+After interactive selection, normalize the answers to the same canonical
+`repository` and `aspect` values used by argument parsing and continue through
+the same baseline-eligibility, evidence-acquisition and reconciliation workflow.
+Interactive mode only resolves missing input; it must not introduce a separate
+maintenance path or weaker full-update semantics.
+
 If the `question` tool is unavailable or fails before selection is obtained, do
 not retry it repeatedly. Report the canonical repositories and provide directly
 executable examples for repository-full and repository-aspect invocation, then
@@ -132,9 +146,22 @@ stop without repository-local source inspection or knowledge writes.
 ## Baseline eligibility
 
 `knowledge-update` requires an established repository knowledge baseline. After
-canonical resolution, verify that repository knowledge exists and can be
-content-inspected. Persisted coverage may help locate the baseline but does not
-substitute for reading the knowledge artifact.
+canonical repository resolution, invoke:
+
+```text
+knowledge_inventory(repository="<canonical-repository>")
+```
+
+Use its returned canonical artifact list to determine structural baseline
+existence. The repository is eligible for maintenance only when at least one
+repository knowledge artifact exists and at least one relevant existing artifact
+can be content-inspected before its claims are reused. Artifact existence is not
+semantic validation.
+
+Do not use `glob`, directory enumeration, conversational/session memory or
+persisted coverage as substitutes for `knowledge_inventory`. Persisted coverage
+may describe canonical state but does not substitute for an inspectable knowledge
+artifact.
 
 If the repository has no existing validated repository knowledge, stop before
 repository-local maintenance writes and recommend:
@@ -153,7 +180,9 @@ post-development changes.
 
 Before deciding what changed for a selected repository:
 
-1. inspect its existing repository knowledge;
+1. use the selected repository entry returned by `knowledge_inventory` as the
+   canonical artifact inventory, then inspect the relevant existing repository
+   knowledge through `knowledge_artifact_refresh(action=inspect)`;
 2. inspect relevant workspace knowledge that contains validated relationships or
    flows involving the repository;
 3. read its persisted coverage state from the workspace overview when present;
@@ -196,13 +225,23 @@ Do not require the user to identify changed files.
 
 ## Full repository update
 
-For:
+For an explicit repository-only invocation or an interactive selection resolved
+to `Full repository update`:
 
 ```text
 /knowledge-update <repository>
 ```
 
-perform a detailed repository refresh.
+perform the same detailed repository refresh. Use the artifact list returned by
+`knowledge_inventory(repository="<canonical-repository>")` as the authoritative
+repository knowledge inventory. Before deciding that any existing repository
+knowledge artifact is unaffected, canonically inspect every artifact in that
+inventory. Do not rediscover or narrow this inventory with `glob`.
+
+The inventory defines the validated concerns that the full update must reconcile;
+do not inspect only `overview.md` and infer that other persisted artifacts remain
+valid. Load the concern-specific skills represented by those artifacts when their
+claims require semantic revalidation.
 
 A full update must normally acquire enough current implementation evidence to
 revalidate the repository knowledge more deeply than a broad baseline
