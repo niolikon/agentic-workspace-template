@@ -129,7 +129,14 @@ Load `business-rule-analysis` whenever the task involves:
 
 Load `configuration-resolution` whenever the task involves effective
 configuration, profiles, environment overrides, runtime wiring or configuration
-consumers.
+consumers. A targeted `knowledge-update <repository> configuration` must load
+`configuration-resolution`; do not substitute `execution-flow-analysis` for that
+concern. When a changed configuration property is observed, use selective
+repository-local search and content inspection to follow that property into
+binding/consumer code when reasonably discoverable before concluding that its
+runtime consumption is unresolved. Distinguish declaration, binding/consumption
+and downstream behavioural enforcement instead of collapsing them into one
+claim.
 
 Load `impact-analysis` whenever existing repository knowledge must be reconciled
 with meaningful codebase changes or the affected knowledge artifacts are not

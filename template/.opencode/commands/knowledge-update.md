@@ -39,18 +39,27 @@ Load before starting:
 validated knowledge is a baseline, not an exemption from claim-strength
 validation and not current-run repository evidence.
 
-Load concern-specific skills as required:
+Load concern-specific skills according to the resolved update concern. For a
+targeted aspect, loading the skill that covers that concern is mandatory rather
+than optional. Preserve the full semantic scope of each skill:
 
-- `execution-flow-analysis` for execution flows and data movement;
+- `execution-flow-analysis` for execution flows, processing paths, data movement
+  and transformation;
 - `business-rule-analysis` for business rules, lifecycle, validation,
   authorization, idempotency, retry/compensation and other behavioural rules;
-- `configuration-resolution` for configuration, profiles, runtime wiring and
-  effective configuration resolution;
+- `configuration-resolution` for configuration, profiles, environment
+  overrides, runtime wiring, effective configuration resolution and
+  configuration consumers;
 - `dependency-inspection` only when an update depends on external package,
   framework or toolchain semantics that repository evidence cannot establish
   efficiently;
 - `architecture-analysis` only when a material architecture concern is in scope
   and sufficient current evidence exists.
+
+For a full repository update, load concern-specific skills as the current
+knowledge baseline and acquired repository evidence make those concerns
+material. Do not load `execution-flow-analysis` as a generic substitute for a
+different targeted concern.
 
 ## Invocation parsing
 
@@ -238,10 +247,30 @@ Examples:
   integration clients;
 - `business-rules` may require validators, domain/service logic and behavioural
   tests;
-- `configuration` may require manifests, configuration files, binding code and
-  runtime consumers;
+- `configuration` requires `configuration-resolution` and may require manifests,
+  configuration files, binding code and runtime consumers;
 - `dependencies` may require manifests plus the repository code that actually
   uses the integration.
+
+For a targeted `configuration` update, do not stop at the configuration source
+when a new, removed or changed property can reasonably be traced further inside
+the selected repository. For each material changed property:
+
+1. identify the declared key, aliases/overrides and default or profile-specific
+   values from current evidence;
+2. search selectively for binding or consumption of that key (for example
+   configuration-properties binding, direct value injection, environment lookup,
+   framework binding or another repository-local reference);
+3. content-inspect the relevant binding/consumer when found;
+4. distinguish a confirmed declaration, a confirmed binding/consumer and actual
+   runtime use/enforcement as separate claim strengths;
+5. keep downstream runtime behaviour unresolved when the inspected consumer does
+   not establish it.
+
+A configuration update may conclude with `binding/consumer not found` only after
+a reasonable repository-local search for the changed property or its binding
+mechanism. Do not infer absence merely because the configuration file itself was
+read.
 
 Do not rewrite unrelated knowledge artifacts merely because they were read as
 supporting evidence. Preserve validated knowledge outside the requested concern

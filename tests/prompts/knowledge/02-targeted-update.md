@@ -92,7 +92,16 @@ Run:
 
 ## Scenario D — targeted configuration update
 
-Run:
+Seed a material configuration delta that is both declared and consumed, for
+example add a property such as:
+
+```yaml
+demo:
+  token-ttl: ${TOKEN_TTL:30m}
+```
+
+and bind or inject `demo.token-ttl` in repository code (for example a service
+constructor or configuration-properties class). Then run:
 
 ```text
 /knowledge-update Demo.Service configuration
@@ -100,10 +109,16 @@ Run:
 
 ### Expected behavior
 
-- Loads configuration-resolution when effective configuration/runtime wiring is
-  material to the update.
-- Inspects the minimum configuration definitions, overrides, bindings and runtime
-  consumers necessary to establish the current effective behaviour.
+- Loads `configuration-resolution` deterministically for the targeted
+  configuration aspect; `execution-flow-analysis` is not used as a substitute.
+- Reads the changed configuration source and selectively searches for the changed
+  property's binding/consumer inside the repository.
+- Content-inspects the binding/consumer when found instead of concluding from the
+  configuration file alone that runtime consumption is unresolved.
+- Records declaration/default/override and binding/consumer as separately
+  supported facts.
+- Does not claim that the configured value is actually enforced in downstream
+  behaviour unless the inspected consumer establishes that behaviour.
 - Keeps unresolved configuration precedence explicit when the evidence cannot
   establish it.
 - Refreshes only materially affected knowledge artifacts.
@@ -167,5 +182,9 @@ The test fails if any of the following occurs:
 - an unchanged artifact is replaced solely because it was re-inspected;
 - generic patch/edit/write is used where canonical artifact refresh is required;
 - a targeted update downgrades coverage because its evidence scope was narrow;
+- a targeted `configuration` update fails to load `configuration-resolution`;
+- a changed configuration property with a reasonably discoverable repository
+  binding/consumer is documented as unresolved without first searching for and
+  inspecting that binding/consumer;
 - unsupported behavioural or toolchain-dependent claims bypass claim-strength
   validation.
