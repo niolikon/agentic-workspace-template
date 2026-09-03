@@ -87,6 +87,231 @@ whose durable content would consist only of hypotheses, conventions or
 low-confidence guesses. Preserve any existing confirmed content unchanged unless
 new evidence supports a safe update.
 
+## Claim-strength validation
+
+Evidence provenance and evidence sufficiency are separate gates. Observing a
+source establishes only what that observation directly supports; it does not
+automatically validate every interpretation that can be derived from it.
+
+Before a new or revised finding becomes persistent validated knowledge:
+
+1. identify the direct observation;
+2. state the candidate persistent claim at the strength it would have in the
+   artifact;
+3. determine whether the claim follows directly from the observed content or
+   depends on additional language, compiler, framework, build, runtime,
+   serialization, deployment or other external semantics;
+4. identify the minimum additional evidence required for any such semantic
+   dependency;
+5. persist the claim as confirmed only when the run-local evidence ledger or
+   preserved validated knowledge contains sufficient support;
+6. otherwise keep the observation explicitly qualified or unresolved, or omit it
+   when it would not provide durable value.
+
+### Observation boundary
+
+A direct observation may describe only repository-visible form, content or
+explicit declarations. Do not smuggle semantic interpretation into the
+`observation` step by attaching validity or outcome labels whose truth depends
+on language, compiler, framework, runtime, serializer, deployment or toolchain
+semantics.
+
+Treat labels such as the following as candidate semantic claims, not direct
+observations, whenever their truth depends on external/versioned semantics:
+
+- `valid` / `invalid syntax`;
+- `supported` / `unsupported construct`;
+- `legal` / `illegal language feature`;
+- `compatible` / `incompatible`;
+- `accepted` / `rejected`;
+- `well-formed` / `malformed`;
+- any equivalent wording that already answers whether an external semantic
+  system permits, rejects or can execute the observed construct.
+
+For example:
+
+```text
+Direct observation:
+JwtTokenFactory.cs uses square-bracket collection syntax for the claims value.
+
+Not a direct observation:
+JwtTokenFactory.cs uses invalid C# syntax.
+```
+
+The second statement has already crossed into C# language/compiler semantics
+and must therefore pass the semantic evidence gate before it can be persisted
+or used as support for another claim. Do not mark such a statement as
+`observed`, `directly observed`, `confirmed by source read`, or equivalent.
+
+Before persisting a candidate finding, normalize it into two parts when
+necessary:
+
+1. repository-visible observation;
+2. semantic interpretation or outcome.
+
+Run claim-strength validation on the second part independently. If its
+required semantics are not established, preserve only the first part plus an
+explicit statement of what was not verified.
+
+Use proportional verification. Direct declarations normally need no unrelated
+verification. For example, an inspected manifest containing
+`<java.version>17</java.version>` is sufficient to record that the manifest
+declares Java 17. An explicit inspected security rule can support the behaviour
+that the rule directly expresses.
+
+Apply a stronger gate to outcome claims such as:
+
+- `does not compile`;
+- `fails at runtime`;
+- `is rejected by the framework`;
+- `cannot deserialize`;
+- `will cause deployment failure`;
+- compatibility or incompatibility claims whose truth depends on a particular
+  language, compiler, framework or toolchain version.
+
+### Closed-world gate for semantic outcome claims
+
+For compiler-, runtime-, framework-, serializer-, deployment- and
+toolchain-dependent outcome claims, use a closed-world evidence rule: the
+claim is **not confirmed unless admissible evidence explicitly closes the
+semantic gap**. A source read, grep match, AST-like inspection, syntax
+recognition or model reasoning about what a language/framework normally means
+does not close that gap.
+
+Repository-local source inspection alone is never sufficient to confirm that
+a construct compiles, fails compilation, succeeds or fails at runtime, is
+accepted or rejected by a framework, serializes/deserializes successfully, or
+causes a deployment outcome. Treat these as unresolved unless at least one
+admissible verification path establishes the relevant semantics for this
+repository and claim, for example:
+
+- compiler/build diagnostics or an observed build result;
+- test/runtime diagnostics directly exercising the disputed behavior;
+- explicit repository configuration that fully determines the effective
+  language/toolchain/framework semantics needed for the claim;
+- directly inspected repository-local documentation that explicitly states
+  the decisive semantics for the configured environment;
+- equivalent concrete tool output or repository-native evidence that verifies
+  the disputed outcome.
+
+Do not synthesize the missing semantic link from model knowledge. For example,
+reading `<TargetFramework>net8.0</TargetFramework>` and observing a C# syntax
+form does not, by itself, permit the model to infer which C# language version
+is effective or whether that compiler accepts the syntax. The mapping itself
+must be established by admissible evidence before a compilation-validity
+claim can be confirmed.
+
+This rule is asymmetric by design: lack of verification is sufficient reason
+to withhold a strong outcome claim; it is not evidence that the opposite
+outcome is true. When the gap remains open, persist only the directly observed
+construct plus the missing verification, if that uncertainty is useful.
+
+Source appearance alone is insufficient for these conclusions. Inspect relevant
+repository context first, such as project manifests, explicit language version,
+target framework, compiler/toolchain configuration, framework versions, enabled
+features, generated-source context, diagnostics, build output or test results.
+Acquire only the evidence needed for the candidate claim; do not build or test a
+repository merely because stronger evidence could theoretically be obtained.
+
+The model's general knowledge is not repository evidence. Do not use remembered,
+pretrained or otherwise unstated knowledge about a programming language, compiler,
+framework, runtime, serializer, build tool or deployment platform as sufficient
+support for a persistent repository-specific outcome claim. Such knowledge may help
+identify what must be verified, but it does not satisfy the evidence gate.
+
+In particular, reading source code can establish that a syntax form or construct is
+present. It does not establish whether the repository's effective compiler or
+toolchain accepts or rejects that construct unless the relevant semantics are also
+established from admissible evidence. A project or target-framework declaration is
+useful context, but do not infer version-to-language-feature mappings from model
+knowledge alone. If the repository does not establish the decisive semantics and no
+approved verification source is available, the compilation outcome remains
+unresolved.
+
+Hedging does not turn an unsupported outcome into a valid persistent claim. Wording
+such as `likely fails compilation`, `probably does not compile`, `appears invalid`
+or equivalent still asserts an outcome whose semantics must be supported. When the
+required evidence is missing, record the observed construct and explicitly state
+that the outcome was not established instead of predicting it.
+
+When the missing semantics belong to an external library, framework or package
+and cannot be established efficiently from repository evidence, load
+`dependency-inspection` and use its local-first, repository-native inspection
+policy. Resolving a dependency, framework, target-framework or toolchain version
+is context, not by itself proof of the semantics attributed to that version.
+If the required semantic evidence remains unavailable, preserve uncertainty
+instead of guessing.
+
+Qualified findings must retain their uncertainty across persistence and later
+runs. Do not silently promote `unresolved`, `requires verification`, `may` or
+equivalent tentative content to confirmed knowledge without new supporting
+evidence. `Unresolved` describes the epistemic status of the claim, not merely
+whether an alleged defect has been fixed. Do not label a finding `unresolved`
+while phrasing its unverified consequence definitively or assigning high
+confidence to that consequence. Prefer wording that separates observation from
+unverified consequence, for example:
+
+```text
+The claims collection uses square-bracket syntax. Compilation validity was not
+verified against the repository's configured C# language/toolchain context.
+```
+
+over an unverified conclusion such as:
+
+```text
+The claims collection contains invalid C# syntax.
+```
+
+Existing validated knowledge is a baseline, not an exemption from claim-strength
+validation. Preservation means reusing claims whose strength remains justified;
+it does not mean treating every persisted conclusion as authoritative merely
+because it already exists.
+
+When a run acquires fresh evidence that is directly relevant to an existing
+strong claim, re-evaluate whether the currently available evidence still
+supports that claim at its persisted strength before preserving or propagating
+it. This re-validation is required even when the new evidence does not explicitly
+contradict the old wording. For compiler-, runtime-, framework-, serialization-,
+deployment- or compatibility-dependent claims, a fresh read of the affected
+source is not sufficient by itself to preserve a definitive outcome claim.
+
+If such a persisted claim is re-encountered and the current reconciliation
+does not contain admissible evidence that closes its semantic gap, the
+definitive outcome **must be removed or downgraded**. Do not mark it
+`confirmed`, `high confidence`, `supported by current read`, `likely`, or
+equivalent. A current source read can confirm only the observed construct, not
+the external semantic outcome.
+
+If the evidence available to the current reconciliation cannot justify the
+persisted strength, remove the unsupported conclusion, reduce it to the directly
+supported observation, or mark the consequence explicitly as requiring
+verification. Do not preserve the original wording merely because stronger
+evidence has not yet disproved it. Absence of contradiction is not positive
+validation.
+
+Do not propagate an insufficiently supported existing claim into another
+knowledge artifact. A claim copied from `overview.md` into `business-rules.md`,
+`execution-flows.md` or another durable document must independently pass this
+gate at the strength used in the destination artifact. Existing provenance is
+not a substitute for evidence sufficiency.
+
+When current evidence materially contradicts an existing claim, apply the same
+claim-strength gate to both sides, prefer the better supported conclusion, and
+reconcile the affected canonical artifact. Correcting or removing an individual
+stale finding does not by itself require downgrading repository coverage.
+
+Run this validation before deciding that a material knowledge delta exists and
+before canonical artifact replacement. `knowledge_artifact_refresh` governs safe
+artifact reconciliation; it does not validate compiler, framework, runtime or
+domain semantics.
+
+Apply the same observation boundary to summaries, coverage notes and evidence
+ledgers. Provenance fields may say that `JwtTokenFactory.cs` was read and may
+describe the literal construct observed, but must not record `invalid C# syntax
+(observed)` or another semantic-validity conclusion as if it were an acquisition
+event. Evidence reporting must not become a back door for re-validating a claim
+that failed the sufficiency gate.
+
 ## Scope rules
 
 - Repository-local information stays in the repository directory.
