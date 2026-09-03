@@ -494,8 +494,8 @@ repository directories merely to represent uninspected repositories.
 
 ### Deterministic coverage persistence
 
-During `knowledge-init`, repository coverage is tool-owned state. Invoke
-`knowledge_coverage` after repository-local analysis and reconciliation. Pass
+During `knowledge-init` and `knowledge-update`, repository coverage is tool-owned
+state. Invoke `knowledge_coverage` after repository-local analysis and reconciliation. Pass
 only evidence-backed state changes from the current slice; do not manually patch
 or regenerate the coverage Markdown table. The tool discovers canonical logical
 repositories, parses any existing coverage, collapses duplicate rows to the
@@ -505,6 +505,15 @@ strongest state, applies monotonic transitions and replaces the complete
 Do not compensate for a failed coverage-tool update with `edit` or `write`. Read
 the persisted overview after the tool call and report a blocker if it does not
 match the tool result.
+
+For a targeted `knowledge-update`, the intentionally narrow acquisition scope is
+not evidence that previously validated repository coverage became weaker. Pass
+only transitions supported by the current run and rely on the monotonic merge to
+preserve a stronger existing state. If current evidence suggests that persisted
+coverage is inconsistent or overstated, report the problem rather than bypassing
+the monotonic tool with a manual downgrade. A full update likewise must not
+advance coverage solely because the command ran; stronger state still requires
+the canonical evidence threshold.
 
 ## Behavioural artifact evidence gate
 
@@ -531,9 +540,9 @@ behavioural conclusion.
 
 ## Evidence ledger reconciliation
 
-During `knowledge-init`, keep a run-local ledger of the evidence actually
-acquired. Populate it only from completed acquisition results and record each
-successful observation as it occurs; never reconstruct the ledger later from
+During `knowledge-init` and `knowledge-update`, keep a run-local ledger of the
+evidence actually acquired. Populate it only from completed acquisition results
+and record each successful observation as it occurs; never reconstruct the ledger later from
 expected repository contents, intended analysis steps, generated knowledge or
 paths mentioned by another source. Treat these evidence classes differently:
 

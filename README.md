@@ -64,7 +64,7 @@ Preview the update without changing files with `-DryRun` in PowerShell or `--dry
 
 ```text
 /knowledge-init [repository...]
-/knowledge-update <topic>
+/knowledge-update [repository] [aspect]
 /knowledge-curate [focus]
 /project-help
 /repository-inventory
@@ -74,7 +74,7 @@ Preview the update without changing files with `-DryRun` in PowerShell or `--dry
 
 Use scoped `/knowledge-init <repository...>` both for first-time initialization
 and to continue repositories whose knowledge is incomplete. Existing validated
-knowledge is cumulative across runs. Use `/knowledge-update <topic>` for focused
+knowledge is cumulative across runs. Use `/knowledge-update [repository] [aspect]` for focused
 changes or investigations rather than for completing repository initialization.
 
 ## Documentation

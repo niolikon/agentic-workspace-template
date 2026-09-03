@@ -292,7 +292,7 @@ Available slash commands:
 
 ```text
 /knowledge-init [repository...]
-/knowledge-update <topic>
+/knowledge-update [repository] [aspect]
 /knowledge-curate [focus]
 /project-help
 /repository-inventory
@@ -307,7 +307,7 @@ Knowledge maintenance is intentionally incremental:
 - `/knowledge-init <repository...>` initializes or continues detailed knowledge
   for the selected repositories using the existing knowledge base as cumulative
   validated state;
-- `/knowledge-update <topic>` performs a focused update after a specific known
+- `/knowledge-update [repository] [aspect]` performs a focused update after a specific known
   change or investigation; it is not required to resume incomplete repository
   initialization;
 - `/knowledge-curate [focus]` consolidates and maintains generated knowledge.
