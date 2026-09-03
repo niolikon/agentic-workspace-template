@@ -6,6 +6,7 @@ steps: 120
 
 permission:
   repository_inventory: allow
+  knowledge_inventory: allow
   knowledge_coverage: allow
   question: allow
   
@@ -22,6 +23,8 @@ permission:
     "repository-analysis": allow
     "execution-flow-analysis": allow
     "business-rule-analysis": allow
+    "configuration-resolution": allow
+    "impact-analysis": allow
     "architecture-analysis": allow
     "knowledge-generation": allow
     "knowledge-curation": allow
@@ -31,8 +34,11 @@ permission:
     "*": ask
     "git status*": allow
     "git diff*": allow
+    "git log*": allow
     "git remote*": allow
     "git -C * remote*": allow
+    "git -C * diff*": allow
+    "git -C * log*": allow
     "git submodule*": allow
     "git -C * submodule*": allow
     "git -C * rev-parse*": allow
@@ -122,6 +128,22 @@ Load `business-rule-analysis` whenever the task involves:
 - business-operation flows;
 - data movement or transformation.
 
+Load `configuration-resolution` whenever the task involves effective
+configuration, profiles, environment overrides, runtime wiring or configuration
+consumers. A targeted `knowledge-update <repository> configuration` must load
+`configuration-resolution`; do not substitute `execution-flow-analysis` for that
+concern. When a changed configuration property is observed, use selective
+repository-local search and content inspection to follow that property into
+binding/consumer code when reasonably discoverable before concluding that its
+runtime consumption is unresolved. Distinguish declaration, binding/consumption
+and downstream behavioural enforcement instead of collapsing them into one
+claim.
+
+Load `impact-analysis` whenever existing repository knowledge must be reconciled
+with meaningful codebase changes or the affected knowledge artifacts are not
+already explicit. Git diff/history may help identify likely impact, but existing
+validated knowledge versus current repository evidence remains authoritative.
+
 Load `architecture-analysis` only when architectural analysis is requested or
 supported by sufficient evidence.
 
@@ -141,14 +163,19 @@ semantic evidence, not as a default knowledge-generation phase.
   re-check candidate material claims against the `knowledge-generation`
   claim-strength rules. Do not allow a write path reached through another
   analysis skill to bypass that validation.
-- During scoped `knowledge-init`, treat the resolved repository scope as a hard
-  content-read boundary. Do not `read`, `glob`, `grep` or otherwise inspect
+- During scoped `knowledge-init` or `knowledge-update`, treat the resolved
+  repository scope as a hard content-read boundary. Do not `read`, `glob`,
+  `grep` or otherwise inspect
   files inside an out-of-scope repository, including a nested duplicate or
   submodule checkout of that repository.
-- Repository scope changes breadth, not depth. Repositories inside the resolved
-  scope retain the normal `knowledge-init` analysis depth: selectively inspect
+- Repository scope changes breadth, not required evidence depth. Repositories
+  inside a resolved `knowledge-init` scope retain normal initialization depth; a
+  full `knowledge-update` normally performs deeper claim-oriented revalidation.
+  Selectively inspect
   manifests, configuration, entry points, representative implementation and
   tests whenever needed to support repository responsibilities, flows or rules.
+  A targeted `knowledge-update <repository> <aspect>` narrows the primary concern
+  but may inspect supporting sources needed to validate that concern correctly.
 - During an explicit scoped `knowledge-init <repository...>`, existing knowledge
   and an `analysed` coverage state are never sufficient to complete the request.
   After loading cumulative knowledge, acquire fresh evidence from each explicitly
@@ -157,6 +184,21 @@ semantic evidence, not as a default knowledge-generation phase.
   stop after inventory and `knowledge-base/` reads merely because prior coverage
   says `analysed`; if current inspection is blocked, report the blocker and
   preserve stronger validated knowledge unchanged.
+- During `knowledge-update`, existing validated knowledge must be inspected first
+  and treated as the comparison baseline, never as current repository evidence.
+  Invoke `knowledge_inventory` after canonical repository resolution and use it as
+  the authoritative structural source for repository-knowledge existence and the
+  repository artifact inventory. Do not use `glob`, directory enumeration,
+  conversational memory or coverage alone to decide baseline existence.
+  For a full repository update, discover and canonically inspect every existing
+  repository-level knowledge artifact before concluding which concerns are
+  unaffected; interactive and argument-based full updates use the same workflow.
+  A full repository update must acquire sufficient fresh repository content to
+  revalidate affected claims; a targeted aspect update must acquire sufficient
+  fresh content for that concern and any required supporting evidence. Git
+  status/diff/history may optimize relevance analysis but cannot be the sole
+  source of truth. A no-change outcome requires current repository evidence, not
+  only existing knowledge, inventory, Git metadata or discovered paths.
 - Fresh inspection is not a write trigger. Compare current repository evidence
   against the existing validated artifacts and write only for a material
   evidence-backed delta. If the current evidence only confirms what is already
@@ -233,7 +275,8 @@ semantic evidence, not as a default knowledge-generation phase.
 - Never infer runtime communication from a Git submodule relationship alone.
 - Never replace existing knowledge with weaker or less specific information.
 - Repository coverage is maintained deterministically by the
-  `knowledge_coverage` tool. During `knowledge-init`, never edit, patch or write
+  `knowledge_coverage` tool. During `knowledge-init` and `knowledge-update`, never
+  edit, patch or write
   the `## Repository coverage` table directly. After repository analysis and
   reconciliation, invoke `knowledge_coverage` with only the evidence-backed
   state updates from the current slice. The tool owns canonical repository

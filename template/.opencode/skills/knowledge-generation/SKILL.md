@@ -537,7 +537,10 @@ successful observation as it occurs; never reconstruct the ledger later from
 expected repository contents, intended analysis steps, generated knowledge or
 paths mentioned by another source. Treat these evidence classes differently:
 
-- `repository_inventory`: identity/topology metadata only;
+- `repository_inventory`: repository identity/topology metadata only;
+- `knowledge_inventory`: persisted knowledge existence, canonical artifact paths
+  and stored coverage metadata only; artifact claims are not content-observed by
+  inventory alone;
 - `glob` or directory enumeration: exact discovered paths/structure only;
 - focused `grep`: exact matching files/fragments and only the returned matching
   content;
