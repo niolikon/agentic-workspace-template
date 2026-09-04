@@ -103,16 +103,25 @@ needed for that validation and inspect the smallest relevant source set.
     content, execute the destructive-consolidation protocol from
     `knowledge-curation`: enumerate every preservation item from the source and
     verify each one against an explicit surviving target;
-13. for every destructive-consolidation candidate, explicitly enumerate every
-    distinct literal evidence path as a numbered ledger of exactly `N` items and
-    record `evidence_expected = N`; do not use implicit or aggregate entries such
-    as "other references". Perform a separate observable exact-text target check
-    during this run for each of the `N` paths (for example exact `grep` inside
-    `knowledge-base/` followed by a target `read`); previous reads, semantic
-    memory, or another item's search do not count. Increment `evidence_verified`
-    only after that item's own exact check and semantic target check succeed. The
-    explicit ledger count, observable per-item checks, `evidence_expected` and
-    `evidence_verified` must reconcile exactly; do not delete otherwise. If an
+13. for every destructive-consolidation candidate, create and maintain one
+    concrete candidate-ledger record before performing the destructive action.
+    Record the candidate `source`, `reason`, `disposition`, canonical `targets`
+    and pending `outcome`, then explicitly enumerate every distinct literal
+    evidence path as exactly `N` evidence child records and set
+    `evidence_expected = N`. Every evidence child record MUST retain the exact
+    literal `path`, the exact `surviving_target` knowledge artifact used for
+    verification, and its `verification` outcome. Do not use implicit or
+    aggregate entries such as "other references" and do not discard these
+    records after computing counters. Perform a separate observable exact-text
+    target check during this run for each of the `N` paths (for example exact
+    `grep` inside `knowledge-base/` followed by a target `read`); previous reads,
+    semantic memory, or another item's search do not count. Mark that child's
+    `verification` complete and increment `evidence_verified` only after its own
+    exact check and semantic target check succeed. Before deletion, validate the
+    ledger itself: exactly `N` non-empty evidence child records exist, each names
+    a surviving target, every verification is complete, and
+    `evidence_verified == evidence_expected == N`. A correct aggregate counter
+    with missing/blank ledger records is a blocking preservation failure. If an
     evidence path is absent, update and verify the target before deletion;
 14. do not delete a source document merely because a canonical document covers
     the same topic; deletion is allowed only after the preservation ledger has
@@ -233,8 +242,16 @@ Report:
   acquisition and complementary non-repository Markdown coverage;
 - knowledge files created, updated, moved, merged or removed;
 - duplicate/overlap candidate accounting (`candidate_count`,
-  `disposed_candidate_count`) and every candidate's disposition/outcome,
-  including `evidence: verified/expected` for every destructive consolidation;
+  `disposed_candidate_count`) by rendering the retained candidate-ledger records
+  themselves: every candidate must show its explicit `source`, `disposition`,
+  canonical `targets` or rationale, and `outcome`; do not regenerate these items
+  from counters or emit empty numbered/bullet entries;
+- for every destructive consolidation, render that candidate ledger's evidence
+  child records and then report `evidence: verified/expected`. Every rendered
+  evidence item must show the exact literal `path` and exact
+  `surviving_target` retained during verification. If the concrete ledger cannot
+  be rendered completely, report curation as incomplete rather than claiming a
+  successful destructive consolidation from aggregate counters alone;
 - duplicate or navigation problems resolved;
 - broken links repaired or left unresolved;
 - repository-coverage preservation status when `workspace/overview.md` was

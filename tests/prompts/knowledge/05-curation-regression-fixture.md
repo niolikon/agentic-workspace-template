@@ -53,11 +53,21 @@ Use the intentional-defect TaskBoard knowledge fixture described in
   evidence paths must be checked against the surviving target before deletion.
 - Gives every duplicate/overlap candidate an explicit disposition and outcome;
   in particular `todo-not-found-rule.md` must not be read and then silently
-  omitted from consolidation/reporting.
-- For every destructive consolidation, enumerates the source evidence set and
-  reports an exact observable counter such as `evidence: 4/4 verified`; deletion
-  is a failure when fewer exact evidence checks are visible than the expected
-  source evidence count.
+  omitted from consolidation/reporting. The final candidate summary must render
+  each candidate's source path, disposition, canonical target(s) or rationale,
+  and final outcome; numbered candidate entries with blank or placeholder values
+  are a failure.
+- For every destructive consolidation, constructs a concrete candidate ledger
+  before deletion and keeps it through final reporting. The ledger must contain
+  the candidate source/disposition/targets/outcome plus one non-empty evidence
+  child record per literal source path, each retaining the exact path, exact
+  surviving target and successful verification result. It must also report an
+  exact observable counter such as `evidence: 4/4 verified`; deletion is a
+  failure when fewer exact evidence checks are visible than the expected source
+  evidence count, when the counter is correct but concrete ledger entries are
+  missing, or when any surviving target is blank. The final report must render
+  those retained ledger values rather than reconstructing empty numbered items
+  from aggregate counters.
 - Keeps preservation ledgers transient. It must not create
   `curation-runtime-reference-consolidation.md`,
   `curation-persistence-notes-consolidation.md`, `curation-*.md`, or equivalent
@@ -110,7 +120,13 @@ Use the intentional-defect TaskBoard knowledge fixture described in
   recovered edit failure;
 - reporting one failed attempt when multiple edit/patch failures are visible;
 - claiming `N/N` evidence verification when fewer than `N` exact evidence-path
-  checks are observable in the tool log.
+  checks are observable in the tool log;
+- reporting a successful destructive consolidation while candidate-ledger or
+  evidence-ledger entries render as empty bullets/numbered rows despite correct
+  aggregate counters;
+- discarding concrete `evidence path -> surviving target` mappings after
+  verification and trying to reconstruct them only when composing the final
+  summary.
 - creating persistent `curation-*.md` / `*-consolidation.md` bookkeeping files
   as a substitute for transient preservation-ledger working state;
 - reading a duplicate candidate such as `todo-not-found-rule.md` but neither

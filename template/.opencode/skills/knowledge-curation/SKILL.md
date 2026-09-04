@@ -123,14 +123,30 @@ Treat every duplicate or substantially overlapping document discovered during
 inspection as a tracked curation candidate. Maintain a candidate queue in
 working context from discovery until final disposition.
 
-For each candidate, record:
+For each candidate, create one explicit candidate-ledger record in working
+context at discovery time and retain that same record through final reporting.
+The record MUST contain concrete values rather than prose placeholders:
 
-- source path;
-- why it is a duplicate/overlap candidate;
-- candidate status: `pending`, `safe-to-consolidate`, `ambiguous`,
+- `source`: source path;
+- `reason`: why it is a duplicate/overlap candidate;
+- `disposition`: `pending`, `safe-to-consolidate`, `ambiguous`,
   `must-retain`, or `not-a-duplicate`;
-- canonical target(s) or explicit rationale;
-- final outcome.
+- `targets`: canonical target path(s), or an explicit semantic rationale when
+  no target applies;
+- `evidence`: for destructive candidates, one child record per distinct literal
+  evidence path containing `path`, `surviving_target` and `verification`;
+- `outcome`: the final action/result.
+
+Populate the ledger incrementally as decisions and verification happen. Do not
+discard concrete values after reducing them to counters such as `3/3`. A
+destructive candidate is not ready for deletion while any required ledger
+field or evidence child record is absent, blank or still pending.
+
+The final disposition summary must render the concrete values from these
+candidate-ledger records rather than reconstructing candidate/evidence lists
+from aggregate counters. A numbered item whose source, disposition,
+target/rationale, evidence mapping or outcome is blank, omitted or replaced by
+a placeholder does not satisfy the candidate-accounting requirement.
 
 The queue is a completion obligation, not a best-effort list. Before the run
 may report curation complete:
@@ -189,6 +205,22 @@ unique item survives:
 - scope distinction that changes the meaning of the claim.
 
 Preserving a representative subset of evidence is never sufficient.
+
+For every destructive candidate, represent each distinct literal evidence path
+as a concrete child entry of that candidate's working ledger. Each entry MUST
+retain all three values through deletion and final reporting:
+
+- `path`: the exact literal evidence path from the source;
+- `surviving_target`: the exact knowledge artifact path where preservation was
+  verified;
+- `verification`: an explicit successful per-item verification outcome.
+
+`evidence_expected` is the number of concrete evidence child entries and
+`evidence_verified` is the number whose `verification` is complete. Counters
+are derived bookkeeping only; they MUST NOT replace or become the sole retained
+representation of the evidence mappings. Before a destructive action, require
+the ledger itself to contain exactly `evidence_expected` non-empty entries and
+require every entry to name its surviving target.
 
 When consolidating duplicated knowledge:
 
@@ -329,7 +361,12 @@ count in `verified/expected` form, for example `evidence: 4/4 verified`. Never
 claim that every evidence path was checked when the tool-visible checks account
 for fewer than `N` source references.
 The report must list the same explicit `N` ledger entries used to derive the
-count. The number of listed entries, the number of per-item observable exact
+count. Each rendered entry must contain the exact literal evidence path from the
+source and the explicit surviving target where that item was verified. Blank
+numbered entries, omitted paths, generic labels such as "evidence item", or
+placeholder values do not count as reported ledger entries. Preserve these
+exact path-to-target mappings in working context until the final report has been
+rendered. The number of listed entries, the number of per-item observable exact
 searches in the current run, `evidence_expected`, and `evidence_verified` must
 reconcile. If they do not reconcile, preservation is unresolved and destructive
 consolidation is forbidden.
