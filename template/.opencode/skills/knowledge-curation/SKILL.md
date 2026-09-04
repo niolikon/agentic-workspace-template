@@ -18,6 +18,43 @@ the user explicitly requests source validation or source reanalysis.
 Existing evidence paths are metadata to preserve. Their presence does not by
 itself authorize reopening the referenced source file during curation.
 
+## Canonical knowledge-store boundaries
+
+During ordinary curation, use `knowledge_inventory` as the authoritative
+structural source for persisted repository knowledge under
+`knowledge-base/repositories/`. Repository membership, canonical artifact paths
+and persisted coverage returned by that tool are structural facts only. They do
+not establish that artifact claims are correct, current, duplicated or safe to
+consolidate.
+
+The complete curation scope remains broader than the repository inventory. Build
+a complementary Markdown inventory for workspace-level and other supported
+knowledge documents outside the structural model exposed by
+`knowledge_inventory`, then union both inventories. A failed, incomplete or
+narrower generic glob must never cause a canonical repository artifact returned
+by `knowledge_inventory` to disappear from the run.
+
+For an existing canonical repository artifact that must be inspected or whose
+validated content will be reused, prefer
+`knowledge_artifact_refresh(action=inspect)`. If that artifact survives curation
+and a material whole-document rewrite is required, use
+`knowledge_artifact_refresh(action=replace)` with the exact inspected revision.
+The canonical replacement mechanism does not replace the preservation ledger,
+candidate disposition, post-write validation or any other semantic curation
+gate.
+
+Do not rewrite a whole-document `safe-to-consolidate` source merely to route it
+through artifact refresh. Once preservation closes, delete the redundant source
+directly as required by the destructive-consolidation protocol. Generic
+safe-file operations remain appropriate for structural operations outside the
+refresh tool's scope, including workspace documents, creation, movement and
+deletion.
+
+Ordinary curation observes and protects repository coverage; it does not manage
+it. Do not invoke `knowledge_coverage` to infer, normalize or mutate coverage
+from the curated artifact set. Report apparent inconsistencies and leave repair
+to a workflow with explicit coverage-maintenance semantics.
+
 ## Repository coverage preservation
 
 Treat the exact `## Repository coverage` section in
@@ -86,14 +123,30 @@ Treat every duplicate or substantially overlapping document discovered during
 inspection as a tracked curation candidate. Maintain a candidate queue in
 working context from discovery until final disposition.
 
-For each candidate, record:
+For each candidate, create one explicit candidate-ledger record in working
+context at discovery time and retain that same record through final reporting.
+The record MUST contain concrete values rather than prose placeholders:
 
-- source path;
-- why it is a duplicate/overlap candidate;
-- candidate status: `pending`, `safe-to-consolidate`, `ambiguous`,
+- `source`: source path;
+- `reason`: why it is a duplicate/overlap candidate;
+- `disposition`: `pending`, `safe-to-consolidate`, `ambiguous`,
   `must-retain`, or `not-a-duplicate`;
-- canonical target(s) or explicit rationale;
-- final outcome.
+- `targets`: canonical target path(s), or an explicit semantic rationale when
+  no target applies;
+- `evidence`: for destructive candidates, one child record per distinct literal
+  evidence path containing `path`, `surviving_target` and `verification`;
+- `outcome`: the final action/result.
+
+Populate the ledger incrementally as decisions and verification happen. Do not
+discard concrete values after reducing them to counters such as `3/3`. A
+destructive candidate is not ready for deletion while any required ledger
+field or evidence child record is absent, blank or still pending.
+
+The final disposition summary must render the concrete values from these
+candidate-ledger records rather than reconstructing candidate/evidence lists
+from aggregate counters. A numbered item whose source, disposition,
+target/rationale, evidence mapping or outcome is blank, omitted or replaced by
+a placeholder does not satisfy the candidate-accounting requirement.
 
 The queue is a completion obligation, not a best-effort list. Before the run
 may report curation complete:
@@ -152,6 +205,22 @@ unique item survives:
 - scope distinction that changes the meaning of the claim.
 
 Preserving a representative subset of evidence is never sufficient.
+
+For every destructive candidate, represent each distinct literal evidence path
+as a concrete child entry of that candidate's working ledger. Each entry MUST
+retain all three values through deletion and final reporting:
+
+- `path`: the exact literal evidence path from the source;
+- `surviving_target`: the exact knowledge artifact path where preservation was
+  verified;
+- `verification`: an explicit successful per-item verification outcome.
+
+`evidence_expected` is the number of concrete evidence child entries and
+`evidence_verified` is the number whose `verification` is complete. Counters
+are derived bookkeeping only; they MUST NOT replace or become the sole retained
+representation of the evidence mappings. Before a destructive action, require
+the ledger itself to contain exactly `evidence_expected` non-empty entries and
+require every entry to name its surviving target.
 
 When consolidating duplicated knowledge:
 
@@ -292,7 +361,12 @@ count in `verified/expected` form, for example `evidence: 4/4 verified`. Never
 claim that every evidence path was checked when the tool-visible checks account
 for fewer than `N` source references.
 The report must list the same explicit `N` ledger entries used to derive the
-count. The number of listed entries, the number of per-item observable exact
+count. Each rendered entry must contain the exact literal evidence path from the
+source and the explicit surviving target where that item was verified. Blank
+numbered entries, omitted paths, generic labels such as "evidence item", or
+placeholder values do not count as reported ledger entries. Preserve these
+exact path-to-target mappings in working context until the final report has been
+rendered. The number of listed entries, the number of per-item observable exact
 searches in the current run, `evidence_expected`, and `evidence_verified` must
 reconcile. If they do not reconcile, preservation is unresolved and destructive
 consolidation is forbidden.
@@ -531,8 +605,12 @@ Never claim a malformed or unverified recovery as successful curation.
 
 ## Safe incremental workflow
 
-1. inventory all existing Markdown files under `knowledge-base/`;
-2. inspect the complete inventory and track coverage;
+1. acquire canonical repository knowledge with `knowledge_inventory`, build
+   the complementary Markdown inventory for the remaining `knowledge-base/`
+   scope, and union both into the complete curation inventory;
+2. inspect the complete inventory and track inspection coverage, using
+   `knowledge_artifact_refresh(action=inspect)` for existing canonical repository
+   artifacts;
 3. identify entry points, document responsibilities and internal links;
 4. detect obvious duplication, fragmentation and oversized mixed-purpose
    documents;

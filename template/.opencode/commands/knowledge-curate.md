@@ -26,6 +26,32 @@ reanalysis.
 
 Do not invoke `repository_inventory` during ordinary curation.
 
+Use `knowledge_inventory` as the authoritative structural inventory for persisted
+repository knowledge under `knowledge-base/repositories/`. Its repository,
+artifact-path and persisted-coverage results are structural state only; they do
+not decide semantic correctness, duplication, consolidation safety or coverage
+transitions.
+
+Generic Markdown discovery is still required to complete the curation scope for
+workspace-level and any other supported knowledge documents not represented by
+`knowledge_inventory`. Never let a failed, incomplete or narrower generic glob
+remove canonical repository artifacts returned by `knowledge_inventory` from
+the run inventory.
+
+For existing canonical repository artifacts returned by `knowledge_inventory`,
+prefer `knowledge_artifact_refresh(action=inspect)` whenever their content must
+be inspected or reused during curation. If a surviving canonical repository
+artifact requires a material whole-document rewrite, use the revision returned
+by that inspection with `knowledge_artifact_refresh(action=replace)` and then
+apply the normal curation post-write validation. Do not route a redundant source
+that is destined for deletion through artifact refresh merely to create a stub
+or transitional rewrite.
+
+Ordinary curation must not invoke `knowledge_coverage` to infer, normalize or
+mutate repository coverage. Observe persisted coverage through canonical
+knowledge state where available, preserve the protected workspace coverage
+projection, and report apparent inconsistencies without repairing them.
+
 Existing evidence paths must be preserved, but they do not need to be reopened
 or revalidated merely because they are referenced by curated documents.
 
@@ -34,11 +60,17 @@ needed for that validation and inspect the smallest relevant source set.
 
 ## Workflow
 
-1. build a complete inventory of existing Markdown under `knowledge-base/`;
+1. invoke `knowledge_inventory` to acquire the authoritative canonical
+   repository-knowledge inventory and persisted repository coverage observations;
+   separately build the complementary Markdown inventory needed for the rest of
+   `knowledge-base/`, then union both results into one complete curation-scope
+   inventory and account for every inventoried path;
 2. inspect every inventoried Markdown document at least enough to determine its
    responsibility, evidence metadata, outgoing internal links and overlap with
-   neighboring documents; do not declare curation complete while inventoried
-   files remain uninspected;
+   neighboring documents; use `knowledge_artifact_refresh(action=inspect)` for
+   existing canonical repository artifacts and ordinary knowledge-base reads for
+   documents outside that tool's scope; do not declare curation complete while
+   inventoried files remain uninspected;
 3. identify repository and workspace entry points and their outgoing links;
    when `knowledge-base/workspace/overview.md` contains the exact
    `## Repository coverage` heading, snapshot that complete section as protected
@@ -71,16 +103,25 @@ needed for that validation and inspect the smallest relevant source set.
     content, execute the destructive-consolidation protocol from
     `knowledge-curation`: enumerate every preservation item from the source and
     verify each one against an explicit surviving target;
-13. for every destructive-consolidation candidate, explicitly enumerate every
-    distinct literal evidence path as a numbered ledger of exactly `N` items and
-    record `evidence_expected = N`; do not use implicit or aggregate entries such
-    as "other references". Perform a separate observable exact-text target check
-    during this run for each of the `N` paths (for example exact `grep` inside
-    `knowledge-base/` followed by a target `read`); previous reads, semantic
-    memory, or another item's search do not count. Increment `evidence_verified`
-    only after that item's own exact check and semantic target check succeed. The
-    explicit ledger count, observable per-item checks, `evidence_expected` and
-    `evidence_verified` must reconcile exactly; do not delete otherwise. If an
+13. for every destructive-consolidation candidate, create and maintain one
+    concrete candidate-ledger record before performing the destructive action.
+    Record the candidate `source`, `reason`, `disposition`, canonical `targets`
+    and pending `outcome`, then explicitly enumerate every distinct literal
+    evidence path as exactly `N` evidence child records and set
+    `evidence_expected = N`. Every evidence child record MUST retain the exact
+    literal `path`, the exact `surviving_target` knowledge artifact used for
+    verification, and its `verification` outcome. Do not use implicit or
+    aggregate entries such as "other references" and do not discard these
+    records after computing counters. Perform a separate observable exact-text
+    target check during this run for each of the `N` paths (for example exact
+    `grep` inside `knowledge-base/` followed by a target `read`); previous reads,
+    semantic memory, or another item's search do not count. Mark that child's
+    `verification` complete and increment `evidence_verified` only after its own
+    exact check and semantic target check succeed. Before deletion, validate the
+    ledger itself: exactly `N` non-empty evidence child records exist, each names
+    a surviving target, every verification is complete, and
+    `evidence_verified == evidence_expected == N`. A correct aggregate counter
+    with missing/blank ledger records is a blocking preservation failure. If an
     evidence path is absent, update and verify the target before deletion;
 14. do not delete a source document merely because a canonical document covers
     the same topic; deletion is allowed only after the preservation ledger has
@@ -102,7 +143,12 @@ needed for that validation and inspect the smallest relevant source set.
     alone is not verification;
 18. for broad structural rewrites of documents that must remain, use a
     deliberate whole-document replacement followed by full re-read and
-    mechanical validation; do not structurally rewrite a whole-document
+    mechanical validation; when the surviving document is an existing canonical
+    repository artifact, use `knowledge_artifact_refresh(action=replace)` with
+    the exact revision from its preceding canonical inspection rather than
+    generic `edit`/`write`; use generic safe-file operations only where canonical
+    artifact refresh does not apply (for example workspace documents, creation,
+    movement or deletion); do not structurally rewrite a whole-document
     `safe-to-consolidate` source that is destined for deletion, and never
     simulate a whole rewrite through a fragile partial patch;
 19. maintain exact failed-write counters during the run; after any failed patch
@@ -137,6 +183,12 @@ needed for that validation and inspect the smallest relevant source set.
 - Never modify repositories or primary-source documentation.
 - Never write outside `knowledge-base/`.
 - Never regenerate the knowledge base from scratch.
+- `knowledge_inventory` is authoritative for canonical repository knowledge
+  membership and paths; generic discovery may supplement but must not override
+  or narrow those results.
+- Do not invoke `knowledge_coverage` during ordinary curation. Coverage mutation
+  belongs to workflows that explicitly establish or reconcile repository
+  analysis state.
 - Treat `workspace/overview.md` repository coverage as protected cumulative
   state during curation. Do not directly add, remove, merge, reorder or change
   coverage rows, states, artifact references or notes with generic Markdown
@@ -186,11 +238,20 @@ Keep the final response concise.
 
 Report:
 
-- curated scope and inventory coverage;
+- curated scope and inventory coverage, including canonical repository inventory
+  acquisition and complementary non-repository Markdown coverage;
 - knowledge files created, updated, moved, merged or removed;
 - duplicate/overlap candidate accounting (`candidate_count`,
-  `disposed_candidate_count`) and every candidate's disposition/outcome,
-  including `evidence: verified/expected` for every destructive consolidation;
+  `disposed_candidate_count`) by rendering the retained candidate-ledger records
+  themselves: every candidate must show its explicit `source`, `disposition`,
+  canonical `targets` or rationale, and `outcome`; do not regenerate these items
+  from counters or emit empty numbered/bullet entries;
+- for every destructive consolidation, render that candidate ledger's evidence
+  child records and then report `evidence: verified/expected`. Every rendered
+  evidence item must show the exact literal `path` and exact
+  `surviving_target` retained during verification. If the concrete ledger cannot
+  be rendered completely, report curation as incomplete rather than claiming a
+  successful destructive consolidation from aggregate counters alone;
 - duplicate or navigation problems resolved;
 - broken links repaired or left unresolved;
 - repository-coverage preservation status when `workspace/overview.md` was
