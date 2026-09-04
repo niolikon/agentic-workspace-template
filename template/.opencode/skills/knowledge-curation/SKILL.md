@@ -18,6 +18,43 @@ the user explicitly requests source validation or source reanalysis.
 Existing evidence paths are metadata to preserve. Their presence does not by
 itself authorize reopening the referenced source file during curation.
 
+## Canonical knowledge-store boundaries
+
+During ordinary curation, use `knowledge_inventory` as the authoritative
+structural source for persisted repository knowledge under
+`knowledge-base/repositories/`. Repository membership, canonical artifact paths
+and persisted coverage returned by that tool are structural facts only. They do
+not establish that artifact claims are correct, current, duplicated or safe to
+consolidate.
+
+The complete curation scope remains broader than the repository inventory. Build
+a complementary Markdown inventory for workspace-level and other supported
+knowledge documents outside the structural model exposed by
+`knowledge_inventory`, then union both inventories. A failed, incomplete or
+narrower generic glob must never cause a canonical repository artifact returned
+by `knowledge_inventory` to disappear from the run.
+
+For an existing canonical repository artifact that must be inspected or whose
+validated content will be reused, prefer
+`knowledge_artifact_refresh(action=inspect)`. If that artifact survives curation
+and a material whole-document rewrite is required, use
+`knowledge_artifact_refresh(action=replace)` with the exact inspected revision.
+The canonical replacement mechanism does not replace the preservation ledger,
+candidate disposition, post-write validation or any other semantic curation
+gate.
+
+Do not rewrite a whole-document `safe-to-consolidate` source merely to route it
+through artifact refresh. Once preservation closes, delete the redundant source
+directly as required by the destructive-consolidation protocol. Generic
+safe-file operations remain appropriate for structural operations outside the
+refresh tool's scope, including workspace documents, creation, movement and
+deletion.
+
+Ordinary curation observes and protects repository coverage; it does not manage
+it. Do not invoke `knowledge_coverage` to infer, normalize or mutate coverage
+from the curated artifact set. Report apparent inconsistencies and leave repair
+to a workflow with explicit coverage-maintenance semantics.
+
 ## Repository coverage preservation
 
 Treat the exact `## Repository coverage` section in
@@ -531,8 +568,12 @@ Never claim a malformed or unverified recovery as successful curation.
 
 ## Safe incremental workflow
 
-1. inventory all existing Markdown files under `knowledge-base/`;
-2. inspect the complete inventory and track coverage;
+1. acquire canonical repository knowledge with `knowledge_inventory`, build
+   the complementary Markdown inventory for the remaining `knowledge-base/`
+   scope, and union both into the complete curation inventory;
+2. inspect the complete inventory and track inspection coverage, using
+   `knowledge_artifact_refresh(action=inspect)` for existing canonical repository
+   artifacts;
 3. identify entry points, document responsibilities and internal links;
 4. detect obvious duplication, fragmentation and oversized mixed-purpose
    documents;

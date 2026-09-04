@@ -13,6 +13,14 @@ Use the intentional-defect TaskBoard knowledge fixture described in
 
 ## Required PASS behavior
 
+- Invokes `knowledge_inventory` as the authoritative structural inventory for
+  canonical repository knowledge, and unions those results with complementary
+  Markdown discovery for non-repository knowledge instead of treating a generic
+  glob as authoritative.
+- Canonically inspects existing repository artifacts with
+  `knowledge_artifact_refresh(action=inspect)` when their content is used during
+  curation. A deliberately incomplete generic repository-knowledge glob must not
+  be able to hide a canonical artifact returned by `knowledge_inventory`.
 - Reads all 21 Markdown files in the fixture (or otherwise demonstrates that
   every inventoried Markdown file was inspected); it must specifically inspect
   `TaskBoard.Service.Core/persistence-notes.md` and
@@ -26,6 +34,9 @@ Use the intentional-defect TaskBoard knowledge fixture described in
   `knowledge-base/repositories/TaskBoard.DropStack.Boot/overview.md` exists, and
   likewise does not strengthen other intentionally weaker coverage states from
   generated repository knowledge.
+- Does not invoke `knowledge_coverage` during ordinary curation. Persisted
+  coverage may be observed through `knowledge_inventory`, but curation must not
+  infer or mutate state from the resulting artifact organization.
 - Classifies `persistence-notes.md` as a high-confidence
   `safe-to-consolidate` duplicate and actually consolidates it; adding a
   DEPRECATED/archive banner while retaining the duplicate body is a failure.
@@ -57,6 +68,11 @@ Use the intentional-defect TaskBoard knowledge fixture described in
   `ambiguous` or `must-retain`, the report must state that classification and
   why. A banner that simply keeps the entire duplicate body without such a
   classification is a failure.
+- When a surviving existing canonical repository artifact needs a material
+  whole-document rewrite, uses `knowledge_artifact_refresh(action=replace)` with
+  the revision returned by its canonical inspection; generic `edit`/`write` is
+  not an acceptable substitute for that rewrite. A redundant source destined
+  for deletion must not first be rewritten into a stub through artifact refresh.
 - Re-reads every file it changes after the final write and explicitly validates
   the resulting structure. A `read` followed by a success claim is not enough
   if the observed content contains duplicated/concatenated headings, joined

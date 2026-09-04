@@ -7,6 +7,7 @@ steps: 120
 permission:
   repository_inventory: allow
   knowledge_inventory: allow
+  knowledge_artifact_refresh: allow
   knowledge_coverage: allow
   question: allow
   

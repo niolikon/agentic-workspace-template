@@ -15,6 +15,9 @@ Run:
 
 Required PASS behavior:
 
+- acquires persisted repository coverage observations through
+  `knowledge_inventory` where available;
+- does not invoke `knowledge_coverage` during ordinary curation;
 - `workspace/overview.md` may be changed to repair navigation or improve other
   non-coverage content;
 - the complete pre-existing `## Repository coverage` section remains unchanged;
@@ -35,6 +38,8 @@ Then run:
 
 Required PASS behavior:
 
+- may observe the contradictory persisted state through canonical knowledge
+  inventory, but does not invoke `knowledge_coverage` to repair it;
 - reports the duplicate/contradictory repository coverage as a consistency
   problem;
 - does not delete, merge, promote, downgrade or otherwise repair either row via

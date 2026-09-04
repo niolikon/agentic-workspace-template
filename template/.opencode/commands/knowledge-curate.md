@@ -26,6 +26,32 @@ reanalysis.
 
 Do not invoke `repository_inventory` during ordinary curation.
 
+Use `knowledge_inventory` as the authoritative structural inventory for persisted
+repository knowledge under `knowledge-base/repositories/`. Its repository,
+artifact-path and persisted-coverage results are structural state only; they do
+not decide semantic correctness, duplication, consolidation safety or coverage
+transitions.
+
+Generic Markdown discovery is still required to complete the curation scope for
+workspace-level and any other supported knowledge documents not represented by
+`knowledge_inventory`. Never let a failed, incomplete or narrower generic glob
+remove canonical repository artifacts returned by `knowledge_inventory` from
+the run inventory.
+
+For existing canonical repository artifacts returned by `knowledge_inventory`,
+prefer `knowledge_artifact_refresh(action=inspect)` whenever their content must
+be inspected or reused during curation. If a surviving canonical repository
+artifact requires a material whole-document rewrite, use the revision returned
+by that inspection with `knowledge_artifact_refresh(action=replace)` and then
+apply the normal curation post-write validation. Do not route a redundant source
+that is destined for deletion through artifact refresh merely to create a stub
+or transitional rewrite.
+
+Ordinary curation must not invoke `knowledge_coverage` to infer, normalize or
+mutate repository coverage. Observe persisted coverage through canonical
+knowledge state where available, preserve the protected workspace coverage
+projection, and report apparent inconsistencies without repairing them.
+
 Existing evidence paths must be preserved, but they do not need to be reopened
 or revalidated merely because they are referenced by curated documents.
 
@@ -34,11 +60,17 @@ needed for that validation and inspect the smallest relevant source set.
 
 ## Workflow
 
-1. build a complete inventory of existing Markdown under `knowledge-base/`;
+1. invoke `knowledge_inventory` to acquire the authoritative canonical
+   repository-knowledge inventory and persisted repository coverage observations;
+   separately build the complementary Markdown inventory needed for the rest of
+   `knowledge-base/`, then union both results into one complete curation-scope
+   inventory and account for every inventoried path;
 2. inspect every inventoried Markdown document at least enough to determine its
    responsibility, evidence metadata, outgoing internal links and overlap with
-   neighboring documents; do not declare curation complete while inventoried
-   files remain uninspected;
+   neighboring documents; use `knowledge_artifact_refresh(action=inspect)` for
+   existing canonical repository artifacts and ordinary knowledge-base reads for
+   documents outside that tool's scope; do not declare curation complete while
+   inventoried files remain uninspected;
 3. identify repository and workspace entry points and their outgoing links;
    when `knowledge-base/workspace/overview.md` contains the exact
    `## Repository coverage` heading, snapshot that complete section as protected
@@ -102,7 +134,12 @@ needed for that validation and inspect the smallest relevant source set.
     alone is not verification;
 18. for broad structural rewrites of documents that must remain, use a
     deliberate whole-document replacement followed by full re-read and
-    mechanical validation; do not structurally rewrite a whole-document
+    mechanical validation; when the surviving document is an existing canonical
+    repository artifact, use `knowledge_artifact_refresh(action=replace)` with
+    the exact revision from its preceding canonical inspection rather than
+    generic `edit`/`write`; use generic safe-file operations only where canonical
+    artifact refresh does not apply (for example workspace documents, creation,
+    movement or deletion); do not structurally rewrite a whole-document
     `safe-to-consolidate` source that is destined for deletion, and never
     simulate a whole rewrite through a fragile partial patch;
 19. maintain exact failed-write counters during the run; after any failed patch
@@ -137,6 +174,12 @@ needed for that validation and inspect the smallest relevant source set.
 - Never modify repositories or primary-source documentation.
 - Never write outside `knowledge-base/`.
 - Never regenerate the knowledge base from scratch.
+- `knowledge_inventory` is authoritative for canonical repository knowledge
+  membership and paths; generic discovery may supplement but must not override
+  or narrow those results.
+- Do not invoke `knowledge_coverage` during ordinary curation. Coverage mutation
+  belongs to workflows that explicitly establish or reconcile repository
+  analysis state.
 - Treat `workspace/overview.md` repository coverage as protected cumulative
   state during curation. Do not directly add, remove, merge, reorder or change
   coverage rows, states, artifact references or notes with generic Markdown
@@ -186,7 +229,8 @@ Keep the final response concise.
 
 Report:
 
-- curated scope and inventory coverage;
+- curated scope and inventory coverage, including canonical repository inventory
+  acquisition and complementary non-repository Markdown coverage;
 - knowledge files created, updated, moved, merged or removed;
 - duplicate/overlap candidate accounting (`candidate_count`,
   `disposed_candidate_count`) and every candidate's disposition/outcome,
