@@ -251,8 +251,51 @@ inventory. Do not rediscover or narrow this inventory with `glob`.
 
 The inventory defines the validated concerns that the full update must reconcile;
 do not inspect only `overview.md` and infer that other persisted artifacts remain
-valid. Load the concern-specific skills represented by those artifacts when their
-claims require semantic revalidation.
+valid.
+
+### Persisted-concern routing barrier
+
+Immediately after the persisted artifact inventory has been inspected, resolve
+the owning capabilities for every persisted concern artifact and invoke those
+capabilities before continuing with repository-local evidence acquisition for the
+full update. This is a workflow barrier, not a relevance hint.
+
+Apply this sequence in order:
+
+1. inspect every persisted artifact returned by `knowledge_inventory`;
+2. derive the required concern-capability set from those persisted artifact
+   identities;
+3. invoke every capability in that set through the `Skill` mechanism;
+4. only after those invocations complete, acquire repository evidence and
+   reconcile the concerns;
+5. only after concern-owned evidence acquisition may an artifact reach the
+   preserve/replace decision.
+
+Do not start a generic repository evidence pass between steps 2 and 3. Do not
+defer a required concern capability until after generic reads have already made
+the concern appear unchanged. Direct `read`, `glob`, `grep` or repository-level
+reasoning cannot satisfy this routing barrier.
+
+Use persisted artifact identity to derive the owning capability where one exists:
+
+- `execution-flows.md` -> `execution-flow-analysis`;
+- `business-rules.md` -> `business-rule-analysis`;
+- `configuration.md` -> `configuration-resolution`.
+
+For example, if `configuration.md` is present in the inspected inventory,
+`configuration-resolution` must be invoked in step 3 even when generic source
+reads have not yet exposed a configuration change. The capability then owns the
+configuration evidence surface and may invoke deterministic discovery tools such
+as `repository_config_inventory`.
+
+Other artifacts may remain under repository-level analysis when no dedicated
+concern capability exists. This mapping is capability routing, not file-format or
+technology-specific evidence discovery.
+
+A full update that reaches repository evidence acquisition or a preserve/replace
+decision while an owning capability required by the inspected persisted artifact
+set has not been invoked is incomplete and must not report successful
+reconciliation.
 
 A full update must normally acquire enough current implementation evidence to
 revalidate the repository knowledge more deeply than a broad baseline
@@ -276,6 +319,39 @@ qualified or removed and new stable reusable behaviour can be assessed.
 Do not complete a full update after only reading existing knowledge, inventory,
 Git metadata or filenames. A no-material-change result is valid only after
 sufficient fresh repository content inspection for the claims being revalidated.
+
+### Concern-owned evidence acquisition during full updates
+
+For every persisted concern represented by the repository knowledge inventory,
+acquire fresh concern-appropriate evidence before deciding that its artifact is
+unaffected. Loading the owning concern skill is mandatory where such a capability
+exists, and loading it is not sufficient by itself: delegate evidence acquisition
+to that capability so it can inspect the current repository surfaces that can
+establish or contradict the persisted claims.
+
+In particular, when a persisted `configuration.md` artifact exists, a full
+repository update must load `configuration-resolution` and let that capability
+own configuration-source discovery and interpretation. Do not encode
+framework-, language- or filename-specific configuration discovery rules in
+this reconciliation workflow.
+
+`configuration-resolution` may use `repository_config_inventory` to obtain a
+deterministic repository-local candidate inventory before selectively reading
+and interpreting relevant configuration sources and consumers. The inventory is
+discovery evidence only: the configuration capability remains responsible for
+deciding which candidates participate in the configuration chain.
+
+Do not infer that a configuration declaration or concrete repository-defined
+value is absent merely because consumer code was inspected and no configuration
+file happened to be read. Before preserving `configuration.md` with a
+no-material-change result, require the configuration capability to establish
+that relevant current configuration sources were inspected or that deterministic
+repository-local discovery produced no plausible source for the documented
+configuration concern.
+
+Apply the same principle to other persisted concern artifacts: the full update
+must obtain evidence through the capability that owns that concern rather than
+reusing a generic set of source files for every artifact.
 
 ## Targeted aspect update
 

@@ -6,6 +6,7 @@ steps: 120
 
 permission:
   repository_inventory: allow
+  repository_config_inventory: allow
   knowledge_inventory: allow
   knowledge_artifact_refresh: allow
   knowledge_coverage: allow
@@ -86,6 +87,25 @@ do not duplicate those procedures here.
 
 For knowledge tasks that do not map to one of the command workflows, compose the
 smallest relevant capability set directly while preserving the invariants below.
+
+## Capability composition contract
+
+Treat capability requirements declared by the selected workflow skill as
+orchestration requirements, not advisory guidance. When a workflow declares a
+supporting skill required for the current mode or resolved concern, load that
+skill in the current run before executing the workflow phase that depends on it.
+
+Do not substitute direct `read`, `glob`, `grep`, generic repository inspection or
+agent reasoning for a supporting capability that the selected workflow requires.
+For conditionally required capabilities, resolve the condition only from the
+workflow inputs and authoritative state/evidence surfaces that the workflow
+permits; once the condition is satisfied, load the owning capability before
+acquiring or reconciling that concern's evidence.
+
+Keep capability-specific routing rules and concern mappings in the workflow
+skills that own them. Do not duplicate those mappings here. If a required
+capability cannot be loaded, report the workflow as blocked rather than silently
+bypassing the declared composition.
 
 ## Persistent knowledge invariant
 
