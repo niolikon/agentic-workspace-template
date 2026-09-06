@@ -99,6 +99,31 @@ chosen the detailed scope, do not `read`, `glob`, `grep` or otherwise inspect
 only repository information used during this phase must come from
 `repository_inventory`.
 
+### Scope normalization barrier
+
+Repository selection is an input-resolution concern only. As soon as a detailed
+repository selection has been obtained, normalize it to the canonical
+`analysis_scope` and discard how that scope was supplied. In particular, do not
+retain or branch on whether a repository came from `$ARGUMENTS`, `Select
+repositories`, `Initialize all`, a valid custom selection, or another supported
+scope-resolution path.
+
+Every canonical repository in the resolved `analysis_scope` MUST enter the same
+repository-local initialization procedure with the same phase ordering, evidence
+requirements, materiality rules and persistence rules. Scope origin MUST NOT
+influence:
+
+- which repository-local evidence categories are assessed;
+- whether configuration, execution-flow, data-flow or business-rule analysis is
+  performed;
+- which canonical artifact categories are considered for materiality;
+- coverage eligibility or coverage state;
+- persistence ordering.
+
+Given the same repository state, the same existing knowledge state and the same
+resolved canonical repository scope, initialization must derive the same material
+repository artifact set regardless of how the scope was supplied.
+
 When `$ARGUMENTS` contains repositories:
 
 - resolve each identifier against an immediate child directory of
@@ -525,11 +550,19 @@ run-local evidence set. Before the repository is eligible for `analysed` coverag
    configuration inspection through `configuration-resolution`;
 3. assess components, configuration, execution flows, data flows and business rules
    to the extent supported by evidence;
-4. derive the complete material canonical artifact set from the reconciled evidence
-   and preserved validated knowledge;
-5. compare that desired set with the existing artifact set and create, preserve or
+4. before writing any repository-local artifact, perform one repository-local
+   artifact materiality decision covering every canonical category applicable to
+   initialization (`overview`, `configuration`, `dependencies`, `execution-flows`,
+   `business-rules` and any other canonical category supported by the workflow);
+   decide each category only from reconciled evidence and preserved validated
+   knowledge, never from scope origin or interaction history;
+5. derive the complete material canonical artifact set from those decisions. Treat
+   this as one repository-local decision boundary: do not write one artifact and
+   then continue reasoning about whether another already-supported category should
+   exist;
+6. compare that desired set with the existing artifact set and create, preserve or
    canonically replace artifacts only according to material evidence differences;
-6. only after those decisions are complete, reconcile and persist repository coverage.
+7. only after those decisions are complete, reconcile and persist repository coverage.
 
 Do not create `overview.md` early and defer an already-supported canonical artifact to
 a later run merely because the first artifact was sufficient to start the knowledge
@@ -552,51 +585,55 @@ allowed and must be reported as such.
 3. when repository arguments are absent, resolve the detailed scope through the
    repository-selection flow above, or stop after inventory for `Inventory only`
    or textual fallback;
-4. only after `analysis_scope` is resolved, read existing repository and
+4. normalize the resulting canonical repository identifiers into `analysis_scope`
+   and discard scope-origin/interaction state; from this point onward execute the
+   exact same repository-local workflow for each selected repository regardless of
+   how it entered the scope;
+6. only after `analysis_scope` is resolved and normalized, read existing repository and
    workspace knowledge plus persisted coverage before using or rewriting that
    knowledge, so valid knowledge from earlier slices is explicitly observed,
    preserved and resumable. A pre-existing artifact must have a current-run
    `read` before its contents may be classified as `existing validated
    knowledge`; do not rely on patch context, file existence or prior-run memory
    as a substitute for that read;
-5. for every repository in the detailed analysis scope, invoke
+6. for every repository in the detailed analysis scope, invoke
    `repository_config_inventory`, then use `configuration-resolution` to content-read
    the configuration candidates material to the repository before configuration is
    considered assessed;
-6. acquire and reconcile the remaining repository-local evidence before persistence;
+7. acquire and reconcile the remaining repository-local evidence before persistence;
    do not create the overview as an early completion boundary;
-7. document orchestrator and submodule relationships supported by evidence,
+8. document orchestrator and submodule relationships supported by evidence,
    without treating out-of-scope repositories as fully analysed;
-8. identify repository roles and primary components for repositories in scope;
-9. identify compile-time, runtime and deployment relationships supported by the
+9. identify repository roles and primary components for repositories in scope;
+10. identify compile-time, runtime and deployment relationships supported by the
    selected repositories;
-10. analyse each repository in scope for:
+11. analyse each repository in scope for:
     - principal execution flows;
     - principal data flows;
     - business and domain rules;
-11. apply the repository completion and convergence checkpoint, then persist the
+12. apply the repository completion and convergence checkpoint, then persist the
     complete material repository-local artifact set before moving to the next
     repository;
-12. perform cross-repository reconciliation limited to relationships supported by
+13. perform cross-repository reconciliation limited to relationships supported by
     the current scope plus existing validated knowledge, without reading
     `outside_scope` repository content;
-13. identify or refine workspace-level execution flows only after applying the
+14. identify or refine workspace-level execution flows only after applying the
     evidence acquisition gate, using only in-scope inspected evidence,
     permitted workspace-level sources and existing validated knowledge;
-14. identify or refine workspace-level data flows only when their material
+15. identify or refine workspace-level data flows only when their material
     transitions are supported by inspected evidence;
-15. identify or refine workspace-level business rules only when concrete
+16. identify or refine workspace-level business rules only when concrete
     inspected evidence supports the rule; do not create a workspace behavioural
     artifact solely because the corresponding phase was assessed;
-16. analyse architecture and architectural patterns only to the extent justified
+17. analyse architecture and architectural patterns only to the extent justified
     by content-inspected workspace evidence; apply the same evidence ledger and
     reconciliation gate before creating or extending `architecture.md`;
-17. reconcile the run-local evidence ledger against repository artifacts,
+18. reconcile the run-local evidence ledger against repository artifacts,
     workspace artifacts, proposed coverage states and coverage notes;
-18. invoke `knowledge_coverage` to merge canonical repository coverage only after
+19. invoke `knowledge_coverage` to merge canonical repository coverage only after
     every selected repository has passed its repository completion checkpoint, then
     validate Markdown links;
-19. reconcile the final response against the same ledger before reporting what
+20. reconcile the final response against the same ledger before reporting what
     was inspected or verified.
 
 Do not limit knowledge generation to repositories declared as submodules.
