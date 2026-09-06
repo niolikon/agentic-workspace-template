@@ -34,6 +34,7 @@ Load the following skills before starting:
 - `repository-analysis`
 - `execution-flow-analysis`
 - `business-rule-analysis`
+- `configuration-resolution`
 
 `knowledge-generation` is mandatory for this command. Do not treat its load
 as optional or infer that its rules are available from the agent definition.
@@ -149,6 +150,16 @@ analysis, retry the normally required evidence surfaces when they are available
 now, including README/manifests, configuration, entry points, representative
 implementation, tests where useful, execution/data flows and evidence-backed
 business rules.
+
+For every repository in `analysis_scope`, configuration is an explicit initialization
+phase rather than an optional consequence of source reads. Invoke
+`repository_config_inventory` after scope resolution and before concluding the
+repository-local analysis. Treat its result as discovery evidence only, then use
+`configuration-resolution` to select and content-read the candidates that are
+material to the repository's runtime, build or deployment configuration. Do not
+report that a configuration source was not found, or that repository configuration
+was inspected, unless that statement follows from the deterministic inventory plus
+the run-local content-read ledger.
 
 A cross-scope relationship may be recorded when evidence from the selected
 repositories or relevant workspace-level sources supports it. Record the
@@ -496,6 +507,43 @@ for example: `Referenced by RepositoryA via .gitmodules. Evidence source:
 RepositoryA/.gitmodules (read).` This must not imply that the referenced
 repository itself was read.
 
+## Repository completion and convergence checkpoint
+
+Initialization must converge for an unchanged repository. Explicit scope and scope
+obtained through the interactive repository-selection flow are two entry paths into
+the same repository-local workflow and must not change its analysis depth, evidence
+surfaces or material artifact decisions.
+
+For each repository in `analysis_scope`, do not treat repository-local persistence as
+complete until all applicable initialization phases have been assessed from the same
+run-local evidence set. Before the repository is eligible for `analysed` coverage:
+
+1. inspect existing canonical repository artifacts that may contribute preserved
+   validated knowledge;
+2. acquire the normal initialization-depth evidence, including deterministic
+   configuration-source discovery through `repository_config_inventory` and focused
+   configuration inspection through `configuration-resolution`;
+3. assess components, configuration, execution flows, data flows and business rules
+   to the extent supported by evidence;
+4. derive the complete material canonical artifact set from the reconciled evidence
+   and preserved validated knowledge;
+5. compare that desired set with the existing artifact set and create, preserve or
+   canonically replace artifacts only according to material evidence differences;
+6. only after those decisions are complete, reconcile and persist repository coverage.
+
+Do not create `overview.md` early and defer an already-supported canonical artifact to
+a later run merely because the first artifact was sufficient to start the knowledge
+baseline. Conversely, do not create a category artifact merely to make repeated runs
+produce the same file count. Stability must follow from the same evidence and
+materiality rules.
+
+If a repeated initialization of an unchanged repository observes the same material
+evidence and the existing canonical artifacts already represent it, preserve those
+artifacts without adding a newly material artifact from evidence that was available
+and applicable in the preceding completed initialization. If a later run legitimately
+acquires stronger or previously unavailable evidence, a material refresh remains
+allowed and must be reported as such.
+
 ## Workflow
 
 1. invoke `repository_inventory`;
@@ -511,36 +559,44 @@ repository itself was read.
    `read` before its contents may be classified as `existing validated
    knowledge`; do not rely on patch context, file existence or prior-run memory
    as a substitute for that read;
-5. create or update repository overview documents for repositories in the
-   detailed analysis scope;
-6. document orchestrator and submodule relationships supported by evidence,
+5. for every repository in the detailed analysis scope, invoke
+   `repository_config_inventory`, then use `configuration-resolution` to content-read
+   the configuration candidates material to the repository before configuration is
+   considered assessed;
+6. acquire and reconcile the remaining repository-local evidence before persistence;
+   do not create the overview as an early completion boundary;
+7. document orchestrator and submodule relationships supported by evidence,
    without treating out-of-scope repositories as fully analysed;
-7. identify repository roles and primary components for repositories in scope;
-8. identify compile-time, runtime and deployment relationships supported by the
+8. identify repository roles and primary components for repositories in scope;
+9. identify compile-time, runtime and deployment relationships supported by the
    selected repositories;
-9. analyse each repository in scope for:
-   - principal execution flows;
-   - principal data flows;
-   - business and domain rules;
-10. persist repository-local knowledge before moving to the next repository;
-11. perform cross-repository reconciliation limited to relationships supported by
+10. analyse each repository in scope for:
+    - principal execution flows;
+    - principal data flows;
+    - business and domain rules;
+11. apply the repository completion and convergence checkpoint, then persist the
+    complete material repository-local artifact set before moving to the next
+    repository;
+12. perform cross-repository reconciliation limited to relationships supported by
     the current scope plus existing validated knowledge, without reading
     `outside_scope` repository content;
-12. identify or refine workspace-level execution flows only after applying the
+13. identify or refine workspace-level execution flows only after applying the
     evidence acquisition gate, using only in-scope inspected evidence,
     permitted workspace-level sources and existing validated knowledge;
-13. identify or refine workspace-level data flows only when their material
+14. identify or refine workspace-level data flows only when their material
     transitions are supported by inspected evidence;
-14. identify or refine workspace-level business rules only when concrete
+15. identify or refine workspace-level business rules only when concrete
     inspected evidence supports the rule; do not create a workspace behavioural
     artifact solely because the corresponding phase was assessed;
-15. analyse architecture and architectural patterns only to the extent justified
+16. analyse architecture and architectural patterns only to the extent justified
     by content-inspected workspace evidence; apply the same evidence ledger and
     reconciliation gate before creating or extending `architecture.md`;
-16. reconcile the run-local evidence ledger against repository artifacts,
+17. reconcile the run-local evidence ledger against repository artifacts,
     workspace artifacts, proposed coverage states and coverage notes;
-17. invoke `knowledge_coverage` to merge canonical repository coverage, then validate Markdown links;
-18. reconcile the final response against the same ledger before reporting what
+18. invoke `knowledge_coverage` to merge canonical repository coverage only after
+    every selected repository has passed its repository completion checkpoint, then
+    validate Markdown links;
+19. reconcile the final response against the same ledger before reporting what
     was inspected or verified.
 
 Do not limit knowledge generation to repositories declared as submodules.
