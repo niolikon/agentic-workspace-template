@@ -584,10 +584,12 @@ The required sequence is:
    before any modification and before using its assertions as validated input.
    The returned complete content is the observed existing-knowledge source and
    the returned `revision` token identifies exactly that observed revision;
-2. snapshot only persistent validated facts and their prior provenance. Text in
-   the old artifact that says `read`, `discovered`, `inventory`, `this run`,
-   `not inspected`, or equivalent remains prior-run provenance and must never be
-   copied into the current run-local ledger;
+2. snapshot only persistent validated facts and durable source attribution that
+   is independent of a particular acquisition run. Do **not** snapshot or carry
+   forward acquisition-status provenance from the old artifact. Text that says
+   `read`, `discovered`, `matched`, `inventory`, `inspected`, `this run`,
+   `not inspected`, or equivalent is prior-run provenance and must never be
+   copied into the current run-local ledger or rendered as current-run evidence;
 3. acquire current-run repository evidence and populate the run-local ledger only
    from completed acquisition results in the current trace;
 4. reconcile persistent facts with that ledger and recompute all run-relative
@@ -599,6 +601,33 @@ The required sequence is:
    and verifies the persisted content;
 7. require successful tool verification before treating the artifact as refreshed.
    For repository `overview.md`, duplicate exact Markdown headings are rejected.
+
+Before step 6, perform a **run-local provenance audit** over the complete rendered
+artifact. Every statement that describes an acquisition action or current-run
+evidence state must map to an acquisition event actually completed in the current
+trace. This includes statements such as `read`, `inspected`, `discovered`,
+`matched via grep`, `inventory returned`, `no consumer found in this run`, and
+any item under headings such as `Evidence acquired in this run`, `Current-run
+evidence`, `Sources inspected`, or equivalent.
+
+The audit is fail-closed:
+
+- if the current ledger does not contain the corresponding acquisition event,
+  remove or rewrite the run-relative statement before persistence;
+- preserved claims may remain in the artifact when their persistence semantics
+  allow it, but their historical acquisition method must not be relabelled as a
+  current-run operation;
+- if a preserved claim depends on an old source that was not reacquired in the
+  current run, describe it as preserved existing validated knowledge when useful,
+  not as `<source> — read`, `<source> — inspected`, or another current-run state;
+- never copy an old evidence-ledger section and edit only the materially changed
+  values. Rebuild every run-relative provenance section from the current ledger
+  from scratch.
+
+If the rendered artifact still contains a current-run acquisition assertion that
+cannot be matched to the current trace, do not invoke
+`knowledge_artifact_refresh(action=replace)`. Correct the rendered artifact first;
+if that cannot be done safely, report the refresh as blocked.
 
 Generic `write`, `edit`, patch, diff-style replacement, append-only merge and
 repeated localized edits are forbidden for this refresh. If the dedicated tool
