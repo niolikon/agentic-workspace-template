@@ -524,10 +524,19 @@ Report:
 - requested aspect or full-update scope;
 - current-run evidence acquired, distinguishing discovered, grep-matched and read
   sources from existing validated knowledge;
-- knowledge artifacts preserved, refreshed or created;
+- knowledge artifacts preserved, refreshed or created; when reporting preservation,
+  distinguish artifact inspection/preservation from claim revalidation;
 - material findings added, removed, corrected or qualified;
 - coverage changes, if any;
 - unresolved blockers or evidence gaps.
 
 Do not report files as inspected unless their content was actually observed in
 this run. Do not present historical provenance as current-run evidence.
+
+Use validation-status wording precisely. An existing artifact that was inspected
+and retained without a material delta is `preserved`, not automatically
+`confirmed` or `revalidated`. Describe a claim as confirmed/revalidated only when
+current-run repository evidence independently supports that claim. Describe an
+entire artifact as confirmed/revalidated only when current-run evidence supports
+all of its material claims. When only some claims were revalidated, report the
+artifact as preserved and identify the specifically revalidated claims when useful.

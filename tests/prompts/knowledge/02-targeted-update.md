@@ -160,6 +160,12 @@ update that does not read every historically named repository file.
 - Recomputes run-relative evidence/provenance sections when a refreshed artifact
   contains them.
 - Final reporting names only acquisition events visible in the current tool trace.
+- An existing artifact that was inspected and preserved is not reported as
+  `confirmed` or `revalidated` unless current-run repository evidence independently
+  supports all material claims in that artifact.
+- When current-run evidence revalidates only selected claims in a preserved artifact,
+  the report keeps the artifact status as preserved and identifies only those claims
+  as revalidated when useful.
 
 ## Scenario G — repository without established baseline
 
@@ -186,6 +192,9 @@ The test fails if any of the following occurs:
 - a full update performs no fresh repository content inspection;
 - a targeted update rewrites unrelated artifacts without a material reason;
 - historical provenance becomes a current-run read/discovery event;
+- an artifact that was only inspected/preserved is reported as `confirmed` or
+  `revalidated` without current-run repository evidence supporting all of its material
+  claims;
 - an unchanged artifact is replaced solely because it was re-inspected;
 - generic patch/edit/write is used where canonical artifact refresh is required;
 - a targeted update downgrades coverage because its evidence scope was narrow;
