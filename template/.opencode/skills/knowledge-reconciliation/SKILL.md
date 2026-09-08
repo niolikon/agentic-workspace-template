@@ -404,16 +404,57 @@ unless current evidence reveals a material contradiction that must be reconciled
 to keep the knowledge base internally correct. Report such necessary spillover
 explicitly.
 
+### Cross-artifact contradiction barrier
+
+A targeted aspect narrows proactive evidence acquisition and normal refresh
+scope; it does **not** authorize knowingly preserving a contradicted persisted
+claim in another artifact.
+
+Before completing a targeted reconciliation, apply this barrier to every
+persisted artifact that was content-inspected in the current run:
+
+1. compare its material claims that overlap the acquired current repository
+   evidence with that evidence;
+2. if current evidence materially contradicts one of those claims and is
+   sufficient to establish the correction, mark that artifact as materially
+   affected even when it is outside the requested aspect;
+3. canonically reconcile that affected artifact through
+   `knowledge_artifact_refresh(action=inspect)` -> complete minimal semantic
+   reconciliation -> `knowledge_artifact_refresh(action=replace)`;
+4. preserve every unrelated validated claim in that artifact unless separately
+   contradicted by sufficient current evidence;
+5. report the refresh as necessary spillover from the targeted reconciliation.
+
+A detected contradiction with sufficient current evidence is not an unresolved
+item and must not be deferred merely because the contradicted claim lives in an
+artifact outside the requested concern. Reporting the contradiction, suggesting
+a later full update, or leaving the known-stale claim persisted is incomplete
+reconciliation.
+
+Do not broaden this barrier into speculative cross-artifact refresh. If the
+current run has not acquired sufficient evidence to establish that an
+out-of-concern claim is wrong, preserve it as existing validated knowledge and
+report only the evidence gap or uncertainty.
+
 ## Artifact impact and refresh
 
 After evidence acquisition:
 
 1. map material current evidence to existing knowledge claims;
-2. identify which canonical knowledge artifacts are materially affected;
+2. identify which canonical knowledge artifacts are materially affected,
+   including any inspected out-of-concern artifact whose persisted claim is
+   contradicted by sufficient current-run evidence;
 3. re-apply the `knowledge-generation` claim-strength gate to every new, revised
    or preserved material claim involved in reconciliation;
 4. preserve an artifact unchanged when no material evidence-backed delta exists;
-5. refresh only materially affected artifacts.
+5. refresh every materially affected artifact, including necessary targeted-run
+   spillover required to remove or correct a known contradiction.
+
+Do not reach the final report while a content-inspected persisted artifact still
+contains a material claim that the current run has already established to be
+false. When sufficient evidence exists, correction through the canonical
+artifact-refresh protocol is part of the current reconciliation, not a suggested
+follow-up.
 
 For an existing structured knowledge artifact, use the canonical protocol:
 
