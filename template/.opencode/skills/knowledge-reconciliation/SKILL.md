@@ -413,28 +413,74 @@ claim in another artifact.
 Before completing a targeted reconciliation, apply this barrier to every
 persisted artifact that was content-inspected in the current run:
 
-1. compare its material claims that overlap the acquired current repository
-   evidence with that evidence;
-2. if current evidence materially contradicts one of those claims and is
-   sufficient to establish the correction, mark that artifact as materially
-   affected even when it is outside the requested aspect;
-3. canonically reconcile that affected artifact through
+1. compare only the artifact claims that overlap **repository evidence actually
+   acquired in the current run** with that evidence. Existing knowledge,
+   historical evidence ledgers, previously rendered `read`/`grep` statements,
+   session memory and another artifact's provenance are never repository
+   evidence for this comparison;
+2. if the current-run tool trace does not contain sufficient repository evidence
+   to establish that an out-of-concern claim is wrong, preserve that claim. Do
+   not manufacture the missing evidence from persisted knowledge. Acquire the
+   necessary repository evidence through an actual current-run inventory,
+   search, read or owning-capability operation when that evidence is required
+   and permitted by the targeted concern;
+3. if trace-backed current repository evidence materially contradicts one of
+   those claims and is sufficient to establish the correction, mark only that
+   artifact as materially affected even when it is outside the requested
+   aspect;
+4. canonically reconcile that affected artifact through
    `knowledge_artifact_refresh(action=inspect)` -> complete minimal semantic
-   reconciliation -> `knowledge_artifact_refresh(action=replace)`;
-4. preserve every unrelated validated claim in that artifact unless separately
-   contradicted by sufficient current evidence;
-5. report the refresh as necessary spillover from the targeted reconciliation.
+   reconciliation -> run-local provenance audit ->
+   `knowledge_artifact_refresh(action=replace)`;
+5. preserve every unrelated validated claim in that artifact unless separately
+   contradicted by sufficient trace-backed current evidence. A spillover refresh
+   must not rebuild unrelated sections from narrower current evidence or convert
+   their historical provenance into current-run evidence;
+6. report the refresh as necessary spillover from the targeted reconciliation.
 
-A detected contradiction with sufficient current evidence is not an unresolved
-item and must not be deferred merely because the contradicted claim lives in an
-artifact outside the requested concern. Reporting the contradiction, suggesting
-a later full update, or leaving the known-stale claim persisted is incomplete
-reconciliation.
+A detected contradiction with sufficient trace-backed current evidence is not
+an unresolved item and must not be deferred merely because the contradicted
+claim lives in an artifact outside the requested concern. Reporting the
+contradiction, suggesting a later full update, or leaving the known-stale claim
+persisted is incomplete reconciliation.
 
 Do not broaden this barrier into speculative cross-artifact refresh. If the
-current run has not acquired sufficient evidence to establish that an
+current run has not acquired sufficient repository evidence to establish that an
 out-of-concern claim is wrong, preserve it as existing validated knowledge and
-report only the evidence gap or uncertainty.
+report only the evidence gap or uncertainty. Artifact inspection can reveal a
+candidate conflict, but inspection alone cannot prove the repository-side value
+needed to correct it.
+
+### Targeted refresh and provenance barrier
+
+Cross-artifact spillover does not relax the normal material-delta or provenance
+rules for either the primary artifact or a spillover artifact.
+
+Before **each** `knowledge_artifact_refresh(action=replace)` in a targeted run:
+
+1. establish an artifact-local material delta by comparing that artifact's
+   inspected persisted claims with trace-backed current evidence. A material
+   delta in another artifact does not make this artifact replaceable;
+2. if the target artifact already semantically matches the supported current
+   evidence, preserve it unchanged even when another inspected artifact requires
+   spillover reconciliation;
+3. audit the complete rendered replacement against the current-run tool trace
+   using the run-local provenance rules from `knowledge-generation`;
+4. every statement that says or implies `read`, `inspected`, `discovered`,
+   `matched`, `grep`, `inventory`, `observed in this run`, `Evidence (this
+   run)`, `current-run evidence` or equivalent must correspond to an actual
+   acquisition event visible in the active run;
+5. when a preserved claim is retained without re-observing its source, keep it
+   as existing validated knowledge and preserve any durable source attribution,
+   but do not label the historical acquisition method as current-run evidence;
+6. if any unsupported run-relative acquisition statement remains in the
+   rendered artifact, do not replace it. Correct the rendering or acquire the
+   missing evidence explicitly first.
+
+Never use the contents of an inspected artifact as proof that repository files
+were read in the current run. In particular, copying an old `Evidence (this
+run)` section into a spillover replacement is invalid even when the semantic
+claims being preserved remain valid.
 
 ## Artifact impact and refresh
 
@@ -446,9 +492,13 @@ After evidence acquisition:
    contradicted by sufficient current-run evidence;
 3. re-apply the `knowledge-generation` claim-strength gate to every new, revised
    or preserved material claim involved in reconciliation;
-4. preserve an artifact unchanged when no material evidence-backed delta exists;
-5. refresh every materially affected artifact, including necessary targeted-run
-   spillover required to remove or correct a known contradiction.
+4. preserve an artifact unchanged when no artifact-local material
+   evidence-backed delta exists; a delta detected in another artifact is not a
+   reason to rewrite it;
+5. refresh every and only materially affected artifact, including necessary
+   targeted-run spillover required to remove or correct a known contradiction,
+   after the targeted refresh and provenance barrier has passed for that
+   artifact.
 
 Do not reach the final report while a content-inspected persisted artifact still
 contains a material claim that the current run has already established to be
