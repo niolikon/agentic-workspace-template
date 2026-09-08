@@ -545,6 +545,56 @@ reads and searches, and verify one-for-one that each has a matching completed
 current-run event. Unsupported operation claims are a blocking provenance error,
 not harmless summary text.
 
+### Provenance-safe replacement rendering
+
+Whole-file replacement is a semantic persistence operation, not permission to
+replay the acquisition history embedded in the previous artifact. When an
+artifact is replaced, classify every retained material claim before rendering it
+as exactly one of these states:
+
+- `re-observed`: independently supported by repository evidence actually
+  acquired in the current run;
+- `preserved validated knowledge`: retained from the inspected artifact because
+  current evidence does not contradict it, but its repository source was not
+  reacquired in the current run;
+- `corrected/removed`: changed because trace-backed current evidence materially
+  contradicts the persisted claim.
+
+Apply the classification claim by claim, not section by section and not from the
+artifact's previous evidence prose. Then render using these rules:
+
+1. only `re-observed` claims may say or imply `read`, `observed`, `matched`,
+   `confirmed in this run`, `revalidated in this run` or equivalent acquisition
+   language, and only when the trace-backed ledger contains the matching event;
+2. `preserved validated knowledge` may retain durable source attribution such as
+   a repository path, symbol, endpoint owner or configuration key, but must not
+   retain the old acquisition verb or any `current run` qualifier. When useful,
+   label it explicitly as `preserved validated knowledge`;
+3. never copy, merge or minimally edit a previous `Evidence (this run)`,
+   `Evidence acquired in this run`, `Observed sources`, or equivalent
+   run-relative section. Rebuild every such section from an empty set using only
+   the active run-local operation ledger;
+4. a previous line such as `AuthController.java — read` is historical provenance,
+   not a reusable rendered claim. If the current run did not read
+   `AuthController.java`, the replacement may preserve an independently validated
+   endpoint claim attributed to `AuthController`, but it must not render
+   `AuthController.java — read`, `(read)`, `observed in this run`, or place that
+   source under current-run evidence;
+5. if only a narrow claim in an artifact is corrected, preserve unaffected
+   semantic claims without manufacturing current evidence for them. Do not
+   broaden the replacement's evidence wording merely because whole-file replace
+   is required by the persistence tool;
+6. before replace, derive the candidate artifact's run-relative evidence section
+   directly from the trace-backed reporting ledger and compare it with the
+   candidate text. If the candidate contains any additional run-relative source
+   or operation, block the replace until the candidate is corrected or the
+   missing evidence is actually acquired.
+
+This rendering barrier applies equally to primary targeted artifacts and
+cross-artifact spillover. A spillover correction must preserve validated
+semantics without laundering historical acquisition provenance into the active
+run.
+
 ## Artifact impact and refresh
 
 After evidence acquisition:
@@ -630,7 +680,11 @@ existing validated knowledge.
 
 Before artifact persistence, coverage updates and the final report, reconcile all
 provenance statements against the run-local ledger. Never report a repository
-file as read because it appears in prior knowledge or old provenance.
+file as read because it appears in prior knowledge or old provenance. For every
+whole-file replacement, rebuild run-relative evidence sections from an empty set
+and populate them only from matching current-run acquisition events; preserved
+claims whose sources were not reacquired remain validated knowledge without a
+current-run acquisition qualifier.
 
 ## Coverage behaviour
 
