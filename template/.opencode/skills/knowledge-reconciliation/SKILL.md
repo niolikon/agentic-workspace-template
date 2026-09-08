@@ -490,6 +490,41 @@ report only the evidence gap or uncertainty. Artifact inspection can reveal a
 candidate conflict, but inspection alone cannot prove the repository-side value
 needed to correct it.
 
+### Claim-local contradiction sufficiency
+
+Evaluate correction sufficiency at the level of the persisted claim that overlaps
+the current concern, not at the level of the whole artifact. A spillover artifact
+does **not** need to be fully revalidated before a contradicted claim inside it can
+be corrected.
+
+When current-run repository evidence independently establishes the value or
+relationship represented by a persisted claim:
+
+1. compare that specific persisted claim with the trace-backed evidence;
+2. if they materially conflict and the evidence is sufficient to establish the
+   correction, classify that claim as `corrected/removed`;
+3. classify unrelated claims whose repository sources were not reacquired as
+   `preserved validated knowledge`;
+4. replace the artifact using a minimal semantic reconciliation that changes the
+   contradicted claim and any directly dependent wording while preserving the
+   unrelated validated claims;
+5. rebuild run-relative provenance only from the active trace as required by the
+   provenance-safe replacement rules below.
+
+Do not require reads for every historical source named by the artifact merely to
+correct one sufficiently contradicted claim. For example, if a targeted
+configuration run reads `application.yml` and establishes `demo.token-ttl` as
+`${TOKEN_TTL:45m}`, that evidence is sufficient to correct a persisted
+`${TOKEN_TTL:6000m}` claim in `overview.md` or `execution-flows.md`; re-reading
+controllers, manifests, README files or unrelated implementation sources is not a
+precondition for that correction. Those unrelated claims remain preserved
+validated knowledge unless separately contradicted.
+
+Never use incomplete revalidation of unrelated artifact sections as a reason to
+preserve a claim that current-run repository evidence has already proved stale.
+Conversely, claim-local correction authority does not validate, refresh or promote
+the unrelated preserved claims to current-run evidence.
+
 ### Targeted refresh and provenance barrier
 
 Cross-artifact spillover does not relax the normal material-delta or provenance
