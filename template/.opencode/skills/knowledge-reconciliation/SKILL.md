@@ -404,6 +404,45 @@ unless current evidence reveals a material contradiction that must be reconciled
 to keep the knowledge base internally correct. Report such necessary spillover
 explicitly.
 
+### Targeted cross-artifact overlap discovery
+
+A targeted update must not stop after validating only the concern-owning artifact
+when current-run repository evidence establishes claims that may also be persisted
+in bounded cross-cutting artifacts. After acquiring the repository evidence needed
+for the requested concern, derive a small candidate set from the canonical artifact
+inventory and inspect those candidates before finalizing.
+
+Candidate selection is semantic and bounded, not an instruction to inspect every
+persisted artifact:
+
+1. always include the concern-owning artifact when it exists;
+2. include the repository `overview.md` when present because it is a cross-cutting
+   summary that may duplicate material claims from any targeted concern;
+3. include another canonical artifact only when the requested concern can
+   materially participate in that artifact's semantics. For example, configuration
+   defaults, bindings or runtime inputs can be persisted in `execution-flows.md`
+   when they affect or describe an execution path; configuration-driven behavioural
+   rules may similarly make `business-rules.md` a candidate;
+4. do not add an artifact merely because `knowledge_inventory` says it exists. The
+   artifact type must have a plausible semantic overlap with the current concern or
+   current evidence;
+5. content-inspect each selected candidate with
+   `knowledge_artifact_refresh(action=inspect)` before deciding whether it contains
+   an overlapping persisted claim. Inventory presence alone is never inspection.
+
+For a targeted `configuration` reconciliation, when current-run evidence establishes
+a configuration key, default/fallback or binding that can affect repository-level
+summary or execution behaviour, inspect existing `overview.md` and
+`execution-flows.md` as overlap candidates before completing the run. This inspection
+does not itself make either artifact materially affected and does not authorize a
+rewrite. It only makes their persisted claims available for the cross-artifact
+contradiction barrier below.
+
+Candidate inspection is persisted-knowledge acquisition, not repository evidence.
+A claim found there may be preserved, or may become a candidate contradiction, but
+it can be corrected only when repository evidence actually acquired in the current
+run independently establishes the conflicting value.
+
 ### Cross-artifact contradiction barrier
 
 A targeted aspect narrows proactive evidence acquisition and normal refresh
