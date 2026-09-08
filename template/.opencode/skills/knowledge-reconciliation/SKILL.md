@@ -482,6 +482,69 @@ were read in the current run. In particular, copying an old `Evidence (this
 run)` section into a spillover replacement is invalid even when the semantic
 claims being preserved remain valid.
 
+### Artifact-local reconciliation ledger
+
+Maintain an explicit reconciliation record per inspected artifact. For each
+artifact that may be preserved or replaced, keep these fields logically
+separate:
+
+- `artifactPath`;
+- `inspectRevision`;
+- persisted claims read from **that artifact only**;
+- current-run repository evidence relevant to those claims;
+- artifact-local material deltas;
+- final action: `preserve` or `replace`.
+
+A persisted claim from artifact A must never be treated as the previous value of
+artifact B. Cross-artifact contradiction detection may use the same current-run
+repository evidence to prove that both artifacts are stale, but each artifact's
+replace decision must independently compare that evidence with the claims
+actually read from that artifact's own inspected baseline.
+
+Therefore:
+
+- if `configuration.md` already contains the current supported value, preserve
+  `configuration.md` even when `overview.md` still contains an older value;
+- when rendering `Material changes since last persisted artifact`, every
+  `previous persisted` value must come from the artifact currently being
+  replaced, never from another inspected artifact;
+- do not replace an artifact merely to copy in current-run evidence, refresh its
+  evidence section, synchronize run-history prose or mirror a delta that exists
+  only in another artifact;
+- a spillover artifact may be replaced only after its own artifact-local ledger
+  records a supported material delta.
+
+If the artifact-local baseline cannot be distinguished reliably, fail closed:
+preserve the artifact and report the ambiguity instead of attributing another
+artifact's stale claim to it.
+
+### Trace-backed reporting ledger
+
+Maintain a run-local operation ledger from actual completed tool/skill
+invocations. The final report and any persisted `Evidence (this run)` section
+must be projected only from this ledger.
+
+In particular:
+
+- `knowledge_inventory` proves artifact existence only; it does **not** prove
+  `knowledge_artifact_refresh(action=inspect)` happened;
+- an artifact may be reported as `inspected` only when an actual inspect
+  invocation for that exact path completed in the current run;
+- a skill may be reported as loaded/invoked only when that skill invocation
+  actually occurred in the current run; do not infer skill use from concern
+  ownership, intended routing or another workflow step;
+- repository files may be reported as read, searched, matched or discovered only
+  when the corresponding current-run operation completed;
+- when a report template or old artifact contains a run-relative operation that
+  is absent from the ledger, remove or rewrite that statement before persistence
+  or final reporting.
+
+Before every replace and before the final report, perform a trace projection
+audit: enumerate the claimed inspections, skill invocations, inventories,
+reads and searches, and verify one-for-one that each has a matching completed
+current-run event. Unsupported operation claims are a blocking provenance error,
+not harmless summary text.
+
 ## Artifact impact and refresh
 
 After evidence acquisition:
@@ -621,8 +684,12 @@ Report:
 - coverage changes, if any;
 - unresolved blockers or evidence gaps.
 
-Do not report files as inspected unless their content was actually observed in
-this run. Do not present historical provenance as current-run evidence.
+Do not report files as inspected unless an actual current-run content-inspection
+operation completed for that exact path. Do not report skills as loaded or
+invoked unless their invocation occurred in the active run. Do not present
+historical provenance as current-run evidence. Derive the operation summary from
+the trace-backed reporting ledger rather than from intended workflow steps,
+artifact inventory, prior reports or persisted provenance.
 
 Use validation-status wording precisely. An existing artifact that was inspected
 and retained without a material delta is `preserved`, not automatically
