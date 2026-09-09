@@ -619,6 +619,40 @@ reads and searches, and verify one-for-one that each has a matching completed
 current-run event. Unsupported operation claims are a blocking provenance error,
 not harmless summary text.
 
+### Preserve-reporting projection barrier
+
+A `preserve` decision does not authorize the final report to infer revalidation
+of the artifact or of claims whose repository sources were not reacquired. Build
+every preservation rationale from the same claim-local classification used for
+replacement rendering.
+
+For each preserved artifact:
+
+1. classify material claims that overlap current evidence as `re-observed` only
+   when matching repository evidence was actually acquired in the current run;
+2. classify every other retained material claim as `preserved validated
+   knowledge`;
+3. report the artifact-level action simply as `preserved` when no material delta
+   exists; do not summarize the whole artifact as `consistent with current-run
+   evidence`, `confirmed`, `revalidated`, or equivalent unless every material
+   claim has current-run support;
+4. when explaining why a preserved artifact needed no replacement, mention only
+   the specific claims that were re-observed. State that unrelated claims were
+   preserved from validated knowledge when that distinction is material;
+5. never use aggregate shorthand such as `controller reads`, `service reads`,
+   `etc.`, `corroborating reads`, or equivalent wording unless every implied
+   operation is explicitly present in the run-local ledger;
+6. an artifact inspection is sufficient to preserve its existing validated
+   claims when current evidence does not contradict them, but inspection alone
+   is never evidence that the underlying repository sources were re-read or that
+   those claims were revalidated.
+
+Before emitting the final report, audit every preservation rationale separately
+from the operation list. Expand each evidence-bearing phrase to the concrete
+repository paths or operations it implies and require a matching trace event for
+each one. If that cannot be done, rewrite the rationale as preservation of
+existing validated knowledge rather than current-run confirmation.
+
 ### Provenance-safe replacement rendering
 
 Whole-file replacement is a semantic persistence operation, not permission to
