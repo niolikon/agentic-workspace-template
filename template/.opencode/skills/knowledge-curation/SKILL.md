@@ -191,6 +191,31 @@ Improve the existing knowledge base by:
 
 Never discard a supported fact merely because it is duplicated.
 
+### Provenance semantics during curation
+
+Keep these evidence states semantically distinct throughout curation and final
+reporting:
+
+- `current-run observed evidence`: a primary source actually read or inspected
+  during the current curation run;
+- `persisted provenance`: an evidence reference already stored in an existing
+  knowledge artifact, including historical annotations such as `(read)`;
+- `validated persisted knowledge`: a claim or provenance relationship checked
+  against another persisted knowledge artifact without reopening its primary
+  source.
+
+Finding an evidence path in a surviving knowledge artifact proves provenance
+preservation only. It does not prove that the referenced primary source was
+observed, re-read, re-validated or independently confirmed during the current
+run. A historical `(read)` annotation remains historical unless the referenced
+source is actually read again in the current run.
+
+Use preservation terminology for knowledge-base-only checks, such as `persisted
+provenance preserved`, `persisted evidence reference found in surviving
+artifact`, or `validated against persisted knowledge`. Reserve `observed`,
+`source verified`, `evidence verified in the current run`, and equivalent
+language for primary evidence actually inspected during the current run.
+
 Before deleting, substantially shortening or replacing an evidence-backed
 section or document with links, construct a preservation mapping from the
 candidate source content to the canonical target knowledge. Verify that every
@@ -239,7 +264,18 @@ keep the original evidence-backed content and report the consolidation as
 incomplete.
 
 If two duplicated statements conflict, do not merge them into a single fact.
-Preserve the conflict explicitly.
+Treat the contradiction itself as an unresolved semantic preservation item unless
+already-inspected persisted knowledge provides a clear, authoritative basis for
+resolving it without primary-source reanalysis. Do not migrate both competing
+claims into a canonical artifact merely to make the source document deletable;
+doing so moves the contradiction into canonical knowledge instead of resolving it.
+
+When the inspected knowledge base cannot resolve the conflict confidently, keep
+the source artifact intact and classify the candidate as `ambiguous` or
+`must-retain` with the concrete conflicting claims and required follow-up stated
+in the final report. Source validation may be suggested as follow-up, but ordinary
+curation must not reopen repository sources unless the user explicitly requested
+source validation or reanalysis.
 
 ## Consolidation decision gate
 
@@ -247,8 +283,10 @@ For every duplicated or substantially overlapping document, classify the
 curation outcome before editing it:
 
 - `safe-to-consolidate`: a clear canonical target exists inside
-  `knowledge-base/`, the responsibilities overlap materially, and every unique
-  preservation item can be mapped or migrated into that target;
+  `knowledge-base/`, the responsibilities overlap materially, every unique
+  preservation item can be mapped or migrated into that target, and no unresolved
+  material contradiction would be introduced into the surviving canonical
+  knowledge;
 - `ambiguous`: the canonical responsibility, surviving destination, or semantic
   mapping cannot be determined confidently from the existing knowledge. A
   candidate is **not** ambiguous merely because it is large, spans several
@@ -258,6 +296,34 @@ curation outcome before editing it:
   decision context that should remain independently browsable, or preservation
   cannot be completed without source validation that was not requested.
 
+### Mandatory semantic-conflict gate
+
+Before assigning `safe-to-consolidate`, compare the candidate's material claims
+with the intended canonical target knowledge. This semantic comparison is a
+separate gate from evidence-path preservation and MUST happen before any
+destructive action.
+
+For every material candidate claim, record whether it is:
+
+- `equivalent`: semantically consistent with the surviving knowledge;
+- `already-present`: already represented without changing meaning;
+- `safely-reconciled`: a difference that can be resolved from the already-
+  inspected persisted knowledge with a clear authoritative basis; or
+- `conflicting-unresolved`: materially contradicts surviving knowledge and cannot
+  be resolved from the persisted knowledge inspected in this run.
+
+A `conflicting-unresolved` claim MUST be represented as a non-evidence
+preservation-ledger item with status `unresolved`. It MUST NOT be converted to
+`migrated:<target>` merely by copying the competing claim into the canonical
+artifact, adding a conflict note, or retaining both alternatives side by side.
+Such copying preserves the contradiction; it does not resolve it.
+
+`evidence_verified == evidence_expected` proves only persisted-provenance
+preservation. It is necessary but never sufficient for `safe-to-consolidate`.
+If any material claim is `conflicting-unresolved`, classify the candidate as
+`ambiguous` or `must-retain`, keep the source intact, and report the concrete
+conflict and required follow-up.
+
 The classification controls the allowed action:
 
 - `safe-to-consolidate` -> execute the destructive-consolidation protocol and,
@@ -265,6 +331,9 @@ The classification controls the allowed action:
   do not retain a stub, redirect, consolidation note or shortened copy merely to
   preserve the old path unless the user explicitly requests path preservation;
 - `ambiguous` -> keep the source intact and report the unresolved consolidation;
+  an unresolved material contradiction between candidate and canonical knowledge
+  is sufficient reason for this disposition when existing persisted knowledge
+  cannot resolve it confidently;
 - `must-retain` -> keep the source as an intentional document and improve only
   navigation/organization if useful.
 
@@ -323,6 +392,13 @@ item record one of: `already-present:<target>`, `migrated:<target>`, or
 `unresolved`. A destructive operation is forbidden while any item is
 `unresolved`.
 
+Before treating a factual claim as `already-present` or `migrated`, compare its
+meaning with the target claim, not only its topic, evidence paths, or surrounding
+structure. If the meanings materially conflict, record the claim as `unresolved`
+unless already-inspected persisted knowledge independently resolves the
+contradiction. Copying an unresolved competing claim into the target does not
+change its ledger state to resolved and MUST NOT enable deletion.
+
 ### Observable evidence checks
 
 Evidence-path preservation must be demonstrated with tool-visible checks, not
@@ -346,8 +422,10 @@ Then:
    check;
 4. read the candidate target containing the match and confirm the evidence is
    attached to the correct surviving claim/qualification;
-5. mark that evidence item verified only after that item's current-run exact
-   search and semantic target check both succeed;
+5. mark that persisted provenance item preserved only after that item's
+   current-run exact search and semantic target check both succeed; this status
+   describes preservation inside `knowledge-base/`, not verification of the
+   referenced primary evidence;
 6. if the exact evidence path is absent, update the canonical target first,
    re-read the complete updated target, and repeat that item's exact check;
 7. maintain `evidence_verified` strictly as the number of explicitly enumerated
@@ -357,8 +435,10 @@ Then:
    item is resolved.
 
 The final report for each destructive consolidation must include the observable
-count in `verified/expected` form, for example `evidence: 4/4 verified`. Never
-claim that every evidence path was checked when the tool-visible checks account
+preservation count, for example `persisted provenance: 4/4 preserved`. Do not
+describe that count as primary evidence verified in the current run unless the
+referenced primary sources were actually inspected. Never claim that every
+persisted evidence path was checked for preservation when the tool-visible checks account
 for fewer than `N` source references.
 The report must list the same explicit `N` ledger entries used to derive the
 count. Each rendered entry must contain the exact literal evidence path from the
@@ -456,7 +536,10 @@ has one canonical terminal action: remove the redundant source file.
 Use this decision rule:
 
 ```text
-if evidence_verified < evidence_expected:
+if any material claim is conflicting-unresolved:
+    classify as ambiguous or must-retain
+    keep source intact
+else if evidence_verified < evidence_expected:
     keep source intact
 else if any non-evidence ledger item is unresolved:
     keep source intact
@@ -628,3 +711,31 @@ Never claim a malformed or unverified recovery as successful curation.
 
 Do not regenerate the knowledge base from scratch.
 Do not perform broad rewrites when smaller edits achieve the same result.
+
+## Completion and reporting contract
+
+Keep the final response concise.
+
+Report:
+
+- curated scope and inventory coverage, including canonical repository inventory
+  acquisition and complementary non-repository Markdown coverage;
+- knowledge files created, updated, moved, merged or removed;
+- duplicate/overlap candidate accounting (`candidate_count`,
+  `disposed_candidate_count`) by rendering the retained candidate-ledger records
+  themselves: every candidate must show its explicit `source`, `disposition`,
+  canonical `targets` or rationale, and `outcome`; do not regenerate these items
+  from counters or emit empty numbered/bullet entries;
+- for every destructive consolidation, render that candidate ledger's evidence
+  child records and then report `evidence: verified/expected`. Every rendered
+  evidence item must show the exact literal `path` and exact
+  `surviving_target` retained during verification. If the concrete ledger cannot
+  be rendered completely, report curation as incomplete rather than claiming a
+  successful destructive consolidation from aggregate counters alone;
+- duplicate or navigation problems resolved;
+- broken links repaired or left unresolved;
+- repository-coverage preservation status when `workspace/overview.md` was
+  changed, and any coverage consistency problem observed without repair;
+- any evidence-preservation concern, plus exact failed-write counts
+  (`attempts`, `recovered`, `unresolved`), or explicit zero counts;
+- incomplete or uninspected curation work.

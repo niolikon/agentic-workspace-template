@@ -19,12 +19,30 @@ and focuses on durable rules rather than implementation details.
     explains, `coding` analyses and modifies code within its
     permissions, and `knowledge` generates and maintains the knowledge
     base.
-5.  **Commands orchestrate workflows; skills define reusable methods.**
-    Commands decide which phases must run. Skills describe how a
-    particular type of analysis or operation should be performed.
-6.  **Deterministic tools are preferred for deterministic facts.**
+5.  **Commands are thin entry points; agents orchestrate; skills own reusable
+    workflow behaviour.** Commands express operation intent and command-specific
+    interaction. Agents interpret intent, establish scope and compose capabilities
+    without embedding detailed workflow procedures. Reusable reasoning and
+    operational behaviour belongs in cohesive skills.
+6.  **Deterministic tools are preferred for deterministic facts and invariants.**
     Repository discovery must use the dedicated `repository_inventory`
-    tool rather than relying on LLM-driven filesystem exploration.
+    tool rather than relying on LLM-driven filesystem exploration. Mechanical
+    state transitions and safeguards should remain tool-owned when they can be
+    enforced deterministically.
+
+### Modular agentic development
+
+Future agent and command development must preserve this separation of
+responsibilities. New functionality should first extend or compose existing
+capabilities rather than expanding central agent or command prompts with
+workflow-specific procedures. Shared behaviour should have one clear primary
+owner: deterministic invariants in tools where possible, reusable reasoning and
+workflow behaviour in skills, orchestration in agents, and invocation-specific
+intent or interaction in commands.
+
+Avoid artificial skill fragmentation: a skill should represent a cohesive,
+independently meaningful capability or workflow unit rather than a single small
+procedural step that is always coupled to another skill.
 
 ## Knowledge architecture
 

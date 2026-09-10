@@ -6,6 +6,7 @@ steps: 40
 
 permission:
   repository_inventory: allow
+  repository_config_inventory: allow
   
   read: allow
   glob: allow

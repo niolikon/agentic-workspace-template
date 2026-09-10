@@ -200,6 +200,90 @@ For example, client configuration used for login and resource-server
 configuration used for validating inbound JWTs are separate chains unless
 evidence shows that the requested operation requires both.
 
+## Configuration source discovery
+
+When repository-local configuration sources must be discovered and their exact
+paths are not already established by current-run evidence, use
+`repository_config_inventory` as the deterministic candidate inventory when the
+tool is available. Prefer it over broad `glob` discovery for deciding whether
+plausible repository-local configuration sources exist.
+
+The inventory is intentionally interpretation-free. A returned path proves only
+that a file matching a configuration-source convention exists in the selected
+repository. It does not prove that the file participates in the requested
+configuration chain, that a profile is active, that one value overrides another,
+or that a setting is consumed at runtime. Establish those claims through focused
+content inspection and the normal configuration-resolution evidence gates.
+
+Use the inventory to narrow reads to candidates relevant to the requested key,
+logical setting, framework/binding mechanism or persisted configuration claim.
+Do not read every returned candidate merely because it was inventoried. If a
+known source path was already established by current-run evidence, it may be read
+directly without rediscovery.
+
+Do not replace deterministic inventory with a hand-maintained workflow-specific
+list of filenames in callers such as `knowledge-reconciliation`. Configuration
+source conventions belong to the inventory tool; semantic relevance and
+configuration-chain reasoning belong to this skill.
+
+### Inventory-first source selection
+
+When the exact repository-local configuration source path is not already
+established by current-run evidence, do not guess a conventional filename and
+attempt to read it directly. Invoke `repository_config_inventory` first and
+treat its returned candidates as the authoritative discovery set for subsequent
+repository-local configuration reads.
+
+In inventory-driven discovery:
+
+1. invoke `repository_config_inventory` for the canonical repository before any
+   speculative configuration-file read;
+2. inspect only paths that were returned by the inventory, unless another
+   current-run evidence source has independently established an exact path;
+3. use repository/framework evidence, the requested key, binding points and the
+   candidate metadata to prioritize which returned files are semantically
+   relevant;
+4. consider base and profile/environment-specific candidates independently; do
+   not assume that one conventional basename represents the whole configuration
+   surface; and
+5. preserve candidates that are real but semantically unresolved as discovered
+   evidence rather than replacing them with an inferred filename.
+
+A failed direct read of a guessed conventional path such as
+`application.properties`, `application.yml`, `appsettings.json` or an equivalent
+framework convention is not configuration discovery and must not be used to
+select, exclude or infer the absence of other candidate sources.
+
+The inventory tool owns existence discovery across supported conventions. This
+skill owns semantic prioritization after that truthful candidate set is known.
+Project/framework nature may be used to rank candidates, but must not be used to
+prune real candidates from discovery merely because they are unusual for the
+detected ecosystem.
+
+### Repository-local absence barrier
+
+When the current configuration claim depends on whether a repository-local
+configuration source, default, or concrete value exists, and no exact source path
+has already been established by current-run evidence, invoking
+`repository_config_inventory` is required before concluding that such evidence is
+absent or unresolved. Treat the inventory as a discovery prerequisite, not as an
+optional fallback after generic repository inspection.
+
+Do not return a configuration concern to a caller for a preserve/replace decision
+with a conclusion such as "no repository-local configuration source was
+observed", "the concrete value was not found", or equivalent until:
+
+1. `repository_config_inventory` has been invoked for the canonical repository,
+   unless an exact relevant source path was already observed in the current run;
+2. inventory candidates relevant to the claim have been inspected through focused
+   reads; and
+3. the final conclusion distinguishes "no plausible candidate discovered" from
+   "candidate discovered but insufficient to establish participation or value".
+
+Generic `glob`, `grep`, directory sampling, consumer-code inspection, or the
+absence of a configuration file among already-read sources does not satisfy this
+barrier and must not be used to infer repository-local absence.
+
 ## Configuration sources
 
 Inspect only source types relevant to the requested setting. Possible sources
