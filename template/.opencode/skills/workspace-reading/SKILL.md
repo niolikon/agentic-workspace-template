@@ -41,6 +41,12 @@ Use this order when applicable:
 
 This is a retrieval strategy, not an absolute authority ranking.
 
+When the user explicitly asks for an answer according to existing workspace
+knowledge, persisted knowledge is the requested primary evidence: discover and
+inspect the relevant knowledge artifact before acquiring repository evidence.
+Repository reads may then confirm, challenge or complete the knowledge claim, but
+must not silently replace the requested knowledge-first perspective.
+
 ## Repository reading order
 
 Inside a repository inspect:
@@ -55,6 +61,14 @@ Inside a repository inspect:
 ## Evidence handling
 
 - Cite workspace-relative paths.
+- Treat a source as current-run evidence only after it has actually been
+  inspected during the current run. A persisted artifact may be known to exist,
+  but it must not be described as read, corroborating, confirming or supporting
+  a claim unless its relevant content was observed in this run.
+- When comparing persisted knowledge with repository evidence, keep their
+  provenance explicit: first report what the inspected knowledge states, then
+  identify which parts are confirmed, contradicted or unresolved by repository
+  evidence acquired in the current run.
 - Report conflicts between sources.
 - Distinguish confirmed facts, likely interpretations and unresolved questions.
 - Do not invent missing information.
