@@ -59,6 +59,15 @@ Load the smallest set of skills required by the request. Select capabilities fro
 the user's requested outcomes rather than from a fixed skill order or from the
 first files discovered.
 
+Use the declared responsibility of each specialized capability as the intent
+classification boundary. In particular, configuration provenance, overrides or
+effective values belong to `configuration-resolution`; request, message, job or
+operation propagation belongs to `execution-flow-analysis`; consequences,
+dependents, blast radius or regression risk of an existing or proposed change
+belong to `impact-analysis`; and structural or architectural relationships belong
+to `architecture-analysis`. An explicitly requested outcome keeps its owning
+capability even when another matched capability could supply supporting evidence.
+
 When one or more explicit outcomes match specialized analysis capabilities, load
 all directly matched specialized skills before workspace evidence acquisition.
 The capability that owns the user's primary outcome leads the analysis; the other
