@@ -61,3 +61,34 @@ Inside a repository inspect:
 - Do not recursively inspect the entire workspace before candidate discovery.
 - Do not inspect external dependencies by default. Escalate to
   `dependency-inspection` only when repository-local evidence is insufficient.
+
+## Workspace access discipline
+
+Keep retrieval anchored to the current workspace and use each tool for the target
+it owns:
+
+- use `read` only for a concrete file path, never for a directory or repository
+  root;
+- use `repository_inventory` when repository identity or workspace repository
+  structure is required;
+- use `glob` when candidate paths must be discovered;
+- use `grep` to locate symbols, configuration keys, endpoint paths or other
+  textual evidence.
+
+Prefer workspace-relative paths returned by successful retrieval. Do not invent
+filesystem-root variants such as `/repositories/...` for workspace paths reported
+as `repositories/...`.
+
+A failed read caused by a directory, malformed path or missing target is not, by
+itself, evidence that workspace access requires additional permission. Recover
+with the appropriate inventory, glob or grep strategy and continue from evidence
+already collected.
+
+Never replace failed discovery with guessed repository names or generic paths.
+Repository and file identities must come from workspace evidence. If valid
+workspace-relative retrieval remains insufficient, report the observed boundary
+instead of inventing a likely structure.
+
+The agent's configured read-only permissions authorize inspection inside the
+workspace. Do not request additional conversational permission merely to perform a
+read that is already allowed by the active agent configuration.

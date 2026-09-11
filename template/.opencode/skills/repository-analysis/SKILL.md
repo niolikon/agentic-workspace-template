@@ -313,3 +313,22 @@ For every relationship report:
 - evidence;
 - confidence;
 - unresolved details.
+
+## Change-scope implications for submodules
+
+When repository analysis supports an implementation task inside a repository that
+is referenced as a Git submodule, establish the change boundary before writing:
+
+1. inspect the submodule repository evidence relevant to the change;
+2. inspect the orchestrator metadata needed to understand the submodule
+   relationship;
+3. distinguish whether the requested change affects only the submodule repository
+   or also an orchestrator pin, build/deployment configuration or evidenced
+   runtime integration;
+4. do not treat submodule membership as proof of runtime integration;
+5. do not include an orchestrator submodule-pointer update in the implementation
+   scope unless the request explicitly requires it.
+
+This section establishes repository and relationship scope only. Modification
+safety remains owned by `safe-file-writing`, and post-change verification remains
+owned by the implementation validation capability when available.

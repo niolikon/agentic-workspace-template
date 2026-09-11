@@ -51,12 +51,14 @@ For every test, record:
 11. `ask/11-configuration-resolution.md`
 12. `ask/12-impact-analysis.md`
 13. `ask/13-verbose-dependency-resolution.md`
+14. `ask/14-composite-capability-routing.md`
 
 ### Coding
 
 1. `coding/01-read-only-analysis.md`
 2. `coding/02-controlled-edit.md`
 3. `coding/03-no-unrelated-changes.md`
+4. `coding/04-analysis-modification-validation.md`
 
 ### Knowledge
 
