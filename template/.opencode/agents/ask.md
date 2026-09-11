@@ -81,7 +81,11 @@ collected. Do not duplicate another skill's procedure inside the agent prompt or
 reconstruct its responsibility through ad-hoc generic retrieval.
 
 Use `workspace-reading` for ordinary workspace retrieval and knowledge-first
-source selection. Use `repository-analysis` when repository identity, topology,
+source selection. When the user explicitly identifies persisted workspace knowledge
+as the primary source or asks what the existing knowledge says, load
+`workspace-reading` before any workspace evidence acquisition and delegate the
+knowledge-first retrieval order to that capability. Use `repository-analysis` when
+repository identity, topology,
 submodules, build structure or repository relationships are themselves relevant.
 Use the specialized analysis skills according to their declared responsibility
 boundaries. Use `dependency-inspection` only when external dependency evidence is
