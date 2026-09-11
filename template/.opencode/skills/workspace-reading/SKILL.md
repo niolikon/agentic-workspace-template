@@ -41,6 +41,12 @@ Use this order when applicable:
 
 This is a retrieval strategy, not an absolute authority ranking.
 
+When the user explicitly asks for an answer according to existing workspace
+knowledge, persisted knowledge is the requested primary evidence: discover and
+inspect the relevant knowledge artifact before acquiring repository evidence.
+Repository reads may then confirm, challenge or complete the knowledge claim, but
+must not silently replace the requested knowledge-first perspective.
+
 ## Repository reading order
 
 Inside a repository inspect:
@@ -55,9 +61,48 @@ Inside a repository inspect:
 ## Evidence handling
 
 - Cite workspace-relative paths.
+- Treat a source as current-run evidence only after it has actually been
+  inspected during the current run. A persisted artifact may be known to exist,
+  but it must not be described as read, corroborating, confirming or supporting
+  a claim unless its relevant content was observed in this run.
+- When comparing persisted knowledge with repository evidence, keep their
+  provenance explicit: first report what the inspected knowledge states, then
+  identify which parts are confirmed, contradicted or unresolved by repository
+  evidence acquired in the current run.
 - Report conflicts between sources.
 - Distinguish confirmed facts, likely interpretations and unresolved questions.
 - Do not invent missing information.
 - Do not recursively inspect the entire workspace before candidate discovery.
 - Do not inspect external dependencies by default. Escalate to
   `dependency-inspection` only when repository-local evidence is insufficient.
+
+## Workspace access discipline
+
+Keep retrieval anchored to the current workspace and use each tool for the target
+it owns:
+
+- use `read` only for a concrete file path, never for a directory or repository
+  root;
+- use `repository_inventory` when repository identity or workspace repository
+  structure is required;
+- use `glob` when candidate paths must be discovered;
+- use `grep` to locate symbols, configuration keys, endpoint paths or other
+  textual evidence.
+
+Prefer workspace-relative paths returned by successful retrieval. Do not invent
+filesystem-root variants such as `/repositories/...` for workspace paths reported
+as `repositories/...`.
+
+A failed read caused by a directory, malformed path or missing target is not, by
+itself, evidence that workspace access requires additional permission. Recover
+with the appropriate inventory, glob or grep strategy and continue from evidence
+already collected.
+
+Never replace failed discovery with guessed repository names or generic paths.
+Repository and file identities must come from workspace evidence. If valid
+workspace-relative retrieval remains insufficient, report the observed boundary
+instead of inventing a likely structure.
+
+The agent's configured read-only permissions authorize inspection inside the
+workspace. Do not request additional conversational permission merely to perform a
+read that is already allowed by the active agent configuration.
