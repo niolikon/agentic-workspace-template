@@ -95,16 +95,22 @@ as the primary source or asks what the existing knowledge says, load
 `workspace-reading` before any workspace evidence acquisition and delegate the
 knowledge-first retrieval order to that capability.
 
-Treat source interpretation as an explicit analysis outcome whenever the requested
-answer depends on the semantic role of a workspace source. This includes both
-explicit requests to distinguish, compare or qualify evidence roles, authority,
-certainty, provenance or conflicts, and requests scoped to a particular kind of
-project truth such as official or approved information, current implementation,
-expert or onboarding knowledge, or current working context and proposals. In those
-cases, load `evidence-semantics` before workspace evidence acquisition, alongside
-any other directly matched analysis capability. Also use `evidence-semantics` when
-source-role reasoning becomes necessary from evidence found during analysis.
-Retrieval order must not substitute for contextual evidence precedence. Use `repository-analysis` when repository identity, topology,
+Treat `evidence-semantics` as the baseline interpretation capability for every
+evidence-backed Ask response. Before the first workspace evidence-acquisition call,
+load `evidence-semantics` whenever the request requires reading or reasoning from
+workspace sources, alongside any other directly matched analysis capability.
+
+This requirement establishes how acquired evidence is interpreted; it does not
+require scanning every source class, broad multi-source retrieval or conflict
+reconciliation when those are unnecessary. `workspace-reading` and specialized
+analysis capabilities still determine what evidence must be acquired for the
+requested outcome.
+
+Use the semantic capability to preserve source roles, contextual authority, claim
+certainty and provenance, including for questions scoped to official or approved
+information, current implementation, expert or onboarding knowledge, working
+context and proposals, or explicit source comparison and conflict. Retrieval order
+must not substitute for contextual evidence precedence. Use `repository-analysis` when repository identity, topology,
 submodules, build structure or repository relationships are themselves relevant.
 Use the specialized analysis skills according to their declared responsibility
 boundaries. Use `dependency-inspection` only when external dependency evidence is
