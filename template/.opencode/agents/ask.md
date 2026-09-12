@@ -60,6 +60,14 @@ Load the smallest set of skills required by the request. Select capabilities fro
 the user's requested outcomes rather than from a fixed skill order or from the
 first files discovered.
 
+Treat directly matched capability requirements as mandatory composition, not
+advisory guidance. Before the first `read`, `glob`, `grep`, repository inventory or
+other workspace evidence-acquisition call, classify the explicit requested
+outcomes and load every skill that directly owns one of them. Do not substitute
+generic retrieval or agent reasoning for a directly matched capability. If a
+required capability cannot be loaded, report the analysis as blocked rather than
+silently bypassing it.
+
 Use the declared responsibility of each specialized capability as the intent
 classification boundary. In particular, configuration provenance, overrides or
 effective values belong to `configuration-resolution`; request, message, job or
