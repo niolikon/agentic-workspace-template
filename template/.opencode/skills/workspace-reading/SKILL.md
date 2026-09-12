@@ -10,9 +10,12 @@ capability for specialized analysis skills.
 
 Do not treat the need to read local files as a reason to select this skill instead
 of a more specific analysis capability. When the user's question is primarily an
-execution-flow, repository, architecture or dependency-analysis question, the
-matching specialized skill should govern the analysis and may use this retrieval
-strategy as needed.
+execution-flow, repository, architecture, dependency-analysis or evidence-semantics
+question, the matching specialized skill should govern the analysis and may use
+this retrieval strategy as needed. Questions scoped to official or approved
+information, current implementation truth, expert or onboarding knowledge, or
+working context depend on source-role semantics even when the user does not
+explicitly ask to compare evidence classes.
 
 ## Retrieval workflow
 
