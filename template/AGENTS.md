@@ -12,25 +12,34 @@ and multiple sources of information.
 - `knowledge-base/` contains derived and curated project knowledge.
 - `scripts/` contains workspace utilities.
 
-## Source reliability
+## Source semantics
 
-Use this order of authority:
+Workspace sources have semantic roles rather than one global order of authority.
+Interpret evidence according to the question being answered:
 
-1. executable code and active configuration;
-2. current official documentation;
-3. official reports and procedures;
-4. training and meeting notes;
-5. personal notes;
-6. agent inference.
+- `repositories/` provides primary implementation evidence for current behaviour;
+- `knowledge-base/` provides curated implementation-derived evidence and remains
+  traceable to repository observation;
+- `documents/` provides reviewed or official project evidence for approved intent,
+  procedures, specifications and formally documented decisions;
+- `trainings/` provides expert-derived contextual evidence that may be simplified,
+  incomplete or stale;
+- `notes/` provides working context that may include hypotheses, TODOs, proposals,
+  recollections or unresolved questions.
 
-Never present an inference as a confirmed fact.
+Retrieval order is not an authority ranking. A source that is appropriate for one
+question must not automatically override a different source role for another.
+Preserve claim-level certainty independently from the directory containing it and
+never present an inference, hypothesis or proposal as a confirmed fact.
 
-When sources conflict:
+When relevant sources conflict:
 
-1. report the conflict;
-2. identify the conflicting files;
-3. explain which source appears more current or authoritative;
-4. never silently choose one.
+1. determine the kind of fact the user is asking for;
+2. preserve the provenance and semantic role of each conflicting claim;
+3. prefer the evidence directly applicable to that question;
+4. report meaningful disagreement rather than silently discarding it;
+5. weaken the conclusion when the available workspace evidence cannot resolve the
+   conflict.
 
 ## Context management
 

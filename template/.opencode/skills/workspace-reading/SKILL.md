@@ -10,36 +10,59 @@ capability for specialized analysis skills.
 
 Do not treat the need to read local files as a reason to select this skill instead
 of a more specific analysis capability. When the user's question is primarily an
-execution-flow, repository, architecture or dependency-analysis question, the
-matching specialized skill should govern the analysis and may use this retrieval
-strategy as needed.
+execution-flow, repository, architecture, dependency-analysis or evidence-semantics
+question, the matching specialized skill should govern the analysis and may use
+this retrieval strategy as needed. Questions scoped to official or approved
+information, current implementation truth, expert or onboarding knowledge, or
+working context depend on source-role semantics even when the user does not
+explicitly ask to compare evidence classes.
 
 ## Retrieval workflow
 
 1. identify the requested information;
-2. determine the most likely source scope;
-3. discover candidate files;
-4. rank candidates by relevance and authority;
-5. inspect the smallest useful set of files or sections;
-6. stop reading when sufficient evidence exists;
-7. answer using explicit workspace-relative evidence paths.
+2. determine the semantically applicable evidence role with `evidence-semantics`
+   when source role affects the answer;
+3. determine the smallest useful source scope for that role;
+4. use `workspace_evidence_search` for deterministic candidate discovery when
+   the scope is `documents/`, `trainings/`, `notes/` or `knowledge-base/`;
+5. rank candidates by relevance within the applicable role, not by a global
+   workspace authority order;
+6. inspect the smallest useful set of files or sections;
+7. expand to supporting or conflicting source roles only when useful or required;
+8. stop reading when sufficient evidence exists;
+9. answer using explicit workspace-relative evidence paths.
 
-## Source order
+## Contextual source selection
 
-Use this order when applicable:
+Do not apply one default cross-directory retrieval order. Choose the initial source
+scope from the semantic question:
 
-1. `knowledge-base/workspace/`;
-2. `knowledge-base/repositories/`;
-3. `documents/`;
-4. repository documentation and manifests;
-5. repository configuration and public interfaces;
-6. implementation source code;
-7. external dependency evidence through `dependency-inspection`, only when the
-   question requires information unavailable from repository evidence;
-8. `trainings/`;
-9. `notes/`.
+- existing persisted knowledge -> `knowledge-base/`;
+- official or approved project information -> `documents/`;
+- current implementation truth -> relevant `knowledge-base/` for efficient context
+  and/or `repositories/` for direct verification as required;
+- onboarding or expert explanation -> `trainings/`;
+- current investigation, proposal or working context -> `notes/`.
 
-This is a retrieval strategy, not an absolute authority ranking.
+These mappings express contextual applicability, not a global authority ranking.
+After inspecting the primary applicable role, acquire supporting or contradictory
+evidence from other roles only when the requested outcome benefits from it.
+
+Candidate search does not determine evidence authority. `workspace_evidence_search`
+returns relevant files and observable content matches inside the role already
+selected by `evidence-semantics`; it must not be used to derive a global source
+ranking. A file reported as unsearched or unsupported remains a candidate and must
+not be treated as evidence that the requested information is absent.
+
+A `workspace_evidence_search` hit with `matchedBy: content` and returned `snippets`
+is current-run observed evidence from that file. This is especially important for
+container or binary-backed formats such as DOCX, PPTX and PDF, where generic `read`
+or `grep` may expose less searchable text than the deterministic extractor. Use the
+returned snippets to establish what the source actually states, then use `read` only
+when broader surrounding context is needed. Do not require a second textual match
+from `read` before accepting a deterministic content hit, and do not reinterpret a
+successful content hit as absence merely because `read` does not surface the same
+passage.
 
 When the user explicitly asks for an answer according to existing workspace
 knowledge, persisted knowledge is the requested primary evidence: discover and
@@ -61,10 +84,11 @@ Inside a repository inspect:
 ## Evidence handling
 
 - Cite workspace-relative paths.
-- Treat a source as current-run evidence only after it has actually been
-  inspected during the current run. A persisted artifact may be known to exist,
-  but it must not be described as read, corroborating, confirming or supporting
-  a claim unless its relevant content was observed in this run.
+- Treat a source as current-run evidence only after its relevant content has been
+  observed during the current run. Observation may come from `read` or from a
+  `workspace_evidence_search` content hit with returned snippets. A persisted
+  artifact may be known to exist, but it must not be described as corroborating,
+  confirming or supporting a claim when only its path was observed.
 - When comparing persisted knowledge with repository evidence, keep their
   provenance explicit: first report what the inspected knowledge states, then
   identify which parts are confirmed, contradicted or unresolved by repository
@@ -85,9 +109,16 @@ it owns:
   root;
 - use `repository_inventory` when repository identity or workspace repository
   structure is required;
-- use `glob` when candidate paths must be discovered;
+- use `workspace_evidence_search` to discover and search candidates inside
+  `documents/`, `trainings/`, `notes/` and `knowledge-base/`; this is preferred
+  over generic `glob`/`grep` discovery for those evidence collections because it
+  inventories files directly and can search supported container formats such as
+  DOCX and PPTX plus extractable text from PDFs; PDFs without extractable text
+  remain visible as candidates rather than being treated as absent;
+- use `glob` when candidate paths must be discovered outside those evidence
+  collections;
 - use `grep` to locate symbols, configuration keys, endpoint paths or other
-  textual evidence.
+  textual evidence in repositories or already narrowed textual scopes.
 
 Prefer workspace-relative paths returned by successful retrieval. Do not invent
 filesystem-root variants such as `/repositories/...` for workspace paths reported

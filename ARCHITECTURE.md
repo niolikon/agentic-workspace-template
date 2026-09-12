@@ -100,45 +100,52 @@ procedural step that is always coupled to another skill.
     traceable to workspace-relative source paths. Inferences and
     unresolved questions must be clearly distinguished from confirmed
     facts.
-21. **Source material is read-only for knowledge workflows.** Knowledge
+21. **Workspace sources have semantic roles and contextual precedence.** Generated
+    knowledge is curated implementation-derived evidence, reviewed documents express
+    official project evidence, trainings provide expert-derived context, notes provide
+    working and potentially speculative context, and repositories remain primary
+    implementation evidence. Source role informs claim interpretation without making
+    every claim in a source equally certain, and precedence depends on the question
+    rather than on one global source hierarchy.
+22. **Source material is read-only for knowledge workflows.** Knowledge
     generation may inspect repositories and project material but may
     write only under `knowledge-base/`.
-22. **Sensitive material is outside normal analysis scope.** Agents must
+23. **Sensitive material is outside normal analysis scope.** Agents must
     not inspect credentials, private keys, production dumps, customer
     exports or personal-data exports.
-23. **Public web access is disabled for workspace reasoning.** Project
+24. **Public web access is disabled for workspace reasoning.** Project
     knowledge should be derived from local workspace evidence unless a
     different workflow explicitly provides external sources.
 
 ## User experience and autonomous execution
 
-24. **A requested workflow implicitly authorizes its permitted read-only
+25. **A requested workflow implicitly authorizes its permitted read-only
     work.** Agents must not repeatedly ask for confirmation before
     reading workspace files that their configured permissions already
     allow them to inspect.
-25. **Progress milestones are not completion conditions.** Inventory
+26. **Progress milestones are not completion conditions.** Inventory
     creation, repository overviews or completion of one repository are
     intermediate results. An agent must continue while required workflow
     phases remain.
-26. **Agents choose the next analysis step autonomously.** During a
+27. **Agents choose the next analysis step autonomously.** During a
     complete workflow, agents should select the next repository and
     phase themselves instead of repeatedly asking the user what to
     analyse next.
-27. **Confirmation is reserved for real boundaries.** User intervention
+28. **Confirmation is reserved for real boundaries.** User intervention
     should be requested only when required by permissions, missing
     information that cannot be derived locally, an actual blocker, or an
     operation whose impact requires explicit approval.
-28. **Long workflows use explicit progress tracking.** Multi-repository
+29. **Long workflows use explicit progress tracking.** Multi-repository
     or multi-phase work should maintain a task list and mark work
     complete incrementally rather than losing or recreating progress.
-29. **Final responses are summaries, not duplicate documentation.** Once
+30. **Final responses are summaries, not duplicate documentation.** Once
     knowledge has been persisted, conversational output should report
     coverage, changed files, major findings, blockers and incomplete
     work without reproducing the generated documents.
-30. **Do not propose optional follow-up work before the requested
+31. **Do not propose optional follow-up work before the requested
     workflow is complete.** Agents should finish the work already
     implied by the command before asking what the user wants to do next.
-31. **Completion is evidence-based.** A workflow is complete only when
+32. **Completion is evidence-based.** A workflow is complete only when
     every applicable repository and analysis phase has produced
     knowledge, been explicitly assessed as not applicable, or been
     blocked for a documented reason.
