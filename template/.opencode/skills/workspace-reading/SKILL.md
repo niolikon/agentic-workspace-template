@@ -54,6 +54,16 @@ selected by `evidence-semantics`; it must not be used to derive a global source
 ranking. A file reported as unsearched or unsupported remains a candidate and must
 not be treated as evidence that the requested information is absent.
 
+A `workspace_evidence_search` hit with `matchedBy: content` and returned `snippets`
+is current-run observed evidence from that file. This is especially important for
+container or binary-backed formats such as DOCX, PPTX and PDF, where generic `read`
+or `grep` may expose less searchable text than the deterministic extractor. Use the
+returned snippets to establish what the source actually states, then use `read` only
+when broader surrounding context is needed. Do not require a second textual match
+from `read` before accepting a deterministic content hit, and do not reinterpret a
+successful content hit as absence merely because `read` does not surface the same
+passage.
+
 When the user explicitly asks for an answer according to existing workspace
 knowledge, persisted knowledge is the requested primary evidence: discover and
 inspect the relevant knowledge artifact before acquiring repository evidence.
@@ -74,10 +84,11 @@ Inside a repository inspect:
 ## Evidence handling
 
 - Cite workspace-relative paths.
-- Treat a source as current-run evidence only after it has actually been
-  inspected during the current run. A persisted artifact may be known to exist,
-  but it must not be described as read, corroborating, confirming or supporting
-  a claim unless its relevant content was observed in this run.
+- Treat a source as current-run evidence only after its relevant content has been
+  observed during the current run. Observation may come from `read` or from a
+  `workspace_evidence_search` content hit with returned snippets. A persisted
+  artifact may be known to exist, but it must not be described as corroborating,
+  confirming or supporting a claim when only its path was observed.
 - When comparing persisted knowledge with repository evidence, keep their
   provenance explicit: first report what the inspected knowledge states, then
   identify which parts are confirmed, contradicted or unresolved by repository

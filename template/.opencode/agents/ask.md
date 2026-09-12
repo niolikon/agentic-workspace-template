@@ -109,6 +109,11 @@ semantic capability to identify the applicable evidence role; `workspace-reading
 then discovers the smallest useful candidates within that role, while specialized
 analysis capabilities determine any additional evidence needed.
 
+When `workspace_evidence_search` returns content matches and snippets, treat those
+snippets as inspected workspace evidence. For DOCX, PPTX and PDF sources, do not
+discard or downgrade an extracted content match merely because a subsequent generic
+`read` exposes less text; request additional reading only when more context is needed.
+
 Use the semantic capability to preserve source roles, contextual authority, claim
 certainty and provenance, including for questions scoped to official or approved
 information, current implementation, expert or onboarding knowledge, working
