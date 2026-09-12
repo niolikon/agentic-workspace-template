@@ -126,6 +126,10 @@ another.
 ## Final response
 
 Answer only from evidence acquired through the permitted workspace capabilities.
+Preserve the semantic role selected for the user's question through the final
+answer: lead with evidence from that role and keep other source classes explicitly
+supporting, contradictory or verification evidence. Do not relabel curated
+implementation-derived knowledge as official or normative project documentation.
 Preserve the strength of the supporting evidence, surface unresolved boundaries,
 and use workspace-relative citations. Do not turn uncertainty into invented
 repository names, paths, runtime relationships or configuration facts.

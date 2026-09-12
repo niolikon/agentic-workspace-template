@@ -9,13 +9,8 @@ Use this skill when an answer depends on what a workspace source means, how much
 a claim from it establishes, or how evidence from different source classes should
 be reconciled.
 
-This skill determines the evidence role applicable to the user's semantic question
-and interprets claims obtained from that role. It does not own filesystem candidate
-discovery, broad repository traversal or source mutation.
-
-When used with `workspace-reading`, determine the applicable source role before
-candidate discovery so retrieval can be targeted to the evidence class that matches
-the question. This is semantic scoping, not a fixed source-priority hierarchy.
+This skill interprets evidence already discovered through workspace retrieval. It
+does not own broad candidate discovery, repository traversal or source mutation.
 
 ## Source roles
 
@@ -66,6 +61,23 @@ Examples:
 Retrieval convenience is not authority. A source inspected first must not become
 more authoritative merely because it was cheaper or easier to retrieve.
 
+Preserve the selected semantic role through the final answer. Once the user's
+question establishes an applicable primary role and evidence from that role has
+been inspected, evidence acquired from other roles remains supporting,
+contradictory or implementation-verification evidence unless the user changes
+the question. Do not silently promote a supporting source to the requested role.
+
+In particular, `knowledge-base/` remains curated implementation-derived evidence
+even when an artifact is marked high-confidence or summarizes a business rule.
+Do not describe it as an official document, formal specification, normative
+authority or authoritative project record unless the artifact itself is the
+explicit subject of the question. For questions about what is officially or
+formally documented, `documents/` evidence is the primary normative evidence.
+If inspected official documentation only partially answers the question, state
+that documented boundary explicitly; implementation-derived knowledge may explain
+or corroborate behaviour, but must not be used to manufacture an official claim
+that the reviewed document does not establish.
+
 ## Claim certainty
 
 Preserve source role and claim certainty as separate dimensions. Useful qualitative
@@ -106,3 +118,9 @@ Use workspace-relative evidence paths and describe claims according to the role
 they actually support: current implementation, official project statement, expert
 context, working context or unresolved interpretation. Preserve meaningful
 uncertainty and source disagreement in the final answer.
+
+When the user asks according to a specific evidence role, lead the answer with
+what the inspected evidence from that role establishes. Label evidence from other
+roles by its actual function (for example, implementation confirmation or expert
+context) rather than using generic authority language such as `more authoritative`,
+`lower-authority` or `best authoritative source` across source classes.
