@@ -18,6 +18,12 @@ type UnsearchedCandidate = {
   reason: string
 }
 
+type PassageMatch = {
+  score: number
+  matchedTerms: string[]
+  text: string
+}
+
 const ALLOWED_SCOPES = new Set(["documents", "trainings", "notes", "knowledge-base"])
 const IGNORED_DIRECTORIES = new Set([".git", "node_modules", ".tmp"])
 const TEXT_EXTENSIONS = new Set([
@@ -47,9 +53,36 @@ function normalize(value: string): string {
     .trim()
 }
 
-function queryTerms(query: string): string[] {
-  const terms = normalize(query).split(" ").filter((term) => term.length >= 3)
-  return [...new Set(terms)]
+function canonicalTerm(term: string): string {
+  const normalized = normalize(term)
+  if (normalized.length > 4 && normalized.endsWith("s") && !normalized.endsWith("ss")) return normalized.slice(0, -1)
+  return normalized
+}
+
+function queryAlternatives(query: string): string[][] {
+  const alternatives = query
+    .split("|")
+    .map((alternative) => normalize(alternative)
+      .split(" ")
+      .map(canonicalTerm)
+      .filter((term) => term.length >= 3))
+    .filter((terms) => terms.length > 0)
+    .map((terms) => [...new Set(terms)])
+
+  const unique = new Map<string, string[]>()
+  for (const alternative of alternatives) unique.set(alternative.join(" "), alternative)
+  return [...unique.values()]
+}
+
+function queryTerms(alternatives: string[][]): string[] {
+  return [...new Set(alternatives.flat())]
+}
+
+function normalizedTokens(value: string): string[] {
+  return normalize(value)
+    .split(" ")
+    .map(canonicalTerm)
+    .filter(Boolean)
 }
 
 function decodeXml(value: string): string {
@@ -294,19 +327,56 @@ async function readSearchableText(file: string, extension: string): Promise<{ te
   return { text: null, reason: `unsupported content format ${extension || "<none>"}` }
 }
 
-function buildSnippets(text: string, terms: string[]): string[] {
-  const lower = text.toLowerCase()
-  const positions = terms
-    .map((term) => ({ term, position: lower.indexOf(term.toLowerCase()) }))
-    .filter((match) => match.position >= 0)
-    .sort((a, b) => a.position - b.position)
+function passageCandidates(text: string): string[] {
+  const candidates: string[] = []
+  for (const block of text.split(/\n+/).map((value) => value.trim()).filter(Boolean)) {
+    if (block.length <= 500) {
+      candidates.push(block)
+      continue
+    }
+    const sentences = block.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [block]
+    for (const sentence of sentences.map((value) => value.trim()).filter(Boolean)) candidates.push(sentence)
+  }
+  return candidates
+}
 
+function scorePassage(text: string, alternatives: string[][]): PassageMatch | null {
+  const tokens = normalizedTokens(text)
+  if (tokens.length === 0) return null
+  const tokenSet = new Set(tokens)
+  const normalizedPassage = tokens.join(" ")
+
+  let bestScore = 0
+  let bestTerms: string[] = []
+  for (const alternative of alternatives) {
+    const matchedTerms = alternative.filter((term) => tokenSet.has(term))
+    if (matchedTerms.length === 0) continue
+    const coverage = matchedTerms.length / alternative.length
+    const exactSequence = normalizedPassage.includes(alternative.join(" "))
+    const cooccurrenceBonus = matchedTerms.length >= 2 ? 15 : 0
+    const score = matchedTerms.length * 12 + coverage * 20 + cooccurrenceBonus + (exactSequence ? 30 : 0)
+    if (score > bestScore) {
+      bestScore = score
+      bestTerms = matchedTerms
+    }
+  }
+
+  return bestScore > 0 ? { score: bestScore, matchedTerms: [...new Set(bestTerms)], text } : null
+}
+
+function findPassageMatches(text: string, alternatives: string[][]): PassageMatch[] {
+  return passageCandidates(text)
+    .map((passage) => scorePassage(passage, alternatives))
+    .filter((match): match is PassageMatch => match !== null)
+    .sort((a, b) => b.score - a.score || b.matchedTerms.length - a.matchedTerms.length || a.text.localeCompare(b.text))
+}
+
+function buildSnippets(matches: PassageMatch[]): string[] {
   const snippets: string[] = []
-  for (const match of positions) {
+  for (const match of matches) {
     if (snippets.length >= MAX_SNIPPETS) break
-    const start = Math.max(0, match.position - SNIPPET_RADIUS)
-    const end = Math.min(text.length, match.position + match.term.length + SNIPPET_RADIUS)
-    const snippet = text.slice(start, end).replace(/\s+/g, " ").trim()
+    let snippet = match.text.replace(/\s+/g, " ").trim()
+    if (snippet.length > SNIPPET_RADIUS * 3) snippet = `${snippet.slice(0, SNIPPET_RADIUS * 3).trim()}…`
     if (snippet && !snippets.includes(snippet)) snippets.push(snippet)
   }
   return snippets
@@ -340,7 +410,8 @@ export default tool({
     if (!ALLOWED_SCOPES.has(scope)) throw new Error(`Unsupported evidence scope: ${args.scope}`)
 
     const query = args.query.trim()
-    const terms = queryTerms(query)
+    const alternatives = queryAlternatives(query)
+    const terms = queryTerms(alternatives)
     if (terms.length === 0) throw new Error("Query must contain at least one searchable term of three or more characters")
 
     const scopeRoot = path.resolve(workspace, scope)
@@ -371,20 +442,21 @@ export default tool({
       try {
         const searchable = await readSearchableText(file, extension)
         if (searchable.text !== null) {
-          const normalizedContent = normalize(searchable.text)
-          const contentTerms = terms.filter((term) => normalizedContent.includes(term))
+          const passageMatches = findPassageMatches(searchable.text, alternatives)
+          const contentTerms = [...new Set(passageMatches.flatMap((match) => match.matchedTerms))]
           const matchedTerms = [...new Set([...pathTerms, ...contentTerms])]
           if (matchedTerms.length === 0) continue
           const matchedBy: Array<"path" | "content"> = []
           if (pathTerms.length > 0) matchedBy.push("path")
-          if (contentTerms.length > 0) matchedBy.push("content")
+          if (passageMatches.length > 0) matchedBy.push("content")
+          const bestPassageScore = passageMatches[0]?.score || 0
           hits.push({
             path: relativePath,
             format: extension || "<none>",
             matchedTerms,
             matchedBy,
-            score: contentTerms.length * 10 + pathTerms.length * 3,
-            snippets: contentTerms.length > 0 ? buildSnippets(searchable.text, contentTerms) : [],
+            score: bestPassageScore + Math.min(contentTerms.length * 2, 20) + pathTerms.length * 3,
+            snippets: buildSnippets(passageMatches),
           })
         } else {
           unsearchedCandidates.push({ path: relativePath, format: extension || "<none>", reason: searchable.reason || "content not searchable" })
@@ -403,6 +475,7 @@ export default tool({
     return JSON.stringify({
       scope,
       query,
+      alternatives,
       terms,
       candidateCount: files.length,
       hitCount: hits.length,
@@ -412,6 +485,7 @@ export default tool({
       guarantees: [
         "Candidate discovery uses direct filesystem enumeration rather than generic glob or grep indexing.",
         "Plain text, DOCX/PPTX OOXML and extractable PDF text are searched deterministically within the selected scope.",
+        "Pipe-separated query alternatives are evaluated independently and snippets are ranked by term co-occurrence and alternative coverage rather than first-term position.",
         "Unsupported binary formats remain visible as candidates; lack of indexed content is never reported as evidence of absence.",
         "Search results establish candidate relevance only and do not establish semantic authority, claim certainty or factual correctness.",
       ],
