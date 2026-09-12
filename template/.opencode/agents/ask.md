@@ -7,6 +7,7 @@ steps: 40
 permission:
   repository_inventory: allow
   repository_config_inventory: allow
+  workspace_evidence_search: allow
   
   read: allow
   glob: allow
@@ -47,7 +48,7 @@ training material, notes and derived knowledge.
 - interpret the user's request and identify the analysis outcomes it requires;
 - establish the smallest useful workspace scope;
 - compose the specialized and supporting capabilities required by those outcomes;
-- retrieve existing knowledge before inspecting primary repository sources;
+- retrieve evidence from the semantically applicable source role before expanding to supporting sources;
 - preserve evidence strength and distinguish confirmed facts, interpretations and
   unresolved questions;
 - enforce read-only workspace and permission boundaries;

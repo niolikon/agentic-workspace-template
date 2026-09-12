@@ -23,7 +23,8 @@ explicitly ask to compare evidence classes.
 2. determine the semantically applicable evidence role with `evidence-semantics`
    when source role affects the answer;
 3. determine the smallest useful source scope for that role;
-4. discover candidate files within that scope;
+4. use `workspace_evidence_search` for deterministic candidate discovery when
+   the scope is `documents/`, `trainings/`, `notes/` or `knowledge-base/`;
 5. rank candidates by relevance within the applicable role, not by a global
    workspace authority order;
 6. inspect the smallest useful set of files or sections;
@@ -46,6 +47,12 @@ scope from the semantic question:
 These mappings express contextual applicability, not a global authority ranking.
 After inspecting the primary applicable role, acquire supporting or contradictory
 evidence from other roles only when the requested outcome benefits from it.
+
+Candidate search does not determine evidence authority. `workspace_evidence_search`
+returns relevant files and observable content matches inside the role already
+selected by `evidence-semantics`; it must not be used to derive a global source
+ranking. A file reported as unsearched or unsupported remains a candidate and must
+not be treated as evidence that the requested information is absent.
 
 When the user explicitly asks for an answer according to existing workspace
 knowledge, persisted knowledge is the requested primary evidence: discover and
@@ -91,9 +98,16 @@ it owns:
   root;
 - use `repository_inventory` when repository identity or workspace repository
   structure is required;
-- use `glob` when candidate paths must be discovered;
+- use `workspace_evidence_search` to discover and search candidates inside
+  `documents/`, `trainings/`, `notes/` and `knowledge-base/`; this is preferred
+  over generic `glob`/`grep` discovery for those evidence collections because it
+  inventories files directly and can search supported container formats such as
+  DOCX and PPTX plus extractable text from PDFs; PDFs without extractable text
+  remain visible as candidates rather than being treated as absent;
+- use `glob` when candidate paths must be discovered outside those evidence
+  collections;
 - use `grep` to locate symbols, configuration keys, endpoint paths or other
-  textual evidence.
+  textual evidence in repositories or already narrowed textual scopes.
 
 Prefer workspace-relative paths returned by successful retrieval. Do not invent
 filesystem-root variants such as `/repositories/...` for workspace paths reported
