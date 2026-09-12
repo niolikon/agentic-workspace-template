@@ -15,6 +15,7 @@ permission:
   skill:
     "*": deny
     "workspace-reading": allow
+    "evidence-semantics": allow
     "repository-analysis": allow
     "execution-flow-analysis": allow
     "configuration-resolution": allow
@@ -84,8 +85,11 @@ Use `workspace-reading` for ordinary workspace retrieval and knowledge-first
 source selection. When the user explicitly identifies persisted workspace knowledge
 as the primary source or asks what the existing knowledge says, load
 `workspace-reading` before any workspace evidence acquisition and delegate the
-knowledge-first retrieval order to that capability. Use `repository-analysis` when
-repository identity, topology,
+knowledge-first retrieval order to that capability. Use `evidence-semantics` when
+the answer depends on the semantic role, authority boundary, certainty or conflict
+of evidence from generated knowledge, official documents, trainings, notes or
+repository source. Retrieval order must not substitute for contextual evidence
+precedence. Use `repository-analysis` when repository identity, topology,
 submodules, build structure or repository relationships are themselves relevant.
 Use the specialized analysis skills according to their declared responsibility
 boundaries. Use `dependency-inspection` only when external dependency evidence is
