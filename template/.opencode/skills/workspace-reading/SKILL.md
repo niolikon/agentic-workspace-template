@@ -20,29 +20,32 @@ explicitly ask to compare evidence classes.
 ## Retrieval workflow
 
 1. identify the requested information;
-2. determine the most likely source scope;
-3. discover candidate files;
-4. rank candidates by relevance and authority;
-5. inspect the smallest useful set of files or sections;
-6. stop reading when sufficient evidence exists;
-7. answer using explicit workspace-relative evidence paths.
+2. determine the semantically applicable evidence role with `evidence-semantics`
+   when source role affects the answer;
+3. determine the smallest useful source scope for that role;
+4. discover candidate files within that scope;
+5. rank candidates by relevance within the applicable role, not by a global
+   workspace authority order;
+6. inspect the smallest useful set of files or sections;
+7. expand to supporting or conflicting source roles only when useful or required;
+8. stop reading when sufficient evidence exists;
+9. answer using explicit workspace-relative evidence paths.
 
-## Source order
+## Contextual source selection
 
-Use this order when applicable:
+Do not apply one default cross-directory retrieval order. Choose the initial source
+scope from the semantic question:
 
-1. `knowledge-base/workspace/`;
-2. `knowledge-base/repositories/`;
-3. `documents/`;
-4. repository documentation and manifests;
-5. repository configuration and public interfaces;
-6. implementation source code;
-7. external dependency evidence through `dependency-inspection`, only when the
-   question requires information unavailable from repository evidence;
-8. `trainings/`;
-9. `notes/`.
+- existing persisted knowledge -> `knowledge-base/`;
+- official or approved project information -> `documents/`;
+- current implementation truth -> relevant `knowledge-base/` for efficient context
+  and/or `repositories/` for direct verification as required;
+- onboarding or expert explanation -> `trainings/`;
+- current investigation, proposal or working context -> `notes/`.
 
-This is a retrieval strategy, not an absolute authority ranking.
+These mappings express contextual applicability, not a global authority ranking.
+After inspecting the primary applicable role, acquire supporting or contradictory
+evidence from other roles only when the requested outcome benefits from it.
 
 When the user explicitly asks for an answer according to existing workspace
 knowledge, persisted knowledge is the requested primary evidence: discover and

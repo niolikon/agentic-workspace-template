@@ -9,8 +9,13 @@ Use this skill when an answer depends on what a workspace source means, how much
 a claim from it establishes, or how evidence from different source classes should
 be reconciled.
 
-This skill interprets evidence already discovered through workspace retrieval. It
-does not own broad candidate discovery, repository traversal or source mutation.
+This skill determines the evidence role applicable to the user's semantic question
+and interprets claims obtained from that role. It does not own filesystem candidate
+discovery, broad repository traversal or source mutation.
+
+When used with `workspace-reading`, determine the applicable source role before
+candidate discovery so retrieval can be targeted to the evidence class that matches
+the question. This is semantic scoping, not a fixed source-priority hierarchy.
 
 ## Source roles
 

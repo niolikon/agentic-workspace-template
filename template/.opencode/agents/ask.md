@@ -100,11 +100,13 @@ evidence-backed Ask response. Before the first workspace evidence-acquisition ca
 load `evidence-semantics` whenever the request requires reading or reasoning from
 workspace sources, alongside any other directly matched analysis capability.
 
-This requirement establishes how acquired evidence is interpreted; it does not
+This requirement establishes both how acquired evidence is interpreted and which
+source role is semantically applicable to the user's requested outcome. It does not
 require scanning every source class, broad multi-source retrieval or conflict
-reconciliation when those are unnecessary. `workspace-reading` and specialized
-analysis capabilities still determine what evidence must be acquired for the
-requested outcome.
+reconciliation when those are unnecessary. Before candidate discovery, use the
+semantic capability to identify the applicable evidence role; `workspace-reading`
+then discovers the smallest useful candidates within that role, while specialized
+analysis capabilities determine any additional evidence needed.
 
 Use the semantic capability to preserve source roles, contextual authority, claim
 certainty and provenance, including for questions scoped to official or approved
