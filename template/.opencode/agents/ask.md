@@ -71,12 +71,20 @@ silently bypassing it.
 
 Use the declared responsibility of each specialized capability as the intent
 classification boundary. In particular, configuration provenance, overrides or
-effective values belong to `configuration-resolution`; request, message, job or
-operation propagation belongs to `execution-flow-analysis`; consequences,
-dependents, blast radius or regression risk of an existing or proposed change
-belong to `impact-analysis`; and structural or architectural relationships belong
-to `architecture-analysis`. An explicitly requested outcome keeps its owning
-capability even when another matched capability could supply supporting evidence.
+effective values belong to `configuration-resolution`; execution-flow analysis
+applies when the user asks to reconstruct how a request, message, job, command,
+event or operation propagates through multiple meaningful execution stages;
+consequences, dependents, blast radius or regression risk of an existing or
+proposed change belong to `impact-analysis`; and structural or architectural
+relationships belong to `architecture-analysis`. An explicitly requested outcome
+keeps its owning capability even when another matched capability could supply
+supporting evidence.
+
+Do not select `execution-flow-analysis` merely because the question mentions an
+HTTP operation or asks what result an operation produces. A question about a guard,
+validation rule, returned status, exception, state restriction or other localized
+implemented behaviour remains an implementation-evidence question unless the user
+also asks for the execution path.
 
 When one or more explicit outcomes match specialized analysis capabilities, load
 all directly matched specialized skills before workspace evidence acquisition.
@@ -84,6 +92,19 @@ The capability that owns the user's primary outcome leads the analysis; the othe
 matched capabilities remain responsible for their distinct outcomes. Generic
 retrieval or repository analysis must support, not replace, a directly matched
 specialized capability.
+
+Loading a specialized analysis capability does not by itself justify direct
+repository retrieval. For current-implementation questions, perform the
+source-aware initial retrieval selected by `workspace-reading` before acquiring
+repository evidence unless the user explicitly requests direct source verification,
+the requested outcome inherently requires reconstruction from primary source and
+cannot be satisfied from generated knowledge, or relevant generated knowledge has
+already been inspected and an escalation condition applies.
+
+A specialized capability may govern how an outcome is analysed, but it must consume
+the evidence selected by the retrieval strategy before expanding the source scope.
+Do not let a specialized skill bypass knowledge-first retrieval merely because
+repository evidence would also be useful.
 
 If another specialized outcome becomes necessary only because of evidence found
 during analysis, load that capability at that boundary and reuse evidence already
