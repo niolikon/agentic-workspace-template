@@ -19,34 +19,119 @@ explicitly ask to compare evidence classes.
 
 ## Retrieval workflow
 
-1. identify the requested information;
-2. determine the semantically applicable evidence role with `evidence-semantics`
-   when source role affects the answer;
-3. determine the smallest useful source scope for that role;
-4. use `workspace_evidence_search` for deterministic candidate discovery when
-   the scope is `documents/`, `trainings/`, `notes/` or `knowledge-base/`;
-5. rank candidates by relevance within the applicable role, not by a global
+1. identify the semantic information need expressed by the request;
+2. determine the applicable evidence role or smallest set of roles with
+   `evidence-semantics`;
+3. select the smallest useful initial source scope;
+4. discover candidates only inside that scope;
+5. rank candidates by relevance and semantic applicability, not by a global
    workspace authority order;
-6. inspect the smallest useful set of files or sections;
-7. expand to supporting or conflicting source roles only when useful or required;
-8. stop reading when sufficient evidence exists;
-9. answer using explicit workspace-relative evidence paths.
+6. inspect the smallest sufficient set of files, snippets or repository evidence;
+7. reuse already acquired evidence before performing further discovery;
+8. escalate to another source role only when an explicit escalation condition is
+   met;
+9. stop as soon as the requested answer is sufficiently supported;
+10. answer using explicit workspace-relative evidence paths.
 
-## Contextual source selection
+## Information-need driven source selection
 
-Do not apply one default cross-directory retrieval order. Choose the initial source
-scope from the semantic question:
+Do not apply one default cross-directory retrieval order. Classify what kind of
+information the user is asking for before candidate discovery. Useful information
+needs include current implemented behaviour, official specification or procedure,
+architectural intent, rationale or historical context, onboarding/training
+knowledge, current investigation or working notes, explicit cross-source
+comparison, and uncertainty or discrepancy investigation.
 
+Select source roles from that information need:
+
+- current implemented behaviour -> begin with relevant `knowledge-base/` when it
+  is likely to contain the implementation concern; use `repositories/` only when
+  direct implementation evidence is required by an escalation condition below;
 - existing persisted knowledge -> `knowledge-base/`;
-- official or approved project information -> `documents/`;
-- current implementation truth -> relevant `knowledge-base/` for efficient context
-  and/or `repositories/` for direct verification as required;
-- onboarding or expert explanation -> `trainings/`;
-- current investigation, proposal or working context -> `notes/`.
+- official or approved specification, procedure, architecture or decision ->
+  `documents/`;
+- onboarding, training or expert explanation -> `trainings/`;
+- current investigation, TODO, hypothesis, proposal or working context -> `notes/`;
+- rationale or historical context -> select only the source roles plausibly able to
+  carry rationale for the specific subject, commonly `documents/`, `trainings/`
+  and/or `notes/`, and add implementation evidence only when the question also asks
+  how that rationale is reflected in the current system;
+- explicit comparison, conflict or discrepancy -> inspect the source roles named
+  or materially implicated by the comparison, without turning the request into an
+  all-workspace scan.
 
-These mappings express contextual applicability, not a global authority ranking.
-After inspecting the primary applicable role, acquire supporting or contradictory
-evidence from other roles only when the requested outcome benefits from it.
+These mappings express contextual applicability, not a global authority ranking. A
+source role that is applicable to one information need may be irrelevant to the
+next question even when files are available there.
+
+## Knowledge-first implementation retrieval
+
+For implementation-oriented questions, interpret knowledge-first as:
+
+```text
+knowledge-base = preferred curated implementation view
+repositories   = primary direct implementation evidence
+```
+
+When relevant generated knowledge is likely to answer the implementation question,
+discover and inspect that knowledge before repository source. If the inspected
+knowledge answers the requested detail clearly and sufficiently, stop: do not open
+repository files merely to restate the same claim.
+
+Escalate from knowledge to repository evidence only when at least one of these
+conditions applies:
+
+- relevant knowledge is missing;
+- the inspected knowledge is ambiguous or internally incomplete for the question;
+- the requested implementation detail is not represented precisely enough;
+- the user explicitly requests direct source or code verification;
+- current-run evidence gives a concrete reason to suspect the knowledge may be
+  stale;
+- another inspected source materially conflicts with the generated knowledge;
+- a specialized analysis capability requires direct repository evidence to satisfy
+  its own outcome.
+
+When escalating, retain and reuse the knowledge already inspected. Narrow
+repository discovery from the known repository, symbol, endpoint, configuration
+key or relationship whenever possible instead of restarting from workspace-wide
+discovery.
+
+## Candidate discovery
+
+For `documents/`, `trainings/`, `notes/` and `knowledge-base/`, use
+`workspace_evidence_search` with a focused query after selecting the semantic
+scope. Search one applicable scope at a time unless the request itself requires
+multiple evidence roles. Do not call the tool once for every evidence directory
+merely to see what exists.
+
+Use path and filename hints when they materially narrow discovery, but never assume
+a fixed filename or one document type per directory. Use `repository_inventory`
+when repository identity or structure is relevant, and use `glob`/`grep` for
+focused repository discovery after the repository scope has been established.
+
+Source role is independent of file format. Markdown, text, extracted PDF content,
+DOCX/PPTX content and other supported representations keep the semantic role of
+their containing source class. If the available local tools cannot inspect a
+relevant format, keep the file as an observed candidate and report the limitation
+instead of guessing its content.
+
+## Escalation and stop conditions
+
+Availability of more workspace material is not a reason to read it. Expand beyond
+the current evidence set only when needed to:
+
+- answer another explicit part of the request;
+- verify a claim that cannot otherwise be supported;
+- resolve a meaningful ambiguity;
+- investigate a material conflict or freshness concern;
+- satisfy the evidence requirements of a specialized analysis capability.
+
+Stop retrieving once the answer requested by the user is sufficiently supported at
+the required semantic level. In particular, do not inspect `documents/`,
+`trainings/` or `notes/` for an implementation-only question unless one of the
+conditions above makes that source role relevant, and do not inspect repositories
+for a document-, training- or note-specific question merely because implementation
+source is available.
 
 Candidate search does not determine evidence authority. `workspace_evidence_search`
 returns relevant files and observable content matches inside the role already

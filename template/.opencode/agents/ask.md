@@ -90,11 +90,19 @@ during analysis, load that capability at that boundary and reuse evidence alread
 collected. Do not duplicate another skill's procedure inside the agent prompt or
 reconstruct its responsibility through ad-hoc generic retrieval.
 
-Use `workspace-reading` for ordinary workspace retrieval and knowledge-first
-source selection. When the user explicitly identifies persisted workspace knowledge
-as the primary source or asks what the existing knowledge says, load
-`workspace-reading` before any workspace evidence acquisition and delegate the
-knowledge-first retrieval order to that capability.
+Use `workspace-reading` as the retrieval capability for evidence-backed workspace
+requests. Before the first workspace evidence-acquisition call, load it alongside
+`evidence-semantics` and any specialized capability that directly owns a requested
+analysis outcome. Delegate candidate discovery, minimal source scoping,
+knowledge-first retrieval and retrieval stop conditions to `workspace-reading`; do
+not reproduce a fixed directory chain in the agent prompt.
+
+Ask owns interpretation of the user's requested information need.
+`evidence-semantics` determines the semantic role applicable to that need, and
+`workspace-reading` retrieves the smallest useful evidence set from that role. If
+the user explicitly identifies persisted workspace knowledge as the primary source
+or asks what the existing knowledge says, preserve that requested perspective and
+do not silently replace it with repository evidence.
 
 Treat `evidence-semantics` as the baseline interpretation capability for every
 evidence-backed Ask response. Before the first workspace evidence-acquisition call,
