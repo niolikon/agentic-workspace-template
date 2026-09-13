@@ -71,21 +71,12 @@ silently bypassing it.
 
 Use the declared responsibility of each specialized capability as the intent
 classification boundary. In particular, configuration provenance, overrides or
-effective values belong to `configuration-resolution`; execution-flow analysis
-applies when the user asks to reconstruct how a request, message, job, command,
-event or operation propagates through multiple meaningful execution stages;
-consequences, dependents, blast radius or regression risk of an existing or
-proposed change belong to `impact-analysis`; and structural or architectural
-relationships belong to `architecture-analysis`. An explicitly requested outcome
-keeps its owning capability even when another matched capability could supply
-supporting evidence.
-
-Do not load `execution-flow-analysis` for questions limited to a localized
-implemented rule or outcome, including whether an operation is allowed, rejected,
-guarded or produces a particular exception, status or state result. Load it when
-the requested outcome requires reconstruction of propagation across multiple
-meaningful execution stages. Merely mentioning an HTTP operation does not make the
-request an execution-flow analysis.
+effective values belong to `configuration-resolution`; request, message, job or
+operation propagation belongs to `execution-flow-analysis`; consequences,
+dependents, blast radius or regression risk of an existing or proposed change
+belong to `impact-analysis`; and structural or architectural relationships belong
+to `architecture-analysis`. An explicitly requested outcome keeps its owning
+capability even when another matched capability could supply supporting evidence.
 
 When one or more explicit outcomes match specialized analysis capabilities, load
 all directly matched specialized skills before workspace evidence acquisition.
@@ -97,46 +88,61 @@ specialized capability.
 Loading a specialized analysis capability does not by itself justify direct
 repository retrieval. For current-implementation questions, perform the
 source-aware initial retrieval selected by `workspace-reading` before acquiring
-repository evidence unless the user explicitly requests direct source verification,
-the requested outcome inherently requires reconstruction from primary source and
-cannot be satisfied from generated knowledge, or relevant generated knowledge has
-already been inspected and an escalation condition applies.
+repository evidence unless the user explicitly requests direct source/code
+verification, relevant generated knowledge has already been inspected and an
+escalation condition applies, or the requested outcome inherently requires
+primary-source reconstruction that generated knowledge cannot provide.
 
-A specialized capability may govern how an outcome is analysed, but it must consume
+A specialized capability governs how its outcome is analysed, but it must consume
 the evidence selected by the retrieval strategy before expanding the source scope.
 Do not let a specialized skill bypass knowledge-first retrieval merely because
 repository evidence would also be useful.
 
-For current-implementation questions, after relevant generated knowledge has been
-inspected, explicitly determine whether it answers every material part of the
-user's request. If it does, stop workspace retrieval. Do not inspect repository
-source merely to confirm, corroborate or strengthen a claim already sufficiently
-supported by generated knowledge.
-
-Before transitioning from generated knowledge to repository evidence, identify a
-concrete unresolved information need and ensure that at least one retrieval
-escalation condition from `workspace-reading` applies. If no unresolved need can
-be stated, repository retrieval is not permitted. Reuse the knowledge evidence
-already acquired when escalation is justified; do not restart discovery.
+Do not select `execution-flow-analysis` merely because a question mentions an HTTP
+operation or asks what result an operation produces. Localized questions about a
+guard, validation rule, returned status, exception, state restriction or other
+implemented outcome remain implementation-evidence questions unless the user asks
+to reconstruct propagation across multiple meaningful execution stages.
 
 If another specialized outcome becomes necessary only because of evidence found
 during analysis, load that capability at that boundary and reuse evidence already
 collected. Do not duplicate another skill's procedure inside the agent prompt or
 reconstruct its responsibility through ad-hoc generic retrieval.
 
-Use `workspace-reading` as the retrieval capability for evidence-backed workspace
-requests. Before the first workspace evidence-acquisition call, load it alongside
-`evidence-semantics` and any specialized capability that directly owns a requested
-analysis outcome. Delegate candidate discovery, minimal source scoping,
-knowledge-first retrieval and retrieval stop conditions to `workspace-reading`; do
-not reproduce a fixed directory chain in the agent prompt.
+Use `workspace-reading` for ordinary workspace retrieval and source-aware,
+knowledge-first source selection. For current-implementation questions, relevant
+generated knowledge is the preferred initial implementation view whenever it is
+plausibly available; repository evidence is the primary direct implementation
+evidence used only when a concrete escalation condition applies.
 
-Ask owns interpretation of the user's requested information need.
-`evidence-semantics` determines the semantic role applicable to that need, and
-`workspace-reading` retrieves the smallest useful evidence set from that role. If
-the user explicitly identifies persisted workspace knowledge as the primary source
-or asks what the existing knowledge says, preserve that requested perspective and
-do not silently replace it with repository evidence.
+A request for an exact, concrete or low-level implementation detail does not by
+itself bypass generated knowledge. Treat precision as a possible reason for later
+repository escalation, not as a reason to skip the knowledge-first stage. Wording
+such as `exact`, `current implementation`, `exact status`, `exact response`,
+`concrete value` or `precise behaviour` increases the required answer precision;
+it does not change the initial evidence class by itself.
+
+After relevant generated knowledge has been inspected, explicitly determine whether
+it answers every material part of the user's question at the requested precision.
+If it does, stop workspace retrieval. Do not inspect repository source merely to
+confirm, corroborate or strengthen a claim already sufficiently supported by
+generated knowledge.
+
+If generated knowledge leaves a concrete detail unresolved, retain the acquired
+evidence and escalate only for that specific gap. Before transitioning from
+generated knowledge to repository evidence, there must be a concrete unresolved
+information need. If no such unresolved need can be stated, repository retrieval is
+not permitted.
+
+Direct repository-first retrieval is appropriate only when the user explicitly
+requests source/code verification, generated knowledge is known to be unavailable
+for the requested area, or the requested task inherently requires primary-source
+reconstruction rather than retrieval of an implementation fact.
+
+When the user explicitly identifies persisted workspace knowledge as the primary
+source or asks what the existing knowledge says, load `workspace-reading` before
+any workspace evidence acquisition and delegate the knowledge-first retrieval order
+to that capability.
 
 Treat `evidence-semantics` as the baseline interpretation capability for every
 evidence-backed Ask response. Before the first workspace evidence-acquisition call,
