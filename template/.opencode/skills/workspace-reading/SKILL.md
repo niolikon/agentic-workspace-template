@@ -73,9 +73,36 @@ knowledge-base = preferred curated implementation view
 repositories   = primary direct implementation evidence
 ```
 
+### Source-specific intent precedence
+
+Before applying the implementation retrieval gate, determine whether the question
+explicitly requests the perspective of a particular workspace evidence class.
+
+Explicit source-specific intent takes precedence over generic implementation cues
+such as feature names, ticket identifiers, endpoints, components or other software
+terms:
+
+- approved, official or reviewed project material -> `documents/`;
+- onboarding, training or expert-session material -> `trainings/`;
+- recorded notes, working context, hypotheses, TODOs, cautions or open questions ->
+  `notes/`.
+
+Start candidate discovery in that requested evidence class. Do not search
+`knowledge-base/` first merely because the subject of the document, training or note
+is an implementation feature.
+
+If the selected source-specific evidence is sufficient for the requested
+perspective, stop. Escalate to another evidence class only when the question also
+requires a material fact that the requested source class cannot support, or when the
+user explicitly asks for comparison or verification against another source class.
+
 ### Mandatory implementation retrieval gate
 
-For every current-implementation question, complete the following gate before any
+Apply this gate to implementation-oriented questions whose requested perspective is
+the current implementation, rather than to questions with an explicit source-specific
+perspective handled above.
+
+For those current-implementation questions, complete the following gate before any
 repository grep, glob, inventory call or repository file read, unless one of the
 repository-first exceptions below applies.
 
