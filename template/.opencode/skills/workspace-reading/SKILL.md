@@ -96,6 +96,34 @@ perspective, stop. Escalate to another evidence class only when the question als
 requires a material fact that the requested source class cannot support, or when the
 user explicitly asks for comparison or verification against another source class.
 
+### Missing source-role stop condition
+
+When the requested perspective itself requires a semantic source role, absence of
+sufficient evidence in that role is an evidence result, not a reason to fall back
+through unrelated source classes.
+
+For example, if the user asks for an officially approved procedure, search the
+applicable `documents/` evidence and inspect the smallest relevant official
+candidate. If no document supports the requested approved procedure, report that
+authoritative evidence gap and stop.
+
+Before expanding to another evidence class after a source-role miss, ask whether
+that class could actually satisfy the requested semantic qualification. If it
+cannot, do not search it merely to find related information.
+
+In particular:
+
+- `knowledge-base/` cannot establish that a procedure is officially approved;
+- `trainings/` cannot substitute expert guidance for an absent approved document;
+- `notes/` cannot turn working context or a proposal into approved guidance;
+- `repositories/` can establish implementation facts but cannot establish approval
+  status unless the question separately asks for implementation verification.
+
+Offer investigation, comparison, repository inspection or drafting from other
+evidence roles only as an explicit next step when useful. Do not perform that
+fallback retrieval unless it is required by another material sub-need in the
+original question.
+
 ### Mixed evidence intent
 
 Before applying the generic implementation gate, determine whether the question
