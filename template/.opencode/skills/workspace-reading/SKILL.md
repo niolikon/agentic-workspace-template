@@ -178,9 +178,35 @@ When escalating, retain and reuse the knowledge already inspected. Narrow reposi
 discovery from the known repository, symbol, endpoint, configuration key or
 relationship whenever possible instead of restarting from workspace-wide discovery.
 
-Repository escalation inherits the unresolved information need. Stop repository
-retrieval as soon as that gap is supported; do not inspect additional implementation
-layers merely because they are reachable.
+Repository escalation inherits the unresolved information need.
+
+### Repository escalation budget
+
+Treat the unresolved information need as a retrieval budget, not merely as the reason
+to enter `repositories/`.
+
+Before each additional repository acquisition, ask whether the currently inspected
+repository evidence already supports the unresolved detail. If it does, stop
+immediately.
+
+When one source file establishes part of the gap and names the exact type, symbol or
+artifact needed for the remaining part, follow only that direct dependency. Do not
+broaden into adjacent service, mapper, model, persistence or other implementation
+layers unless the unresolved detail specifically depends on them.
+
+For example, if a controller establishes the exact HTTP status and identifies the
+response DTO, and that DTO establishes the exact serialized response shape, the
+original status/body gap is fully resolved. Do not continue into service logic,
+mapping code or domain models merely to corroborate how that DTO was produced.
+
+Repository discovery must also remain anchored to the repository already implied by
+the inspected knowledge or unresolved symbol. Prefer the directly relevant repository
+over nested, vendored, deployment-zone or duplicated copies when the canonical
+repository is available.
+
+Stop repository retrieval as soon as the unresolved detail is supported; do not
+inspect additional implementation layers merely because they are reachable,
+interesting or potentially corroborating.
 
 ## Candidate discovery
 
