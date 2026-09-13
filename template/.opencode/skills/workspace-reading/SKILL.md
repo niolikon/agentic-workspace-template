@@ -73,10 +73,24 @@ knowledge-base = preferred curated implementation view
 repositories   = primary direct implementation evidence
 ```
 
-When relevant generated knowledge is likely to answer the implementation question,
-discover and inspect that knowledge before repository source. If the inspected
-knowledge answers the requested detail clearly and sufficiently, stop: do not open
-repository files merely to restate the same claim.
+For current-implementation questions, generated knowledge is the initial candidate
+scope whenever relevant repository knowledge may plausibly exist. Do not select
+`repositories/` as the initial scope merely because the request asks for an exact,
+concrete, current or low-level implementation detail.
+
+First perform focused candidate discovery in `knowledge-base/`. If a relevant
+knowledge candidate exists, inspect the smallest useful knowledge evidence and
+determine which requested details it supports and which material details, if any,
+remain unresolved.
+
+If the inspected knowledge answers the requested detail clearly and sufficiently,
+stop: do not open repository files merely to restate, confirm or strengthen the same
+claim.
+
+If no relevant generated knowledge candidate exists, repository evidence may become
+the initial effective evidence source. Repository-first retrieval is otherwise
+reserved for explicit direct-source verification or for tasks that inherently
+require primary-source reconstruction.
 
 Escalate from knowledge to repository evidence only when at least one of these
 conditions applies:
@@ -91,10 +105,15 @@ conditions applies:
 - a specialized analysis capability requires direct repository evidence to satisfy
   its own outcome.
 
-When escalating, retain and reuse the knowledge already inspected. Narrow
-repository discovery from the known repository, symbol, endpoint, configuration
-key or relationship whenever possible instead of restarting from workspace-wide
-discovery.
+When escalating, retain and reuse the knowledge already inspected. The escalation
+inherits the concrete unresolved information need: repository retrieval must target
+that gap rather than reopening general implementation analysis.
+
+Narrow repository discovery from the known repository, symbol, endpoint,
+configuration key or relationship whenever possible instead of restarting from
+workspace-wide discovery. Stop repository retrieval as soon as the unresolved detail
+is supported; do not inspect additional implementation layers merely because they
+are reachable.
 
 ## Candidate discovery
 
