@@ -69,6 +69,38 @@ generic retrieval or agent reasoning for a directly matched capability. If a
 required capability cannot be loaded, report the analysis as blocked rather than
 silently bypassing it.
 
+Before choosing the initial evidence class, classify the request's semantic
+information needs separately from its analysis capabilities. This classification
+must happen before applying the generic current-implementation knowledge-first path.
+
+Distinguish:
+
+- explicit single-source perspective: the user asks what an official document,
+  training, note or persisted knowledge says;
+- mixed-source perspective: materially distinct parts of the question require
+  different evidence roles;
+- generic current-implementation perspective: the requested claim is about current
+  implementation and no more specific evidence perspective governs it.
+
+For a mixed-source perspective, decompose the request into the smallest semantic
+sub-needs and pass those source roles to `workspace-reading` before evidence
+acquisition. Do not route the entire request through `knowledge-base/` merely
+because one sub-need concerns current implementation.
+
+A question asking why a design or behavior exists and how that rationale is
+reflected in the current implementation is a mixed-source request when recorded
+working rationale may exist:
+
+```text
+recorded rationale / intent -> notes/
+current implementation      -> repositories/
+```
+
+Retrieve the rationale-bearing source first, then use repository evidence only for
+the implementation-verification sub-need. Do not substitute reconstructed rationale
+from code, tests, training material or architecture analysis when applicable
+recorded rationale is available in notes.
+
 Use the declared responsibility of each specialized capability as the intent
 classification boundary. In particular, configuration provenance, overrides or
 effective values belong to `configuration-resolution`; request, message, job or
