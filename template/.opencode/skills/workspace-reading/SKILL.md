@@ -73,24 +73,63 @@ knowledge-base = preferred curated implementation view
 repositories   = primary direct implementation evidence
 ```
 
-For current-implementation questions, generated knowledge is the initial candidate
-scope whenever relevant repository knowledge may plausibly exist. Do not select
-`repositories/` as the initial scope merely because the request asks for an exact,
-concrete, current or low-level implementation detail.
+### Mandatory implementation retrieval gate
 
-First perform focused candidate discovery in `knowledge-base/`. If a relevant
-knowledge candidate exists, inspect the smallest useful knowledge evidence and
-determine which requested details it supports and which material details, if any,
-remain unresolved.
+For every current-implementation question, complete the following gate before any
+repository grep, glob, inventory call or repository file read, unless one of the
+repository-first exceptions below applies.
 
-If the inspected knowledge answers the requested detail clearly and sufficiently,
-stop: do not open repository files merely to restate, confirm or strengthen the same
-claim.
+```text
+implementation question
+    ↓
+focused knowledge-base candidate discovery
+    ↓
+relevant knowledge candidate?
+    ├─ no  → repository becomes eligible
+    └─ yes
+         ↓
+      inspect smallest useful knowledge evidence
+         ↓
+      requested detail sufficiently supported?
+         ├─ yes → STOP
+         └─ no
+              ↓
+           state the concrete unresolved detail
+              ↓
+           repository becomes eligible only for that gap
+```
 
-If no relevant generated knowledge candidate exists, repository evidence may become
-the initial effective evidence source. Repository-first retrieval is otherwise
-reserved for explicit direct-source verification or for tasks that inherently
-require primary-source reconstruction.
+The mandatory first action for this gate is a focused
+`workspace_evidence_search` scoped to `knowledge-base/`. Do not substitute a
+repository grep, repository inventory, repository glob or source-file read for this
+candidate-discovery step.
+
+Requests for exact, concrete, current or low-level implementation details still pass
+through this gate. Precision can make repository escalation necessary after knowledge
+inspection; it does not make repository evidence the initial scope.
+
+Repository-first retrieval is allowed only when:
+
+- the user explicitly asks for direct source/code verification or explicitly asks to
+  bypass generated knowledge;
+- generated knowledge is already known from current-run evidence to be unavailable
+  for the requested area;
+- the requested outcome inherently requires primary-source reconstruction rather
+  than retrieval of an implementation fact.
+
+Loading a specialized analysis skill does not bypass this gate. A specialized skill
+may determine how the requested outcome is analysed, but repository evidence remains
+ineligible until the gate permits escalation.
+
+### Knowledge evaluation and escalation
+
+If a relevant knowledge candidate exists, inspect the smallest useful knowledge
+evidence and determine which requested details it supports and which material details,
+if any, remain unresolved.
+
+If the inspected knowledge answers every material part of the question at the
+requested precision, stop retrieval. Do not open repository files merely to restate,
+confirm, corroborate or strengthen the same claim.
 
 Escalate from knowledge to repository evidence only when at least one of these
 conditions applies:
@@ -99,21 +138,22 @@ conditions applies:
 - the inspected knowledge is ambiguous or internally incomplete for the question;
 - the requested implementation detail is not represented precisely enough;
 - the user explicitly requests direct source or code verification;
-- current-run evidence gives a concrete reason to suspect the knowledge may be
-  stale;
+- current-run evidence gives a concrete reason to suspect the knowledge may be stale;
 - another inspected source materially conflicts with the generated knowledge;
 - a specialized analysis capability requires direct repository evidence to satisfy
   its own outcome.
 
-When escalating, retain and reuse the knowledge already inspected. The escalation
-inherits the concrete unresolved information need: repository retrieval must target
-that gap rather than reopening general implementation analysis.
+Before the first repository acquisition after knowledge inspection, identify the
+specific unresolved information need. Repository retrieval is permitted only for
+that gap. If no unresolved need can be stated, repository retrieval is not permitted.
 
-Narrow repository discovery from the known repository, symbol, endpoint,
-configuration key or relationship whenever possible instead of restarting from
-workspace-wide discovery. Stop repository retrieval as soon as the unresolved detail
-is supported; do not inspect additional implementation layers merely because they
-are reachable.
+When escalating, retain and reuse the knowledge already inspected. Narrow repository
+discovery from the known repository, symbol, endpoint, configuration key or
+relationship whenever possible instead of restarting from workspace-wide discovery.
+
+Repository escalation inherits the unresolved information need. Stop repository
+retrieval as soon as that gap is supported; do not inspect additional implementation
+layers merely because they are reachable.
 
 ## Candidate discovery
 
