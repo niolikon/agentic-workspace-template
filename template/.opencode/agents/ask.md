@@ -80,11 +80,12 @@ relationships belong to `architecture-analysis`. An explicitly requested outcome
 keeps its owning capability even when another matched capability could supply
 supporting evidence.
 
-Do not select `execution-flow-analysis` merely because the question mentions an
-HTTP operation or asks what result an operation produces. A question about a guard,
-validation rule, returned status, exception, state restriction or other localized
-implemented behaviour remains an implementation-evidence question unless the user
-also asks for the execution path.
+Do not load `execution-flow-analysis` for questions limited to a localized
+implemented rule or outcome, including whether an operation is allowed, rejected,
+guarded or produces a particular exception, status or state result. Load it when
+the requested outcome requires reconstruction of propagation across multiple
+meaningful execution stages. Merely mentioning an HTTP operation does not make the
+request an execution-flow analysis.
 
 When one or more explicit outcomes match specialized analysis capabilities, load
 all directly matched specialized skills before workspace evidence acquisition.
@@ -105,6 +106,18 @@ A specialized capability may govern how an outcome is analysed, but it must cons
 the evidence selected by the retrieval strategy before expanding the source scope.
 Do not let a specialized skill bypass knowledge-first retrieval merely because
 repository evidence would also be useful.
+
+For current-implementation questions, after relevant generated knowledge has been
+inspected, explicitly determine whether it answers every material part of the
+user's request. If it does, stop workspace retrieval. Do not inspect repository
+source merely to confirm, corroborate or strengthen a claim already sufficiently
+supported by generated knowledge.
+
+Before transitioning from generated knowledge to repository evidence, identify a
+concrete unresolved information need and ensure that at least one retrieval
+escalation condition from `workspace-reading` applies. If no unresolved need can
+be stated, repository retrieval is not permitted. Reuse the knowledge evidence
+already acquired when escalation is justified; do not restart discovery.
 
 If another specialized outcome becomes necessary only because of evidence found
 during analysis, load that capability at that boundary and reuse evidence already
