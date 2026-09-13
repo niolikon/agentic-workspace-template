@@ -96,6 +96,41 @@ perspective, stop. Escalate to another evidence class only when the question als
 requires a material fact that the requested source class cannot support, or when the
 user explicitly asks for comparison or verification against another source class.
 
+### Mixed evidence intent
+
+Before applying the generic implementation gate, determine whether the question
+contains multiple semantic information needs that belong to different evidence
+classes.
+
+Decompose mixed questions into the smallest independently supportable sub-needs and
+assign each sub-need to its applicable evidence class. Do not let an implementation
+clause force the entire question through `knowledge-base/`.
+
+In particular, questions that ask both why a design or behavior exists and how that
+rationale is reflected in the current implementation should normally be decomposed
+as:
+
+```text
+recorded rationale / intent -> notes/
+current implementation      -> repositories/
+```
+
+Retrieve the rationale-bearing evidence first when the question asks for the reason,
+intent, caution, hypothesis or decision context. Then inspect repository evidence
+only to verify the implementation-specific sub-need.
+
+Keep evidence roles distinct: working notes can support recorded rationale or intent
+but do not prove current implementation; repository code can prove implementation
+but should not be used to reconstruct or replace available recorded rationale.
+
+For each sub-need, apply the smallest-sufficient-evidence rule independently. Do not
+inspect unrelated evidence classes, and do not add corroborating repository files
+once the implementation sub-need is sufficiently supported.
+
+If a mixed question has no relevant candidate in the evidence class assigned to one
+sub-need, report that absence or continue with the remaining supported sub-needs
+without silently substituting a different evidence role.
+
 ### Mandatory implementation retrieval gate
 
 Apply this gate to implementation-oriented questions whose requested perspective is
