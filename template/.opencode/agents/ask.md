@@ -69,6 +69,38 @@ generic retrieval or agent reasoning for a directly matched capability. If a
 required capability cannot be loaded, report the analysis as blocked rather than
 silently bypassing it.
 
+Before choosing the initial evidence class, classify the request's semantic
+information needs separately from its analysis capabilities. This classification
+must happen before applying the generic current-implementation knowledge-first path.
+
+Distinguish:
+
+- explicit single-source perspective: the user asks what an official document,
+  training, note or persisted knowledge says;
+- mixed-source perspective: materially distinct parts of the question require
+  different evidence roles;
+- generic current-implementation perspective: the requested claim is about current
+  implementation and no more specific evidence perspective governs it.
+
+For a mixed-source perspective, decompose the request into the smallest semantic
+sub-needs and pass those source roles to `workspace-reading` before evidence
+acquisition. Do not route the entire request through `knowledge-base/` merely
+because one sub-need concerns current implementation.
+
+A question asking why a design or behavior exists and how that rationale is
+reflected in the current implementation is a mixed-source request when recorded
+working rationale may exist:
+
+```text
+recorded rationale / intent -> notes/
+current implementation      -> repositories/
+```
+
+Retrieve the rationale-bearing source first, then use repository evidence only for
+the implementation-verification sub-need. Do not substitute reconstructed rationale
+from code, tests, training material or architecture analysis when applicable
+recorded rationale is available in notes.
+
 Use the declared responsibility of each specialized capability as the intent
 classification boundary. In particular, configuration provenance, overrides or
 effective values belong to `configuration-resolution`; request, message, job or
@@ -85,16 +117,64 @@ matched capabilities remain responsible for their distinct outcomes. Generic
 retrieval or repository analysis must support, not replace, a directly matched
 specialized capability.
 
+Loading a specialized analysis capability does not by itself justify direct
+repository retrieval. For current-implementation questions, perform the
+source-aware initial retrieval selected by `workspace-reading` before acquiring
+repository evidence unless the user explicitly requests direct source/code
+verification, relevant generated knowledge has already been inspected and an
+escalation condition applies, or the requested outcome inherently requires
+primary-source reconstruction that generated knowledge cannot provide.
+
+A specialized capability governs how its outcome is analysed, but it must consume
+the evidence selected by the retrieval strategy before expanding the source scope.
+Do not let a specialized skill bypass knowledge-first retrieval merely because
+repository evidence would also be useful.
+
+Do not select `execution-flow-analysis` merely because a question mentions an HTTP
+operation or asks what result an operation produces. Localized questions about a
+guard, validation rule, returned status, exception, state restriction or other
+implemented outcome remain implementation-evidence questions unless the user asks
+to reconstruct propagation across multiple meaningful execution stages.
+
 If another specialized outcome becomes necessary only because of evidence found
 during analysis, load that capability at that boundary and reuse evidence already
 collected. Do not duplicate another skill's procedure inside the agent prompt or
 reconstruct its responsibility through ad-hoc generic retrieval.
 
-Use `workspace-reading` for ordinary workspace retrieval and knowledge-first
-source selection. When the user explicitly identifies persisted workspace knowledge
-as the primary source or asks what the existing knowledge says, load
-`workspace-reading` before any workspace evidence acquisition and delegate the
-knowledge-first retrieval order to that capability.
+Use `workspace-reading` for ordinary workspace retrieval and source-aware,
+knowledge-first source selection. For current-implementation questions, relevant
+generated knowledge is the preferred initial implementation view whenever it is
+plausibly available; repository evidence is the primary direct implementation
+evidence used only when a concrete escalation condition applies.
+
+A request for an exact, concrete or low-level implementation detail does not by
+itself bypass generated knowledge. Treat precision as a possible reason for later
+repository escalation, not as a reason to skip the knowledge-first stage. Wording
+such as `exact`, `current implementation`, `exact status`, `exact response`,
+`concrete value` or `precise behaviour` increases the required answer precision;
+it does not change the initial evidence class by itself.
+
+After relevant generated knowledge has been inspected, explicitly determine whether
+it answers every material part of the user's question at the requested precision.
+If it does, stop workspace retrieval. Do not inspect repository source merely to
+confirm, corroborate or strengthen a claim already sufficiently supported by
+generated knowledge.
+
+If generated knowledge leaves a concrete detail unresolved, retain the acquired
+evidence and escalate only for that specific gap. Before transitioning from
+generated knowledge to repository evidence, there must be a concrete unresolved
+information need. If no such unresolved need can be stated, repository retrieval is
+not permitted.
+
+Direct repository-first retrieval is appropriate only when the user explicitly
+requests source/code verification, generated knowledge is known to be unavailable
+for the requested area, or the requested task inherently requires primary-source
+reconstruction rather than retrieval of an implementation fact.
+
+When the user explicitly identifies persisted workspace knowledge as the primary
+source or asks what the existing knowledge says, load `workspace-reading` before
+any workspace evidence acquisition and delegate the knowledge-first retrieval order
+to that capability.
 
 Treat `evidence-semantics` as the baseline interpretation capability for every
 evidence-backed Ask response. Before the first workspace evidence-acquisition call,
