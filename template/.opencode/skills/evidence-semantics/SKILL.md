@@ -184,6 +184,43 @@ knowledge after those capabilities have established their own technical claims.
 Reuse evidence already acquired for a specialized analysis. Do not rerun equivalent
 retrieval merely to perform reconciliation.
 
+Do not strengthen the evidentiary meaning of discovery results during reconciliation.
+A candidate path, inventory entry or repository search match remains evidence only
+for what that acquisition directly exposed. Before describing a file as supporting
+a behavioural, test, configuration or design claim, require that the relevant
+content itself was observed in the active run or attribute the claim to an inspected
+persisted artifact that records it. If the candidate is merely corroborative and
+not needed to answer the question, omit the claim instead of expanding retrieval.
+
+## Run-local provenance boundary
+
+Persisted workspace evidence can describe actions performed when that artifact was
+created, such as files being read, commands being executed, dependencies being
+inspected or configuration being rendered. Treat those statements as provenance
+of the persisted artifact, not as actions performed by the active Ask run.
+
+A final answer may say that inspected knowledge records or reports such a prior
+observation, but must not restate it as `read in this run`, `observed in this run`,
+`verified in this run`, `executed in this run` or equivalent unless the active tool
+trace actually acquired that evidence directly. Repository paths mentioned inside
+knowledge remain transitive provenance until the repository source itself is read
+or otherwise directly observed by a permitted current-run evidence capability.
+
+Before final synthesis, apply this provenance gate to every material claim:
+
+1. identify whether the claim is supported by direct current-run acquisition or only
+   by inspected persisted evidence;
+2. preserve persisted observations as attributed historical evidence when they are
+   still useful;
+3. remove current-run wording that is not backed by an actual current-run read,
+   search content hit or specialized tool result; and
+4. acquire direct repository evidence when a material present-state conclusion
+   requires confirmation beyond the persisted artifact.
+
+This boundary applies even when the persisted artifact itself uses phrases such as
+`in this run`; the deictic phrase belongs to the artifact-producing run, not to the
+current Ask session.
+
 ## Reporting
 
 Use workspace-relative evidence paths and describe claims according to the role

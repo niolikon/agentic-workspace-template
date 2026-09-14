@@ -112,7 +112,7 @@ async function walk(repositoryRoot: string, current: string, workspace: string, 
 }
 
 export default tool({
-  description: "Return a deterministic inventory of plausible repository-local configuration sources across common application, environment, project and deployment conventions. The tool inventories paths only; it does not interpret configuration semantics or assert that a candidate participates in an effective configuration chain. Prefer this over broad glob discovery when deciding which configuration sources may exist in a repository.",
+  description: "Return the deterministic repository-scoped inventory for configuration and deployment source discovery. When a canonical repository is known and configuration, environment, Docker Compose, container, Helm or related deployment files must be located, invoke this tool before generic Glob/Grep discovery; broad workspace Glob/Grep is not a substitute. The tool inventories paths only and does not interpret configuration semantics or assert that a candidate participates in an effective configuration chain.",
   args: {
     repository: tool.schema.string().describe("Canonical repository identifier under the workspace repositories directory."),
   },

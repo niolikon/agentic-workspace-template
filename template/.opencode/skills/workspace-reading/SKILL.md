@@ -281,8 +281,58 @@ merely to see what exists.
 
 Use path and filename hints when they materially narrow discovery, but never assume
 a fixed filename or one document type per directory. Use `repository_inventory`
-when repository identity or structure is relevant, and use `glob`/`grep` for
-focused repository discovery after the repository scope has been established.
+when repository identity or structure is relevant. For repository-local discovery,
+prefer deterministic inventories where applicable; use `grep` only for focused
+textual discovery after repository scope has been established and `glob` only under
+the fallback conditions defined in Workspace access discipline.
+
+### Candidate applicability gate
+
+A search hit is only a candidate; semantic similarity does not make it evidence for
+the entity, repository, component or path that the unresolved information need is
+about. Before inspecting or relying on a candidate, verify that its scope actually
+matches the target of the sub-need.
+
+When discovery is focused on a named repository, component, configuration owner or
+workspace path:
+
+- prefer a candidate explicitly scoped to that target;
+- do not treat an artifact for a sibling or related repository as evidence about
+  the requested target merely because the search ranked it highly;
+- if the returned knowledge candidate is about a different target, record a
+  knowledge miss for the requested target rather than silently substituting it;
+- after such a target-specific knowledge miss, direct repository evidence becomes
+  eligible for the unresolved target under the normal escalation gate.
+
+Cross-repository evidence may still be useful when the question explicitly concerns
+a relationship between those repositories, but each side of that relationship must
+retain its own provenance. Do not infer a mismatch between two repository paths
+until evidence applicable to both sides has actually been observed.
+
+### Discovery-to-content evidence gate
+
+Repository discovery results establish only what they directly expose. A path or
+match returned by `repository_inventory`, `repository_path_inventory`,
+`repository_config_inventory`, `glob` or `grep` may establish existence, location
+or the matched text actually returned by that tool. It does not establish the
+surrounding file's behaviour, test expectations, control flow, configuration
+semantics or other content that was not observed.
+
+In particular:
+
+- a discovered test path establishes that the test is a candidate, not what it tests;
+- a `grep` match may support the exact matched text and its location, but must not be
+  expanded into assertions about the rest of the file without inspecting the
+  relevant content;
+- paths surfaced incidentally by a broader search remain candidates until their
+  relevant content is acquired;
+- if a candidate would only provide optional corroboration and the answer is already
+  sufficiently supported, omit the extra claim rather than reading more files;
+- if a material claim depends on that candidate, acquire the smallest relevant
+  content before using it as supporting, confirming or contradicting evidence.
+
+Apply this gate independently of source authority and independently of whether the
+path looks conventional or its filename strongly suggests its purpose.
 
 Source role is independent of file format. Markdown, text, extracted PDF content,
 DOCX/PPTX content and other supported representations keep the semantic role of
@@ -349,6 +399,31 @@ Inside a repository inspect:
   `workspace_evidence_search` content hit with returned snippets. A persisted
   artifact may be known to exist, but it must not be described as corroborating,
   confirming or supporting a claim when only its path was observed.
+- Evidence pointers, source paths, prior-run observations or verification notes
+  recorded inside persisted knowledge remain provenance carried by that knowledge;
+  they do not make the referenced repository files current-run observed evidence.
+  Do not say that a referenced source was read, inspected, verified or confirmed
+  in the current run unless its relevant content was independently acquired in
+  the current run.
+- Treat first-person or run-oriented wording embedded inside a persisted artifact
+  (for example, "read in this run", "observed", "verified", dependency inspection
+  results or rendered-command output) as historical content of that artifact, not
+  as a description of the active Ask run. Never inherit those statements into the
+  current response's provenance. Current-run acquisition is established only by
+  the tools actually invoked during the active Ask run.
+- Before the final response, perform a provenance consistency check for every claim
+  phrased as current-run observation (`read`, `inspected`, `observed`, `verified`,
+  `confirmed`, `rendered`, `executed`). If the active run did not directly acquire
+  that source or result, rephrase it as a claim reported by the persisted artifact
+  or omit it; do not promote it to direct evidence.
+- When a material current-implementation conclusion depends on choosing between an
+  inspected source-specific claim and a conflicting or apparently conflicting
+  generated-knowledge claim, do not declare an implementation discrepancy, call
+  either implementation source current, or prefer one implementation path solely
+  from transitive knowledge provenance. State the unresolved implementation detail
+  and escalate to the smallest direct repository evidence needed to decide it. If
+  direct verification is not acquired, keep the implementation relationship
+  unresolved and report only what each inspected source actually establishes.
 - When comparing persisted knowledge with repository evidence, keep their
   provenance explicit: first report what the inspected knowledge states, then
   identify which parts are confirmed, contradicted or unresolved by repository
@@ -369,14 +444,23 @@ it owns:
   root;
 - use `repository_inventory` when repository identity or workspace repository
   structure is required;
+- when a canonical repository is already known and a repository-local path must
+  be discovered, prefer the narrowest deterministic inventory that owns the
+  discovery: use specialized inventories such as `repository_config_inventory`
+  for configuration/deployment sources, otherwise use `repository_path_inventory`
+  with a repository-relative pattern; treat returned paths as existence evidence
+  only and `read` a returned file before presenting its contents as current-run
+  evidence;
 - use `workspace_evidence_search` to discover and search candidates inside
   `documents/`, `trainings/`, `notes/` and `knowledge-base/`; this is preferred
   over generic `glob`/`grep` discovery for those evidence collections because it
   inventories files directly and can search supported container formats such as
   DOCX and PPTX plus extractable text from PDFs; PDFs without extractable text
   remain visible as candidates rather than being treated as absent;
-- use `glob` when candidate paths must be discovered outside those evidence
-  collections;
+- use generic `glob` only when candidate paths must be discovered outside those
+  evidence collections and the target cannot be expressed as a known canonical
+  repository plus a repository-relative pattern. Do not use workspace-wide `glob`
+  as a substitute for `repository_config_inventory` or `repository_path_inventory`;
 - use `grep` to locate symbols, configuration keys, endpoint paths or other
   textual evidence in repositories or already narrowed textual scopes.
 

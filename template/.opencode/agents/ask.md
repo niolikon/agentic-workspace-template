@@ -7,6 +7,7 @@ steps: 40
 permission:
   repository_inventory: allow
   repository_config_inventory: allow
+  repository_path_inventory: allow
   workspace_evidence_search: allow
   
   read: allow
@@ -222,6 +223,12 @@ required beyond the available workspace evidence.
 For composite requests, share established evidence across capabilities. Do not
 restart discovery merely because responsibility passes from one loaded skill to
 another.
+
+When a loaded capability defines a deterministic inventory or discovery tool as a
+prerequisite for its evidence class, honor that contract before using generic
+`glob`, `grep` or speculative `read` as a substitute. Ask owns capability
+orchestration, not the procedural mechanics of that discovery: invoke the owning
+capability's deterministic tool, then continue from its returned candidates.
 
 ## Final response
 

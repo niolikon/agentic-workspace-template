@@ -206,7 +206,17 @@ When repository-local configuration sources must be discovered and their exact
 paths are not already established by current-run evidence, use
 `repository_config_inventory` as the deterministic candidate inventory when the
 tool is available. Prefer it over broad `glob` discovery for deciding whether
-plausible repository-local configuration sources exist.
+plausible repository-local configuration sources exist. A generic
+`repository_path_inventory` may support non-configuration path discovery, but it
+does not replace `repository_config_inventory` for this capability.
+
+When an inspected authoritative or procedural source names the canonical repository
+that owns the deployment/configuration being verified, keep repository-local
+discovery scoped to that repository. A semantically related knowledge artifact
+for a sibling repository does not change the verification target. If current-state
+verification is material and no applicable knowledge artifact covers the named
+target, invoke `repository_config_inventory` for that target and inspect only the
+relevant returned candidates before reporting a repository-path discrepancy.
 
 The inventory is intentionally interpretation-free. A returned path proves only
 that a file matching a configuration-source convention exists in the selected
