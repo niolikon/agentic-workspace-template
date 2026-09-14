@@ -189,6 +189,21 @@ semantic capability to identify the applicable evidence role; `workspace-reading
 then discovers the smallest useful candidates within that role, while specialized
 analysis capabilities determine any additional evidence needed.
 
+When evidence from more than one source role materially contributes to the same
+answer, use `evidence-semantics` to reconcile the material claims before composing
+the final response. Reconciliation is claim-oriented: preserve each claim's source
+role, semantic applicability, directness, temporal context and certainty; determine
+whether the claims agree, conflict or address different contexts; then state only
+the conclusion supported for the user's actual question. Do not use source count,
+inspection order or a global source hierarchy as a substitute for this reasoning.
+
+A conflict involving generated knowledge and another observed source may create a
+current-run freshness concern. For current-implementation questions, if that
+conflict is material and generated knowledge alone can no longer establish the
+requested claim, use the existing `workspace-reading` escalation gate to inspect
+only the repository evidence required to resolve that claim. Keep Ask read-only and
+do not repair or rewrite stale knowledge during the answer.
+
 When `workspace_evidence_search` returns content matches and snippets, treat those
 snippets as inspected workspace evidence. For DOCX, PPTX and PDF sources, do not
 discard or downgrade an extracted content match merely because a subsequent generic

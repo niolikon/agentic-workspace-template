@@ -93,24 +93,96 @@ Do not assign artificial numeric confidence. Do not give every statement in one
 source class identical certainty: claim wording, provenance and corroborating or
 contradictory evidence still matter.
 
+## Multi-source reconciliation
+
+Reconcile evidence at claim level rather than flattening all inspected material into
+one source pool. For each material claim used in the answer, reason through:
+
+```text
+claim
+    ↓
+source role
+    ↓
+semantic applicability to the user's question
+    ↓
+directness / temporal context / certainty
+    ↓
+agreement, conflict or different-context relationship
+    ↓
+final supported conclusion
+```
+
+This is an interpretation step over evidence already acquired through the retrieval
+strategy. It must not trigger broad workspace scanning merely because multiple
+source classes exist.
+
+When multiple source roles agree, synthesize the shared conclusion only to the
+strength they jointly support while retaining their distinct meanings. Agreement
+between curated knowledge and repository source can strengthen a current
+implementation conclusion; agreement from reviewed documentation can additionally
+show that the behaviour is officially documented. Do not imply that those sources
+are interchangeable or that repeated contextual claims override direct evidence.
+
+When a source contributes useful explanation without directly establishing the
+requested fact, preserve it as context. Training material can explain a concept,
+notes can record a proposal or investigation, and roadmap/design material can record
+future intent without becoming evidence that the behaviour is currently
+implemented.
+
 ## Conflict semantics
 
 When relevant evidence disagrees:
 
-1. determine the kind of fact the user is asking for;
-2. identify the evidence role most directly applicable to that semantic question;
-3. preserve the workspace-relative provenance of the conflicting claims;
-4. prefer direct evidence for the requested semantic question;
-5. report meaningful disagreement when it affects the answer;
-6. weaken the conclusion when available workspace evidence cannot resolve it.
+1. identify the conflicting material claims and keep their provenance separate;
+2. determine the semantic question each claim can actually answer;
+3. identify the evidence role most directly applicable to the user's question;
+4. consider directness, temporal or version context, and claim certainty where they
+   are available from observed evidence;
+5. prefer the claim that directly supports the requested semantic question;
+6. report meaningful disagreement when it affects interpretation of the answer;
+7. avoid declaring another source wrong when it may describe a different timeframe,
+   intent, simplification or working context;
+8. weaken or leave the conclusion unresolved when the observed evidence cannot
+   safely determine which claim applies.
 
 Do not silently discard a conflicting claim and do not resolve disagreement through
-a static directory hierarchy.
+a static directory hierarchy, source count or inspection order.
 
 For example, an official document can remain normative for a documented
 specification while repository evidence simultaneously shows that today's
-implementation differs. The answer should state the applicable conclusion and the
-relevant discrepancy instead of collapsing both into one fact.
+implementation differs. A training statement may remain useful explanatory context
+while repository evidence shows a different configurable default. A note describing
+a possible change remains a proposal when approved or implementation evidence still
+shows the current value.
+
+## Temporal interpretation
+
+Before treating differing claims as contradictory, determine whether observed
+content places them in different temporal or version contexts. Distinguish current
+state, approved future intent and working proposal when the evidence supports those
+roles.
+
+Use timestamps, versions, roadmap wording, issue state or other temporal evidence
+only when they were actually observed. Do not invent dates, freshness guarantees or
+a historical sequence from directory names or intuition alone.
+
+A generated knowledge artifact that conflicts materially with direct repository
+evidence can be described as possibly stale or incomplete only to the degree the
+observed conflict supports. The conflict does not authorize Ask to modify the
+knowledge base.
+
+## Specialized analysis composition
+
+Source reconciliation determines how claims from heterogeneous evidence roles relate
+to the user's question. It does not duplicate technical analysis owned elsewhere.
+For example, let `configuration-resolution` establish an effective configuration
+chain, `execution-flow-analysis` establish propagation, `architecture-analysis`
+establish architectural relationships and `impact-analysis` establish affected
+surfaces. Reconcile the resulting evidence with documents, trainings, notes or
+knowledge after those capabilities have established their own technical claims.
+
+Reuse evidence already acquired for a specialized analysis. Do not rerun equivalent
+retrieval merely to perform reconciliation.
 
 ## Reporting
 
