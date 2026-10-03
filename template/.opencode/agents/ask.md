@@ -24,6 +24,7 @@ permission:
     "impact-analysis": allow
     "architecture-analysis": allow
     "dependency-inspection": allow
+    "engineering-guideline-review": allow
 
   edit: deny
   write: deny
