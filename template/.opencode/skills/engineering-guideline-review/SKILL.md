@@ -31,14 +31,18 @@ interpretation belong to this skill.
 Return a concise review containing:
 
 1. the reviewed change scope;
-2. material findings, each traceable to one stable guideline rule ID;
+2. material findings for actionable or uncertain results, each traceable to one
+   stable guideline rule ID;
 3. a compact summary of positive compliance for applicable rules that were
    sufficiently verified;
 4. applicable rules that could not be verified when that uncertainty matters;
 5. any guideline conflict or scope uncertainty that prevents a stronger result.
 
-Do not emit one verbose finding for every passing rule. Non-applicable rules are
-excluded from findings rather than reported as failures or passes.
+A compliant rule is not a material finding. Do not emit the verbose material
+finding shape for passing rules and do not attach warning/error presentation to a
+successful check. Group compliant rule IDs into a concise positive-compliance
+summary, with only enough implementation evidence to make the summary credible.
+Non-applicable rules are excluded rather than reported as failures or passes.
 
 ## Canonical guideline source
 
@@ -158,8 +162,15 @@ presenting a recommendation as mandatory.
 ### `compliant`
 
 Use `compliant` only when observed implementation evidence is sufficient to show
-that an applicable rule is satisfied for the reviewed change. Summarize positive
-compliance compactly instead of emitting repetitive per-rule findings.
+that an applicable rule is satisfied for the reviewed change. A compliant result
+is positive review state, not a material finding. Aggregate compliant rule IDs in
+a compact positive-compliance summary instead of emitting repetitive per-rule
+findings.
+
+Do not pair a successful result with finding-style severity presentation such as
+`Severity: warning` or `Severity: error`. The canonical severity still belongs to
+the rule and may be retained internally or in an explicitly requested validation
+trace, but it should not make a passing rule look actionable.
 
 ### `not-verifiable`
 
@@ -175,7 +186,7 @@ For each material finding provide, at minimum:
 
 - **Rule**: stable guideline rule ID;
 - **Severity**: severity declared by the guideline;
-- **Status**: `violation`, `warning`, `compliant` or `not-verifiable` where useful;
+- **Status**: `violation`, `warning` or `not-verifiable` as applicable;
 - **Scope**: affected repository, file or bounded change scope;
 - **Explanation**: concise relationship between the rule and implementation;
 - **Implementation evidence**: concrete inspected path, changed hunk, symbol or
@@ -183,6 +194,11 @@ For each material finding provide, at minimum:
 - **Guideline evidence**: canonical guideline path and the relevant rule ID;
 - **Exception / uncertainty**: applicable exception, unresolved applicability or
   verification limitation when present.
+
+Do not use this verbose shape for `compliant` rules. Report those separately under
+a concise positive-compliance summary. When a caller explicitly requests a
+validation trace, that trace may list each evaluated rule ID and its status,
+including `compliant`, without expanding passing rules into findings.
 
 Never invent line numbers, changed hunks or implementation facts that were not
 observed. Preserve the stable rule ID exactly as published in the guideline.
