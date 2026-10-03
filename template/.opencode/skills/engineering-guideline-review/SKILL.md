@@ -40,9 +40,12 @@ Return a concise review containing:
 
 A compliant rule is not a material finding. Do not emit the verbose material
 finding shape for passing rules and do not attach warning/error presentation to a
-successful check. Group compliant rule IDs into a concise positive-compliance
-summary, with only enough implementation evidence to make the summary credible.
-Non-applicable rules are excluded rather than reported as failures or passes.
+successful check. Group related compliant rule IDs into compact positive-compliance
+summary entries. Do not emit one evidence block per passing rule. A positive summary
+should normally use one short statement for a coherent rule group and mention only
+the minimum implementation evidence needed to make that group-level statement
+credible. Non-applicable rules are excluded rather than reported as failures or
+passes.
 
 ## Canonical guideline source
 
@@ -163,14 +166,21 @@ presenting a recommendation as mandatory.
 
 Use `compliant` only when observed implementation evidence is sufficient to show
 that an applicable rule is satisfied for the reviewed change. A compliant result
-is positive review state, not a material finding. Aggregate compliant rule IDs in
-a compact positive-compliance summary instead of emitting repetitive per-rule
-findings.
+is positive review state, not a material finding.
 
-Do not pair a successful result with finding-style severity presentation such as
-`Severity: warning` or `Severity: error`. The canonical severity still belongs to
-the rule and may be retained internally or in an explicitly requested validation
-trace, but it should not make a passing rule look actionable.
+Render positive compliance as a compact grouped summary, not as a sequence of
+per-rule mini-findings. Prefer grouping rules that were verified from the same
+artifact and concern, for example `TEST-001, TEST-002, TEST-003, TEST-004 —
+compliant: the changed unit test follows the applicable testing conventions.`
+Use a separate group only when a materially different concern needs its own short
+statement, such as secret handling.
+
+Do not include per-rule `Severity`, `Explanation`, `Implementation evidence` or
+`Guideline evidence` fields for passing rules. Do not pair a successful result
+with finding-style severity presentation such as `Severity: warning` or
+`Severity: error`. The canonical severity still belongs to the rule and may be
+retained internally or in an explicitly requested validation trace, but it should
+not make a passing rule look actionable.
 
 ### `not-verifiable`
 
@@ -196,12 +206,43 @@ For each material finding provide, at minimum:
   verification limitation when present.
 
 Do not use this verbose shape for `compliant` rules. Report those separately under
-a concise positive-compliance summary. When a caller explicitly requests a
-validation trace, that trace may list each evaluated rule ID and its status,
-including `compliant`, without expanding passing rules into findings.
+a concise `Positive compliance` section. That section must not reproduce the
+material-finding schema rule by rule. It should aggregate related passing IDs and
+use at most a short group-level rationale/evidence sentence for each coherent
+group.
+
+When a caller explicitly requests a validation trace, that trace may list each
+evaluated rule ID and its status, including `compliant`. Per-rule severity may also
+appear there when explicitly useful for validation. The trace is diagnostic
+metadata and must not be copied back into the user-facing positive-compliance
+summary.
 
 Never invent line numbers, changed hunks or implementation facts that were not
 observed. Preserve the stable rule ID exactly as published in the guideline.
+
+## Output rendering
+
+Use this presentation model unless the caller requires a stricter machine-readable
+format:
+
+```text
+Summary
+- concise overall result
+
+Material findings
+- detailed violation / warning / not-verifiable items only, or `None`
+
+Positive compliance
+- RULE-ID[, RULE-ID...] — compliant: one short group-level statement
+
+Validation trace   # only when requested
+- RULE-ID — status
+```
+
+Never place `compliant` items under `Material findings`, `Findings`, `Concise
+findings` or another finding-like section. Never expand positive compliance into
+one detailed block per passing rule merely because rule-level evidence is
+available. Preserve that detail internally or in the explicit validation trace.
 
 ## Unit-test guideline evaluation
 
