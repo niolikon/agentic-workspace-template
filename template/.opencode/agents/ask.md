@@ -25,6 +25,7 @@ permission:
     "architecture-analysis": allow
     "dependency-inspection": allow
     "engineering-guideline-review": allow
+    "review-evidence-model": allow
 
   edit: deny
   write: deny
