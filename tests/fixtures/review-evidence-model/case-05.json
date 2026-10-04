@@ -1,0 +1,391 @@
+{
+  "schemaVersion": "review-evidence/v1",
+  "workItem": {
+    "provider": "azure-devops",
+    "externalId": "azure-devops:work-item:7007:39",
+    "title": {
+      "state": "available",
+      "value": "Add canonical review input",
+      "provenance": [
+        {
+          "provider": "azure-devops",
+          "sourceReference": {
+            "provider": "azure-devops",
+            "stableExternalId": "azure-devops:work-item:7007:39",
+            "displayId": "39",
+            "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+            "host": "dev.azure.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "title"
+        }
+      ]
+    },
+    "description": {
+      "state": "available",
+      "value": "Define a provider-neutral review evidence model.",
+      "provenance": [
+        {
+          "provider": "azure-devops",
+          "sourceReference": {
+            "provider": "azure-devops",
+            "stableExternalId": "azure-devops:work-item:7007:39",
+            "displayId": "39",
+            "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+            "host": "dev.azure.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "description"
+        }
+      ]
+    },
+    "acceptanceCriteria": {
+      "state": "available",
+      "value": [
+        "One work item can be paired with one or more change requests."
+      ],
+      "provenance": [
+        {
+          "provider": "azure-devops",
+          "sourceReference": {
+            "provider": "azure-devops",
+            "stableExternalId": "azure-devops:work-item:7007:39",
+            "displayId": "39",
+            "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+            "host": "dev.azure.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "acceptanceCriteria"
+        }
+      ]
+    },
+    "labels": {
+      "state": "available",
+      "value": [
+        "enhancement"
+      ],
+      "provenance": [
+        {
+          "provider": "azure-devops",
+          "sourceReference": {
+            "provider": "azure-devops",
+            "stableExternalId": "azure-devops:work-item:7007:39",
+            "displayId": "39",
+            "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+            "host": "dev.azure.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "labels"
+        }
+      ]
+    },
+    "type": {
+      "state": "available",
+      "value": "enhancement",
+      "provenance": [
+        {
+          "provider": "azure-devops",
+          "sourceReference": {
+            "provider": "azure-devops",
+            "stableExternalId": "azure-devops:work-item:7007:39",
+            "displayId": "39",
+            "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+            "host": "dev.azure.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "type"
+        }
+      ]
+    },
+    "status": {
+      "state": "available",
+      "value": "open",
+      "provenance": [
+        {
+          "provider": "azure-devops",
+          "sourceReference": {
+            "provider": "azure-devops",
+            "stableExternalId": "azure-devops:work-item:7007:39",
+            "displayId": "39",
+            "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+            "host": "dev.azure.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "status"
+        }
+      ]
+    },
+    "sourceReference": {
+      "provider": "azure-devops",
+      "stableExternalId": "azure-devops:work-item:7007:39",
+      "displayId": "39",
+      "url": "https://dev.azure.example.test/org/project/_workitems/edit/39",
+      "host": "dev.azure.example.test"
+    },
+    "retrieval": {
+      "capability": "review-fixture-loader",
+      "mode": "fixture",
+      "retrievedAt": "2026-10-04T10:00:00Z",
+      "complete": true
+    }
+  },
+  "changeRequests": [
+    {
+      "provider": "azure-devops",
+      "repository": {
+        "provider": "azure-devops",
+        "stableId": "repo-42",
+        "name": "review-demo",
+        "fullName": "org/project/review-demo",
+        "sourceReference": {
+          "provider": "azure-devops",
+          "stableExternalId": "azure-devops:repo:repo-42",
+          "displayId": "review-demo",
+          "url": "https://dev.azure.example.test/org/project/_git/review-demo",
+          "host": "dev.azure.example.test"
+        }
+      },
+      "externalId": "azure-devops:pr:7007:repo-42:12",
+      "title": {
+        "state": "available",
+        "value": "Implement review evidence model",
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "title"
+          }
+        ]
+      },
+      "description": {
+        "state": "available",
+        "value": "Implements the normalized contract.",
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "description"
+          }
+        ]
+      },
+      "sourceRef": {
+        "state": "available",
+        "value": {
+          "name": "feature/review-evidence",
+          "commitId": "1111111111111111111111111111111111111111"
+        },
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "sourceRef"
+          }
+        ]
+      },
+      "targetRef": {
+        "state": "available",
+        "value": {
+          "name": "main",
+          "commitId": "2222222222222222222222222222222222222222"
+        },
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "targetRef"
+          }
+        ]
+      },
+      "commits": {
+        "state": "available",
+        "value": [
+          "1111111111111111111111111111111111111111"
+        ],
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "commits"
+          }
+        ]
+      },
+      "changedFiles": {
+        "state": "available",
+        "value": [
+          {
+            "path": "template/.opencode/skills/review-evidence-model/SKILL.md",
+            "changeKind": "modified"
+          }
+        ],
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "changedFiles"
+          }
+        ]
+      },
+      "diff": {
+        "state": "unavailable",
+        "reason": "permission-denied",
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": false
+            },
+            "sourceLocator": "diff"
+          }
+        ]
+      },
+      "reviewState": {
+        "state": "available",
+        "value": "open",
+        "provenance": [
+          {
+            "provider": "azure-devops",
+            "sourceReference": {
+              "provider": "azure-devops",
+              "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+              "displayId": "12",
+              "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+              "host": "dev.azure.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "reviewState"
+          }
+        ]
+      },
+      "sourceReference": {
+        "provider": "azure-devops",
+        "stableExternalId": "azure-devops:pr:7007:repo-42:12",
+        "displayId": "12",
+        "url": "https://dev.azure.example.test/org/project/_git/review-demo/pullrequest/12",
+        "host": "dev.azure.example.test"
+      },
+      "retrieval": {
+        "capability": "review-fixture-loader",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-04T10:00:00Z",
+        "complete": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,398 @@
+{
+  "schemaVersion": "review-evidence/v1",
+  "workItem": {
+    "provider": "jira",
+    "externalId": "jira:DEMO-39",
+    "title": {
+      "state": "available",
+      "value": "Add canonical review input",
+      "provenance": [
+        {
+          "provider": "jira",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "title"
+        }
+      ]
+    },
+    "description": {
+      "state": "available",
+      "value": "Define a provider-neutral review evidence model.",
+      "provenance": [
+        {
+          "provider": "jira",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "description"
+        }
+      ]
+    },
+    "acceptanceCriteria": {
+      "state": "ambiguous",
+      "candidates": [
+        [
+          "Support one or more change requests."
+        ],
+        [
+          "Preserve source traceability."
+        ]
+      ],
+      "reason": "criteria are embedded in free text without a reliable structural boundary",
+      "provenance": [
+        {
+          "provider": "jira",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "description"
+        }
+      ]
+    },
+    "labels": {
+      "state": "available",
+      "value": [
+        "enhancement"
+      ],
+      "provenance": [
+        {
+          "provider": "jira",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "labels"
+        }
+      ]
+    },
+    "type": {
+      "state": "available",
+      "value": "enhancement",
+      "provenance": [
+        {
+          "provider": "jira",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "type"
+        }
+      ]
+    },
+    "status": {
+      "state": "available",
+      "value": "open",
+      "provenance": [
+        {
+          "provider": "jira",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "status"
+        }
+      ]
+    },
+    "sourceReference": {
+      "provider": "jira",
+      "stableExternalId": "jira:DEMO-39",
+      "displayId": "DEMO-39",
+      "url": "https://jira.example.test/browse/DEMO-39",
+      "host": "jira.example.test"
+    },
+    "retrieval": {
+      "capability": "review-fixture-loader",
+      "mode": "fixture",
+      "retrievedAt": "2026-10-04T10:00:00Z",
+      "complete": true
+    }
+  },
+  "changeRequests": [
+    {
+      "provider": "gitlab",
+      "repository": {
+        "provider": "gitlab",
+        "stableId": "2002",
+        "name": "review-demo",
+        "fullName": "group/review-demo",
+        "sourceReference": {
+          "provider": "gitlab",
+          "stableExternalId": "gitlab:project:2002",
+          "displayId": "group/review-demo",
+          "url": "https://gitlab.example.test/group/review-demo",
+          "host": "gitlab.example.test"
+        }
+      },
+      "externalId": "gitlab:mr:2002:17",
+      "title": {
+        "state": "available",
+        "value": "Implement review evidence model",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "title"
+          }
+        ]
+      },
+      "description": {
+        "state": "available",
+        "value": "Implements the normalized contract.",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "description"
+          }
+        ]
+      },
+      "sourceRef": {
+        "state": "available",
+        "value": {
+          "name": "feature/review-evidence",
+          "commitId": "1111111111111111111111111111111111111111"
+        },
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "sourceRef"
+          }
+        ]
+      },
+      "targetRef": {
+        "state": "available",
+        "value": {
+          "name": "main",
+          "commitId": "2222222222222222222222222222222222222222"
+        },
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "targetRef"
+          }
+        ]
+      },
+      "commits": {
+        "state": "available",
+        "value": [
+          "1111111111111111111111111111111111111111"
+        ],
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "commits"
+          }
+        ]
+      },
+      "changedFiles": {
+        "state": "available",
+        "value": [
+          {
+            "path": "template/.opencode/skills/review-evidence-model/SKILL.md",
+            "changeKind": "modified"
+          }
+        ],
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "changedFiles"
+          }
+        ]
+      },
+      "diff": {
+        "state": "partial",
+        "value": "@@ -1,2 +1,3 @@\\n existing\\n+partial patch fragment",
+        "reason": "truncated",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": false
+            },
+            "sourceLocator": "diff"
+          }
+        ]
+      },
+      "reviewState": {
+        "state": "available",
+        "value": "open",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "gitlab:mr:2002:17",
+              "displayId": "!17",
+              "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+              "host": "gitlab.example.test"
+            },
+            "retrieval": {
+              "capability": "review-fixture-loader",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-04T10:00:00Z",
+              "complete": true
+            },
+            "sourceLocator": "reviewState"
+          }
+        ]
+      },
+      "sourceReference": {
+        "provider": "gitlab",
+        "stableExternalId": "gitlab:mr:2002:17",
+        "displayId": "!17",
+        "url": "https://gitlab.example.test/group/review-demo/-/merge_requests/17",
+        "host": "gitlab.example.test"
+      },
+      "retrieval": {
+        "capability": "review-fixture-loader",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-04T10:00:00Z",
+        "complete": false
+      }
+    }
+  ]
+}
