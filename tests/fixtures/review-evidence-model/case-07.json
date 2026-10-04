@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "review-evidence/v1",
+  "workItem": {
+    "provider": "github",
+    "externalId": "github:issue:example/review-demo:39",
+    "title": {
+      "state": "available",
+      "value": "Add canonical review input",
+      "provenance": [
+        {
+          "provider": "github",
+          "sourceReference": {
+            "provider": "github",
+            "stableExternalId": "github:issue:example/review-demo:39",
+            "displayId": "#39",
+            "url": "https://github.example.test/example/review-demo/issues/39",
+            "host": "github.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "title"
+        }
+      ]
+    },
+    "description": {
+      "state": "available",
+      "value": "Define a provider-neutral review evidence model.",
+      "provenance": [
+        {
+          "provider": "github",
+          "sourceReference": {
+            "provider": "github",
+            "stableExternalId": "github:issue:example/review-demo:39",
+            "displayId": "#39",
+            "url": "https://github.example.test/example/review-demo/issues/39",
+            "host": "github.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "description"
+        }
+      ]
+    },
+    "acceptanceCriteria": {
+      "state": "available",
+      "value": [
+        "One work item can be paired with one or more change requests."
+      ],
+      "provenance": [
+        {
+          "provider": "github",
+          "sourceReference": {
+            "provider": "github",
+            "stableExternalId": "github:issue:example/review-demo:39",
+            "displayId": "#39",
+            "url": "https://github.example.test/example/review-demo/issues/39",
+            "host": "github.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "acceptanceCriteria"
+        }
+      ]
+    },
+    "labels": {
+      "state": "available",
+      "value": [
+        "enhancement"
+      ],
+      "provenance": [
+        {
+          "provider": "github",
+          "sourceReference": {
+            "provider": "github",
+            "stableExternalId": "github:issue:example/review-demo:39",
+            "displayId": "#39",
+            "url": "https://github.example.test/example/review-demo/issues/39",
+            "host": "github.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "labels"
+        }
+      ]
+    },
+    "type": {
+      "state": "available",
+      "value": "enhancement",
+      "provenance": [
+        {
+          "provider": "github",
+          "sourceReference": {
+            "provider": "github",
+            "stableExternalId": "github:issue:example/review-demo:39",
+            "displayId": "#39",
+            "url": "https://github.example.test/example/review-demo/issues/39",
+            "host": "github.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "type"
+        }
+      ]
+    },
+    "status": {
+      "state": "available",
+      "value": "open",
+      "provenance": [
+        {
+          "provider": "github",
+          "sourceReference": {
+            "provider": "github",
+            "stableExternalId": "github:issue:example/review-demo:39",
+            "displayId": "#39",
+            "url": "https://github.example.test/example/review-demo/issues/39",
+            "host": "github.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "status"
+        }
+      ]
+    },
+    "sourceReference": {
+      "provider": "github",
+      "stableExternalId": "github:issue:example/review-demo:39",
+      "displayId": "#39",
+      "url": "https://github.example.test/example/review-demo/issues/39",
+      "host": "github.example.test"
+    },
+    "retrieval": {
+      "capability": "review-fixture-loader",
+      "mode": "fixture",
+      "retrievedAt": "2026-10-04T10:00:00Z",
+      "complete": true
+    }
+  },
+  "changeRequests": []
+}
