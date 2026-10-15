@@ -22,7 +22,8 @@
             "retrievedAt": "2026-10-04T10:00:00Z",
             "complete": true
           },
-          "sourceLocator": "title"
+          "sourceLocator": "title",
+          "backend": "review-fixture-loader"
         }
       ]
     },
@@ -45,7 +46,8 @@
             "retrievedAt": "2026-10-04T10:00:00Z",
             "complete": true
           },
-          "sourceLocator": "description"
+          "sourceLocator": "description",
+          "backend": "review-fixture-loader"
         }
       ]
     },
@@ -76,7 +78,8 @@
             "retrievedAt": "2026-10-04T10:00:00Z",
             "complete": true
           },
-          "sourceLocator": "description"
+          "sourceLocator": "description",
+          "backend": "review-fixture-loader"
         }
       ]
     },
@@ -101,7 +104,8 @@
             "retrievedAt": "2026-10-04T10:00:00Z",
             "complete": true
           },
-          "sourceLocator": "labels"
+          "sourceLocator": "labels",
+          "backend": "review-fixture-loader"
         }
       ]
     },
@@ -124,7 +128,8 @@
             "retrievedAt": "2026-10-04T10:00:00Z",
             "complete": true
           },
-          "sourceLocator": "type"
+          "sourceLocator": "type",
+          "backend": "review-fixture-loader"
         }
       ]
     },
@@ -147,7 +152,8 @@
             "retrievedAt": "2026-10-04T10:00:00Z",
             "complete": true
           },
-          "sourceLocator": "status"
+          "sourceLocator": "status",
+          "backend": "review-fixture-loader"
         }
       ]
     },
@@ -163,6 +169,30 @@
       "mode": "fixture",
       "retrievedAt": "2026-10-04T10:00:00Z",
       "complete": true
+    },
+    "comments": {
+      "state": "unavailable",
+      "reason": "not-retrieved",
+      "provenance": [
+        {
+          "provider": "jira",
+          "backend": "review-fixture-loader",
+          "sourceReference": {
+            "provider": "jira",
+            "stableExternalId": "jira:DEMO-39",
+            "displayId": "DEMO-39",
+            "url": "https://jira.example.test/browse/DEMO-39",
+            "host": "jira.example.test"
+          },
+          "retrieval": {
+            "capability": "review-fixture-loader",
+            "mode": "fixture",
+            "retrievedAt": "2026-10-04T10:00:00Z",
+            "complete": true
+          },
+          "sourceLocator": "comments"
+        }
+      ]
     }
   },
   "changeRequests": [
@@ -201,7 +231,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "title"
+            "sourceLocator": "title",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -224,7 +255,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "description"
+            "sourceLocator": "description",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -250,7 +282,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "sourceRef"
+            "sourceLocator": "sourceRef",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -276,7 +309,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "targetRef"
+            "sourceLocator": "targetRef",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -301,7 +335,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "commits"
+            "sourceLocator": "commits",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -329,7 +364,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "changedFiles"
+            "sourceLocator": "changedFiles",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -353,7 +389,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": false
             },
-            "sourceLocator": "diff"
+            "sourceLocator": "diff",
+            "backend": "review-fixture-loader"
           }
         ]
       },
@@ -376,7 +413,8 @@
               "retrievedAt": "2026-10-04T10:00:00Z",
               "complete": true
             },
-            "sourceLocator": "reviewState"
+            "sourceLocator": "reviewState",
+            "backend": "review-fixture-loader"
           }
         ]
       },
