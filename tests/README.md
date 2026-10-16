@@ -98,3 +98,17 @@ A test passes when the agent:
 - avoids secrets and unrelated data;
 - performs only the requested scope;
 - terminates without unnecessary continuation or repeated compaction.
+
+Fixture provider tests (same Node.js requirement) run both acquisition and resolver
+regressions without services or credentials:
+
+```text
+node --experimental-strip-types --test tests/review-backend-resolution.test.mjs tests/review-evidence-acquisition.test.mjs
+```
+
+These cover exact canonical preservation, multiple IDs, evidence boundaries,
+threaded comments, structural failures, controlled diagnostics and path confinement
+(including a real Windows junction). Junction creation requires filesystem
+permissions on Windows; do not report a blocked junction test as passing.
+Fixture inputs and an example registry live in `fixtures/review-providers/`;
+expected outcomes are maintained separately in executable tests.

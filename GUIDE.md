@@ -33,7 +33,12 @@ The resolver exposes only sanitized connection metadata to agents.
 See the [backend configuration and resolution contract](template/.opencode/skills/review-backend-resolution/SKILL.md)
 for the schema, multi-backend example, request/default/repository/inference
 precedence and acquisition handoff. Ambiguous selection requires an explicit ID.
-This feature selects backends; provider retrieval requires a separate adapter.
+Filesystem evidence is available through the
+[acquisition contract](template/.opencode/skills/review-evidence-acquisition/SKILL.md).
+Configure `adapter: "fixture"` and a workspace-relative `fixturePath` on either
+backend family; keep the represented provider and HTTPS base URL, omit credentials.
+See `tests/fixtures/review-providers/` for an input-only catalog and registry.
+Live-provider retrieval requires a separate adapter.
 
 For existing workspaces the updater deploys skills and tools but preserves root
 configuration. Create `review-backends.json` manually using the empty template
