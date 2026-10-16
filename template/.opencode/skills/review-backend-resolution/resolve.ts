@@ -2,7 +2,7 @@ import { readFile, realpath } from "node:fs/promises"
 import path from "node:path"
 
 type Family = "workItemBackends" | "changeBackends"
-type Backend = { id: string; provider: string; baseUrl: string; credentialEnv?: string; repository?: string; project?: string }
+type Backend = { id: string; provider: string; baseUrl: string; credentialEnv?: string; repository?: string; project?: string; adapter?: "fixture"; fixturePath?: string }
 type Selection = { workItemBackend?: string; changeBackend?: string }
 type Config = { schemaVersion: "review-backends/v1"; workItemBackends: Backend[]; changeBackends: Backend[]; defaults?: Selection; repositoryHints?: Record<string, Selection> }
 export type Request = { family: Family; backendId?: string; repository?: string; backendHint?: string; resourceUrl?: string }
@@ -29,7 +29,11 @@ function validate(value: unknown): value is Config {
   for (const family of families) {
     if (!Array.isArray(value[family])) return false
     for (const backend of value[family]) {
-      if (!object(backend) || !keysOnly(backend, ["id", "provider", "baseUrl", "credentialEnv", "repository", "project"])) return false
+      if (!object(backend) || !keysOnly(backend, ["id", "provider", "baseUrl", "credentialEnv", "repository", "project", "adapter", "fixturePath"])) return false
+      if (backend.adapter !== undefined && backend.adapter !== "fixture") return false
+      if (backend.adapter === "fixture") {
+        if (!nonempty(backend.fixturePath) || path.isAbsolute(backend.fixturePath) || /^[A-Za-z]:/.test(backend.fixturePath) || backend.fixturePath.includes("\\") || backend.fixturePath.split("/").some(part => !part || part === "." || part === "..") || backend.credentialEnv !== undefined) return false
+      } else if (backend.fixturePath !== undefined) return false
       if (!nonempty(backend.id) || !idPattern.test(backend.id) || ids.has(backend.id)) return false
       ids.add(backend.id)
       if (!nonempty(backend.provider) || !idPattern.test(backend.provider) || !safeUrl(backend.baseUrl)) return false
@@ -66,7 +70,7 @@ export function resolveBackend(config: unknown, request: Request) {
     const backend = candidates.find(b => b.id === id)
     if (!backend || !compatible(backend)) return { status: "invalid-request", reason: "Selected backend is unknown, belongs to another family or conflicts with the resource scope.", source }
     // Construct an allowlisted descriptor. credentialEnv and all credential values stay out of agent output.
-    return { status: "resolved", source, backend: { id: backend.id, provider: backend.provider, baseUrl: backend.baseUrl, ...(backend.repository ? { repository: backend.repository } : {}), ...(backend.project ? { project: backend.project } : {}) } }
+    return { status: "resolved", source, backend: { id: backend.id, provider: backend.provider, baseUrl: backend.baseUrl, ...(backend.adapter ? { adapter: backend.adapter, fixturePath: backend.fixturePath } : {}), ...(backend.repository ? { repository: backend.repository } : {}), ...(backend.project ? { project: backend.project } : {}) } }
   }
   if (request.backendId !== undefined) return selected(request.backendId, "request")
   if (config.defaults?.[key] !== undefined) return selected(config.defaults[key]!, "project")

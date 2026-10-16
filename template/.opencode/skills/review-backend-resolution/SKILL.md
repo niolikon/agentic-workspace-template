@@ -28,6 +28,11 @@ more entries. Each entry has:
   `azure-devops`); new types require an acquisition adapter before retrieval.
 - `baseUrl`: explicit HTTPS service/API root, including a self-hosted path if needed.
   No userinfo, query, fragment, interpolation or secret-bearing URL is allowed.
+- Optional `adapter: "fixture"` plus `fixturePath`: select filesystem acquisition
+  through `review-evidence-acquisition`. The path is workspace-relative JSON with
+  forward slashes and no empty, dot or parent segments. Fixture backends retain
+  the represented `provider` and HTTPS `baseUrl`, and cannot declare credentials.
+  Omit both fields for existing service backends.
 - Optional `credentialEnv`: environment-variable NAME matching
   `[A-Za-z_][A-Za-z0-9_]*`, never its value
   and never OpenCode `{env:...}` expansion. Omit for unauthenticated acquisition.
@@ -109,5 +114,6 @@ backend. The resolver intentionally neither checks credentials nor calls service
 Record this originating ID in normalized `Provenance.backend`; preserve additional
 cache/fixture origins according to `review-evidence-model`. Selecting a backend
 before acquisition does not authorize repairing missing origins in existing data.
-Provider adapters and acquisition skills are separate capabilities; if absent,
+Use `review-evidence-acquisition` and `review_evidence_acquire` for the installed
+fixture adapter. Other provider adapters are separate capabilities; if absent,
 report acquisition unavailable rather than using shell/curl with a token.

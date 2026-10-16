@@ -10,6 +10,7 @@ permission:
   repository_path_inventory: allow
   workspace_evidence_search: allow
   review_backend_resolve: allow
+  review_evidence_acquire: allow
   
   read: allow
   glob: allow
@@ -28,6 +29,7 @@ permission:
     "engineering-guideline-review": allow
     "review-evidence-model": allow
     "review-backend-resolution": allow
+    "review-evidence-acquisition": allow
 
   edit: deny
   write: deny
@@ -65,6 +67,9 @@ training material, notes and derived knowledge.
 For Review backend discovery or selection, load `review-backend-resolution`
 before invoking `review_backend_resolve`. The skill owns the configuration,
 precedence and acquisition handoff; the tool enforces the deterministic selection.
+
+For Review evidence acquisition, load `review-evidence-acquisition` and use
+`review_evidence_acquire` with the exact selected backend and resource IDs.
 
 Load the smallest set of skills required by the request. Select capabilities from
 the user's requested outcomes rather than from a fixed skill order or from the
