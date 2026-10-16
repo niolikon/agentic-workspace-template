@@ -183,11 +183,24 @@ Conceptually represent provenance as:
 ```text
 Provenance {
   provider: ProviderId
+  backend: BackendId
   sourceReference: SourceReference
   retrieval: RetrievalMetadata
   sourceLocator?: string
 }
 ```
+
+`BackendId` is a non-empty stable string identifying the originating acquisition
+backend (for example a live connector, fixture loader or cache). It is mandatory
+for every provenance entry, including unavailable evidence. It is distinct from
+`provider`, which identifies the external system, and retrieval mode, which
+describes how this observation was obtained. A fixture representing GitHub evidence
+retains `provider: "github"` and identifies its fixture backend separately.
+Preserve material upstream origins when evidence passes through a cache or another
+retrieval capability; do not relabel fixture evidence as live evidence.
+
+Missing originating backend is invalid. Do not infer it from provider, URL,
+adapter name or retrieval mode, or replace it with an evidence-gap classification.
 
 `sourceLocator` identifies the provider-response field, JSON path, page, patch,
 response section or equivalent location that supports the normalized field. It
@@ -235,6 +248,7 @@ WorkItem {
   externalId: string
   title: EvidenceField<string>
   description: EvidenceField<string>
+  comments: EvidenceField<WorkItemComment[]>
   acceptanceCriteria: EvidenceField<AcceptanceCriterion[]>
   labels: EvidenceField<string[]>
   type: EvidenceField<string>
@@ -257,6 +271,82 @@ they were not retrieved, use the applicable `unavailable` reason.
 Labels, type and status are supporting review context, not mandatory review
 judgments. Their absence must not invalidate the whole input when represented
 explicitly as unavailable.
+
+## Work-item comments and discussion relationships
+
+Comments must remain distinct evidence items. Keep the original description in
+`description` and subsequently added discussion in `comments`; never flatten
+comments into the description or silently promote them to acceptance criteria.
+
+```text
+WorkItemComment {
+  externalId: string
+  content: EvidenceField<string>
+  author: EvidenceField<CommentAuthor>
+  createdAt: EvidenceField<string>
+  updatedAt: EvidenceField<string>
+  parent: EvidenceField<CommentRelationship>
+  thread: EvidenceField<ThreadRelationship>
+  sourceReference: SourceReference
+  retrieval: RetrievalMetadata
+}
+```
+
+```text
+CommentAuthor {
+  externalId?: string
+  displayName?: string
+}
+```
+
+```text
+CommentRelationship = {kind: "none"} | {kind: "comment", externalId: string}
+ThreadRelationship = {kind: "none"} | {kind: "thread", externalId: string}
+```
+
+Comment IDs must be non-empty, stable source identities, unique within the work
+item. Bind every comment and its fields to its source reference and retrieval
+metadata; provenance may reference the owning work item with a locator that
+unambiguously identifies the comment. An available author must have at least a
+non-empty external ID or display name; missing author details use an explicit
+evidence state. Preserve provider-supplied timestamps, including timezone/offset
+when supplied, and distinguish creation from update time and retrieval time.
+Never manufacture an update time from creation or retrieval time.
+
+The collection state describes acquisition coverage independently of each comment
+field. An `available` collection can contain comments with partial, ambiguous or
+unavailable content, author, timestamps or relationships. Use `partial` with reason
+`pagination-incomplete` for a retrieved subset when more pages remain, even if all
+retrieved comments are individually complete. An explicitly verified empty
+collection is `available` with `[]`; unrequested or unsupported comments are
+`unavailable`, never an assumed empty collection.
+
+Preserve known parent/reply and thread relationships independently. `parent`
+identifies the immediate comment being replied to; `thread` identifies a discussion
+group, not a parent comment. Each reference is scoped to the owning work item and
+source identity. Use `available` with `{kind: "none"}` only when acquisition
+explicitly establishes that no parent or thread exists. A known reference uses
+the corresponding kind and the source's stable external ID.
+
+Unknown relationships are unavailable with the applicable reason (`unsupported`,
+`not-retrieved`, `not-provided` or another observed retrieval gap). Conflicting
+observations use `ambiguous` and retain candidates where available; incomplete
+relationship evidence uses `partial` only within its observed boundary. Never infer
+relationships from comment order, indentation, quoted text, authors or timestamps.
+An unavailable relationship has no `value`; it must not carry an invented parent
+or thread. Missing or unsupported threading does not invalidate an otherwise valid
+work item. Relationship limitations do not make WorkItem structurally invalid.
+
+Reject duplicate comment identities, self-parent references and cycles among known
+parent references as structural normalization errors. A known parent outside the
+retrieved collection is not by itself invalid: preserve the reference and the
+acquisition boundary without inventing the missing comment or a cycle. Do not infer
+thread membership from a known parent or parenthood from shared thread membership.
+
+Map provider reply and thread transport keys at the adapter boundary. Neither
+provider response nesting nor provider-specific discussion objects belong in these
+canonical comment or relationship types. Review consumers use the same states and
+typed relationships for live and fixture-backed acquisition.
 
 ## Change request
 

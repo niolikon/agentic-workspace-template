@@ -1,0 +1,792 @@
+{
+  "schemaVersion": "review-evidence/v1",
+  "workItem": {
+    "provider": "github",
+    "externalId": "56",
+    "title": {
+      "state": "available",
+      "value": "Threaded review evidence fixture",
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.title"
+        }
+      ]
+    },
+    "description": {
+      "state": "available",
+      "value": "Original work-item description, not including any comments.",
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.description"
+        }
+      ]
+    },
+    "comments": {
+      "state": "available",
+      "value": [
+        {
+          "externalId": "c1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "c1",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56#comment-c1"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "content": {
+            "state": "available",
+            "value": "First independent comment",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c1.content"
+              }
+            ]
+          },
+          "author": {
+            "state": "available",
+            "value": {
+              "externalId": "alice",
+              "displayName": "Alice"
+            },
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c1.author"
+              }
+            ]
+          },
+          "createdAt": {
+            "state": "available",
+            "value": "2026-10-05T10:00:00Z",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c1.createdAt"
+              }
+            ]
+          },
+          "updatedAt": {
+            "state": "unavailable",
+            "reason": "not-provided",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c1.updatedAt"
+              }
+            ]
+          },
+          "parent": {
+            "state": "unavailable",
+            "reason": "unsupported",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c1.parent"
+              }
+            ]
+          },
+          "thread": {
+            "state": "unavailable",
+            "reason": "unsupported",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c1.thread"
+              }
+            ]
+          }
+        },
+        {
+          "externalId": "c2",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "c2",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56#comment-c2"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "content": {
+            "state": "available",
+            "value": "A reply to c1",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c2.content"
+              }
+            ]
+          },
+          "author": {
+            "state": "available",
+            "value": {
+              "externalId": "bob"
+            },
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c2.author"
+              }
+            ]
+          },
+          "createdAt": {
+            "state": "available",
+            "value": "2026-10-05T10:05:00Z",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c2.createdAt"
+              }
+            ]
+          },
+          "updatedAt": {
+            "state": "available",
+            "value": "2026-10-05T10:06:00Z",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c2.updatedAt"
+              }
+            ]
+          },
+          "parent": {
+            "state": "available",
+            "value": {
+              "kind": "comment",
+              "externalId": "c1"
+            },
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c2.parent"
+              }
+            ]
+          },
+          "thread": {
+            "state": "available",
+            "value": {
+              "kind": "thread",
+              "externalId": "t1"
+            },
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c2.thread"
+              }
+            ]
+          }
+        },
+        {
+          "externalId": "c3",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "c3",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56#comment-c3"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "content": {
+            "state": "unavailable",
+            "reason": "redacted",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c3.content"
+              }
+            ]
+          },
+          "author": {
+            "state": "unavailable",
+            "reason": "not-retrieved",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c3.author"
+              }
+            ]
+          },
+          "createdAt": {
+            "state": "unavailable",
+            "reason": "not-retrieved",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c3.createdAt"
+              }
+            ]
+          },
+          "updatedAt": {
+            "state": "unavailable",
+            "reason": "not-retrieved",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c3.updatedAt"
+              }
+            ]
+          },
+          "parent": {
+            "state": "unavailable",
+            "reason": "unsupported",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c3.parent"
+              }
+            ]
+          },
+          "thread": {
+            "state": "unavailable",
+            "reason": "unsupported",
+            "provenance": [
+              {
+                "provider": "github",
+                "backend": "independent-fixture-v1",
+                "sourceReference": {
+                  "provider": "github",
+                  "externalId": "56",
+                  "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+                },
+                "retrieval": {
+                  "mode": "fixture",
+                  "adapter": "independent-test-fixture",
+                  "retrievedAt": "2026-10-12T00:00:00Z"
+                },
+                "sourceLocator": "comment.c3.thread"
+              }
+            ]
+          }
+        }
+      ],
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.comments"
+        }
+      ]
+    },
+    "acceptanceCriteria": {
+      "state": "unavailable",
+      "reason": "not-retrieved",
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.acceptanceCriteria"
+        }
+      ]
+    },
+    "labels": {
+      "state": "available",
+      "value": [],
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.labels"
+        }
+      ]
+    },
+    "type": {
+      "state": "available",
+      "value": "enhancement",
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.type"
+        }
+      ]
+    },
+    "status": {
+      "state": "available",
+      "value": "open",
+      "provenance": [
+        {
+          "provider": "github",
+          "backend": "independent-fixture-v1",
+          "sourceReference": {
+            "provider": "github",
+            "externalId": "56",
+            "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+          },
+          "retrieval": {
+            "mode": "fixture",
+            "adapter": "independent-test-fixture",
+            "retrievedAt": "2026-10-12T00:00:00Z"
+          },
+          "sourceLocator": "workItem.status"
+        }
+      ]
+    },
+    "sourceReference": {
+      "provider": "github",
+      "externalId": "56",
+      "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+    },
+    "retrieval": {
+      "mode": "fixture",
+      "adapter": "independent-test-fixture",
+      "retrievedAt": "2026-10-12T00:00:00Z"
+    }
+  },
+  "changeRequests": [
+    {
+      "provider": "github",
+      "repository": {
+        "provider": "github",
+        "stableId": "niolikon/agentic-workspace-template",
+        "name": "agentic-workspace-template",
+        "fullName": "niolikon/agentic-workspace-template",
+        "sourceReference": {
+          "provider": "github",
+          "externalId": "pr-57",
+          "url": "https://github.com/niolikon/agentic-workspace-template/pull/57"
+        }
+      },
+      "externalId": "pr-57",
+      "title": {
+        "state": "available",
+        "value": "Fixture change",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.title"
+          }
+        ]
+      },
+      "description": {
+        "state": "unavailable",
+        "reason": "not-retrieved",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.description"
+          }
+        ]
+      },
+      "sourceRef": {
+        "state": "available",
+        "value": {
+          "name": "feature/threaded-evidence"
+        },
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.sourceRef"
+          }
+        ]
+      },
+      "targetRef": {
+        "state": "available",
+        "value": {
+          "name": "develop"
+        },
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.targetRef"
+          }
+        ]
+      },
+      "commits": {
+        "state": "unavailable",
+        "reason": "not-retrieved",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.commits"
+          }
+        ]
+      },
+      "changedFiles": {
+        "state": "unavailable",
+        "reason": "not-retrieved",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.changedFiles"
+          }
+        ]
+      },
+      "diff": {
+        "state": "unavailable",
+        "reason": "not-retrieved",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.diff"
+          }
+        ]
+      },
+      "reviewState": {
+        "state": "unavailable",
+        "reason": "not-retrieved",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "independent-fixture-v1",
+            "sourceReference": {
+              "provider": "github",
+              "externalId": "56",
+              "url": "https://github.com/niolikon/agentic-workspace-template/issues/56"
+            },
+            "retrieval": {
+              "mode": "fixture",
+              "adapter": "independent-test-fixture",
+              "retrievedAt": "2026-10-12T00:00:00Z"
+            },
+            "sourceLocator": "changeRequest.reviewState"
+          }
+        ]
+      },
+      "sourceReference": {
+        "provider": "github",
+        "externalId": "pr-57",
+        "url": "https://github.com/niolikon/agentic-workspace-template/pull/57"
+      },
+      "retrieval": {
+        "mode": "fixture",
+        "adapter": "independent-test-fixture",
+        "retrievedAt": "2026-10-12T00:00:00Z"
+      }
+    }
+  ]
+}
