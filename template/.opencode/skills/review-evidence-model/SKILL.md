@@ -370,6 +370,8 @@ ChangeRequest {
   changedFiles: EvidenceField<ChangedFile[]>
   diff: EvidenceField<DiffEvidence>
   reviewState: EvidenceField<string>
+  checks?: EvidenceField<ChangeCheck[]>
+  reviewDiscussions?: EvidenceField<WorkItemComment[]>
   sourceReference: SourceReference
   retrieval: RetrievalMetadata
   providerExtensions?: ProviderExtensions
@@ -395,6 +397,37 @@ deletions, patch fragments or per-file commit metadata may be retained when
 observed, but do not invent them from other fields.
 
 ## Repository and ref identity
+
+### Checks and review discussions
+
+New acquisition adapters represent both surfaces explicitly with evidence fields,
+including `unavailable` with reason `unsupported` or `not-retrieved` when needed.
+These additive fields are optional for compatibility with existing canonical
+objects; omission establishes no evidence and never means empty, successful or
+approved. Consumers retain legacy objects unchanged.
+
+```text
+ChangeCheck {
+  externalId: string
+  name: EvidenceField<string>
+  status: EvidenceField<string>
+  conclusion: EvidenceField<string>
+  sourceReference: SourceReference
+  retrieval: RetrievalMetadata
+}
+```
+
+Checks represent pipeline/check observations independently from `reviewState`.
+Preserve provider-reported normalized status/conclusion without inferring an
+aggregate pipeline outcome, approval or requirement fulfillment. Check identities
+are unique within their change. Every field has attributable provenance.
+
+`reviewDiscussions` reuses the canonical comment shape and relationship invariants
+above, scoped to its owning change rather than a work item. Keep discussions
+separate from description; preserve partial coverage, authors, timestamps and
+independent parent/thread boundaries. Do not expose provider response nesting or
+infer missing relationships. Available empty discussions and unsupported
+discussions remain distinct.
 
 Represent repository identity independently from the work-item provider:
 

@@ -31,6 +31,7 @@ permission:
     "review-backend-resolution": allow
     "review-evidence-acquisition": allow
     "work-item-evidence-acquisition": allow
+    "change-evidence-acquisition": allow
 
   edit: deny
   write: deny
@@ -73,7 +74,8 @@ For work-item evidence acquisition with a selected backend, load
 `work-item-evidence-acquisition` together with `review-evidence-model` before
 provider retrieval. Both are mandatory even when the caller supplies exact IDs
 or acquisition returns a controlled failure. For change evidence acquisition, load
-`review-evidence-acquisition`. These skills own retrieval through the provider
+`change-evidence-acquisition` together with `review-evidence-model` before provider
+retrieval, including controlled failures. These skills own retrieval through the provider
 interface with the exact selected backend and resource IDs.
 
 Load the smallest set of skills required by the request. Select capabilities from
