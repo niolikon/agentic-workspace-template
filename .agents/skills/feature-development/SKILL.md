@@ -114,6 +114,51 @@ base che entrano nella copia. I workspace temporanei non sono un sandbox del sis
 operativo. Non eseguire OpenCode direttamente nei sorgenti originali Demo/TaskBoard.
 Non modificare il candidato durante una validazione.
 
+### Acceptance, provenance e prerequisiti
+
+Consulta i contratti attuali nell'harness: `README.md` (Combined E2E acceptance e
+`required_calls`), `PROVENANCE.md` (External semantic evaluation), `PREFLIGHT.md`
+e `FIXTURE_POLICY.md`. Sono le fonti normative; applica questa sequenza usando le
+interfacce esistenti, senza introdurre un secondo workflow di validazione:
+
+1. Prima del runner dichiara nella suite gli oracoli obbligatori tramite
+   `required_semantic_checks`, ricavati dalla matrice requisito/scenario. Un
+   `required_calls` soddisfatto richiede evidenza esplicita di completamento.
+2. Valuta il preflight: `unknown` indica una condizione non verificata, anche se
+   l'aggregato dei probe locali è passato; risolvi i prerequisiti necessari senza
+   trasformarli in PASS. Configurazione, autenticazione o disponibilità di un
+   provider non implicano consenso remoto. Rispetta l'autorizzazione esplicita
+   dell'utente prima di eseguire modelli remoti. Usa `fixture_policy` solo quando
+   serve selezionare fixture, preservando gli input obbligatori degli oracoli;
+   non è un filtro universale né una sanitizzazione dei contenuti.
+3. Esegui il runner e conserva il manifest `provenance.json`. Distingui esecuzione
+   (`report.status`, con le sue asserzioni) e acceptance complessiva: exit 1 con
+   esecuzione riuscita e soli oracoli obbligatori mancanti è atteso in questa fase
+   e non dimostra da solo un difetto funzionale. Esamina comunque gli altri gate.
+4. Per oracoli esterni successivi al runner prepara un'area di valutazione nuova,
+   fuori dall'archivio finalizzato e dal SUT, secondo `PROVENANCE.md`. Copia solo
+   report ed evidenze necessarie byte per byte mantenendo i percorsi relativi;
+   verifica run ID, hash del report e delle evidenze contro l'archivio/manifest.
+   Produci lì diagnostiche ed envelope `semantic-results/<scenario>/<check>.json`.
+   Non aggiungere file all'archivio, non riscriverne report o manifest.
+5. Richiedi l'aggregazione aggiornata con `acceptance --report <evaluation>/report.json
+   --output <nuova-directory>`. Prima di accettare richiedi exit 0,
+   `acceptance_status: passed`, `complete_suite: true`, run ID e SHA-256 del report
+   corrispondenti all'originale. Conserva il collegamento verificabile tra aggregato,
+   area di valutazione e archivio/manifest come descritto nel contratto provenance.
+   Revisioni delle evidenze richiedono nuovi tentativi conservando i precedenti.
+6. Usa `--archive-inputs` soltanto quando serve verifica indipendente dagli input
+   originali, scegliendo basi sintetiche/prive di segreti. Quando tale garanzia
+   archivistica è richiesta, usa `verify-archive` con output esterno all'archivio
+   e richiedi `verified`, anche dopo la valutazione. Integrità archivistica e
+   acceptance funzionale sono gate distinti. Senza oracoli esterni rimane valido
+   il percorso acceptance del runner; nessun passaggio archivistico è obbligatorio
+   incondizionatamente.
+
+Codex Local decide l'accettazione e crea commit di completamento soltanto dopo
+tutti i gate obbligatori superati; runner, oracoli, acceptance e provenance non
+prendono questa decisione.
+
 ## Evidenze e iterazioni
 
 - Conserva tutto fuori dal candidato, normalmente in
