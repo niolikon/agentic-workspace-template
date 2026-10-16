@@ -9,6 +9,7 @@ permission:
   repository_config_inventory: allow
   repository_path_inventory: allow
   workspace_evidence_search: allow
+  review_backend_resolve: allow
   
   read: allow
   glob: allow
@@ -26,6 +27,7 @@ permission:
     "dependency-inspection": allow
     "engineering-guideline-review": allow
     "review-evidence-model": allow
+    "review-backend-resolution": allow
 
   edit: deny
   write: deny
@@ -59,6 +61,10 @@ training material, notes and derived knowledge.
 - orchestrate the final answer without reimplementing capability procedures.
 
 ## Capability orchestration
+
+For Review backend discovery or selection, load `review-backend-resolution`
+before invoking `review_backend_resolve`. The skill owns the configuration,
+precedence and acquisition handoff; the tool enforces the deterministic selection.
 
 Load the smallest set of skills required by the request. Select capabilities from
 the user's requested outcomes rather than from a fixed skill order or from the

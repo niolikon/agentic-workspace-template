@@ -21,6 +21,24 @@ OpenCode runs from the workspace root and can inspect multiple related repositor
 
 Do not place credentials, private keys, production dumps, customer exports or other sensitive material inside the workspace.
 
+### Review evidence backends
+
+Configure Review acquisition separately in workspace-root `review-backends.json`.
+The template ships empty, independent `workItemBackends` and `changeBackends`
+arrays. Define stable IDs, provider types, HTTPS base URLs (including self-hosted
+roots) and environment-variable names for credentials. Never put credential values
+in this file or `opencode.jsonc`, or use `{env:...}` interpolation for Review secrets.
+The resolver exposes only sanitized connection metadata to agents.
+
+See the [backend configuration and resolution contract](template/.opencode/skills/review-backend-resolution/SKILL.md)
+for the schema, multi-backend example, request/default/repository/inference
+precedence and acquisition handoff. Ambiguous selection requires an explicit ID.
+This feature selects backends; provider retrieval requires a separate adapter.
+
+For existing workspaces the updater deploys skills and tools but preserves root
+configuration. Create `review-backends.json` manually using the empty template
+file, then configure it locally; do not overwrite an existing backend registry.
+
 ## 2. Prerequisites
 
 Install:

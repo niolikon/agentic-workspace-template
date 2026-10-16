@@ -1,5 +1,18 @@
 # Manual workspace validation
 
+Backend resolution also has deterministic automated tests. From the repository
+root, with Node.js 22.14 or later, run:
+
+```text
+node --experimental-strip-types --test tests/review-backend-resolution.test.mjs
+```
+
+These exercise the production resolver without OpenCode, network access or
+provider credentials: family independence, precedence, stable ambiguity,
+self-hosted URL boundaries, invalid configuration and credential isolation.
+OpenCode E2E scenarios additionally verify the owning skill and resolver calls
+through the independent harness on disposable workspace copies.
+
 This directory contains reusable prompts for validating the behavior of the
 workspace after changing a provider, model, OpenCode version, agent or skill.
 
