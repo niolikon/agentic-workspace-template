@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "review-fixtures/v1",
+  "workItems": [],
+  "changeRequests": [
+    {
+      "provider": "gitlab",
+      "externalId": "PR-8",
+      "sourceReference": {
+        "provider": "gitlab",
+        "stableExternalId": "PR-8",
+        "url": "https://code.example.test/team/client/pull/8"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-16T08:00:00Z"
+      },
+      "repository": {
+        "provider": "gitlab",
+        "stableId": "team/client",
+        "name": "client",
+        "fullName": "team/client",
+        "sourceReference": {
+          "provider": "gitlab",
+          "stableExternalId": "team/client",
+          "url": "https://code.example.test/team/client"
+        }
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Add audit capture"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Persist item IDs in audit entries."
+      },
+      "sourceRef": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "targetRef": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "changedFiles": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "reviewState": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "diff": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "checks": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      },
+      "reviewDiscussions": {
+        "state": "unavailable",
+        "reason": "unsupported",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "fixture-change-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

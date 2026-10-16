@@ -23,6 +23,18 @@ regressions (including missing discussion metadata) run with:
 node --experimental-strip-types --test tests/review-evidence-acquisition.test.mjs
 ```
 
+Change acquisition and cross-domain #61 coverage additionally run with:
+
+```text
+node --experimental-strip-types --test tests/change-evidence-acquisition.test.mjs
+```
+
+These tests cover canonical checks/discussions, optional evidence states, multiple
+repositories/backends, repeatability and controlled malformed input. Run the
+existing resolver and acquisition suites too for #59 regressions. The specialized
+`change-evidence-acquisition` skill consumes the same selected-backend provider
+tool contract; no live adapter or provider credentials are needed by these tests.
+
 This directory contains reusable prompts for validating the behavior of the
 workspace after changing a provider, model, OpenCode version, agent or skill.
 

@@ -40,6 +40,15 @@ backend family; keep the represented provider and HTTPS base URL, omit credentia
 See `tests/fixtures/review-providers/` for an input-only catalog and registry.
 Live-provider retrieval requires a separate adapter.
 
+With a selected backend, use the specialized
+[work-item acquisition](template/.opencode/skills/work-item-evidence-acquisition/SKILL.md)
+or [change acquisition](template/.opencode/skills/change-evidence-acquisition/SKILL.md)
+capability for one or more stable references. Change acquisition preserves each
+repository independently and returns canonical checks and review discussions
+where supported, with explicit evidence boundaries for unavailable metadata.
+The caller may compose one source work item and multiple changes from different
+backends; acquisition does not evaluate or mutate them.
+
 For existing workspaces the updater deploys skills and tools but preserves root
 configuration. Create `review-backends.json` manually using the empty template
 file, then configure it locally; do not overwrite an existing backend registry.

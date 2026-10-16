@@ -38,6 +38,33 @@ function field(v: unknown, check: (x: any) => boolean, provider: string, backend
 }
 const relationship = (v: unknown, kind: string) => object(v) && ((v.kind === "none" && only(v, ["kind"])) || (v.kind === kind && text(v.externalId) && only(v, ["kind", "externalId"])))
 
+function validComments(v: Obj, commentsField: unknown, provider: string, backend: string): boolean {
+  const f = (x: unknown, check: (x: any) => boolean) => field(x, check, provider, backend)
+  const string = (x: unknown) => typeof x === "string"
+  const comment = (c: unknown) => {
+    if (!object(c) || !only(c, ["externalId", "content", "author", "createdAt", "updatedAt", "parent", "thread", "sourceReference", "retrieval"]) || !text(c.externalId) || !source(c.sourceReference, provider) || c.sourceReference.stableExternalId !== c.externalId || !retrieval(c.retrieval) || c.retrieval.mode !== "fixture") return false
+    const commentField = (key: string, check: (x: any) => boolean) => f(c[key], check) && c[key].provenance.some((p: Obj) => p.sourceReference.stableExternalId === c.externalId || (p.sourceReference.stableExternalId === v.externalId && text(p.sourceLocator) && p.sourceLocator.includes(c.externalId)))
+    return commentField("content", string) && commentField("author", a => object(a) && only(a, ["externalId", "displayName"]) && (text(a.externalId) || text(a.displayName))) && commentField("createdAt", text) && commentField("updatedAt", text) && commentField("parent", r => relationship(r, "comment")) && commentField("thread", r => relationship(r, "thread"))
+  }
+  if (!f(commentsField, x => array(x, comment))) return false
+  const collections = (commentsField as Obj).state === "ambiguous" ? (commentsField as Obj).candidates ?? [] : [(commentsField as Obj).value ?? []]
+  for (const comments of collections) {
+    const parents = new Map<string, string>()
+    const ids = new Set<string>()
+    for (const c of comments) {
+      if (ids.has(c.externalId)) return false
+      ids.add(c.externalId)
+      if (["available", "partial"].includes(c.parent.state) && c.parent.value.kind === "comment") parents.set(c.externalId, c.parent.value.externalId)
+    }
+    for (const id of ids) {
+      const seen = new Set<string>([id])
+      let parent = parents.get(id)
+      while (parent !== undefined) { if (seen.has(parent)) return false; seen.add(parent); parent = parents.get(parent) }
+    }
+  }
+  return true
+}
+
 export function validEvidence(v: unknown, family: EvidenceRequest["family"], provider: string, backend: string): v is Obj {
   if (!object(v) || v.provider !== provider || !text(v.externalId) || !source(v.sourceReference, provider) || v.sourceReference.stableExternalId !== v.externalId || !retrieval(v.retrieval) || v.retrieval.mode !== "fixture") return false
   if (v.providerExtensions !== undefined && !object(v.providerExtensions)) return false
@@ -47,32 +74,21 @@ export function validEvidence(v: unknown, family: EvidenceRequest["family"], pro
   if (family === "workItemBackends") {
     if (!only(v, ["provider", "externalId", "title", "description", "comments", "acceptanceCriteria", "labels", "type", "status", "sourceReference", "retrieval", "providerExtensions"])) return false
     if (!f(v.acceptanceCriteria, x => array(x, string)) || !f(v.labels, x => array(x, string)) || !f(v.type, string) || !f(v.status, string)) return false
-    const comment = (c: unknown) => {
-      if (!object(c) || !only(c, ["externalId", "content", "author", "createdAt", "updatedAt", "parent", "thread", "sourceReference", "retrieval"]) || !text(c.externalId) || !source(c.sourceReference, provider) || c.sourceReference.stableExternalId !== c.externalId || !retrieval(c.retrieval) || c.retrieval.mode !== "fixture") return false
-      const commentField = (key: string, check: (x: any) => boolean) => f(c[key], check) && c[key].provenance.some((p: Obj) => p.sourceReference.stableExternalId === c.externalId || (p.sourceReference.stableExternalId === v.externalId && text(p.sourceLocator) && p.sourceLocator.includes(c.externalId)))
-      return commentField("content", string) && commentField("author", a => object(a) && only(a, ["externalId", "displayName"]) && (text(a.externalId) || text(a.displayName))) && commentField("createdAt", text) && commentField("updatedAt", text) && commentField("parent", r => relationship(r, "comment")) && commentField("thread", r => relationship(r, "thread"))
-    }
-    if (!f(v.comments, x => array(x, comment))) return false
-    const collections = v.comments.state === "ambiguous" ? v.comments.candidates ?? [] : [v.comments.value ?? []]
-    for (const comments of collections) {
-      const parents = new Map<string, string>()
-      const ids = new Set<string>()
-      for (const c of comments) {
-        if (ids.has(c.externalId)) return false
-        ids.add(c.externalId)
-        if (["available", "partial"].includes(c.parent.state) && c.parent.value.kind === "comment") parents.set(c.externalId, c.parent.value.externalId)
-      }
-      for (const id of ids) {
-        const seen = new Set<string>([id])
-        let parent = parents.get(id)
-        while (parent !== undefined) { if (seen.has(parent)) return false; seen.add(parent); parent = parents.get(parent) }
-      }
-    }
-    return true
+    return validComments(v, v.comments, provider, backend)
   }
-  if (!only(v, ["provider", "externalId", "repository", "title", "description", "sourceRef", "targetRef", "commits", "changedFiles", "diff", "reviewState", "sourceReference", "retrieval", "providerExtensions"])) return false
+  if (!only(v, ["provider", "externalId", "repository", "title", "description", "sourceRef", "targetRef", "commits", "changedFiles", "diff", "reviewState", "checks", "reviewDiscussions", "sourceReference", "retrieval", "providerExtensions"])) return false
   const repo = v.repository
   if (!object(repo) || repo.provider !== provider || !text(repo.stableId) || !text(repo.name) || !source(repo.sourceReference, provider)) return false
+  if (v.reviewDiscussions !== undefined && !validComments(v, v.reviewDiscussions, provider, backend)) return false
+  const check = (c: unknown) => {
+    if (!object(c) || !only(c, ["externalId", "name", "status", "conclusion", "sourceReference", "retrieval"]) || !text(c.externalId) || !source(c.sourceReference, provider) || c.sourceReference.stableExternalId !== c.externalId || !retrieval(c.retrieval) || c.retrieval.mode !== "fixture") return false
+    return ["name", "status", "conclusion"].every(key => f(c[key], string) && c[key].provenance.some((p: Obj) => p.sourceReference.stableExternalId === c.externalId || (p.sourceReference.stableExternalId === v.externalId && text(p.sourceLocator) && p.sourceLocator.includes(c.externalId))))
+  }
+  if (v.checks !== undefined) {
+    if (!f(v.checks, x => array(x, check))) return false
+    const collections = v.checks.state === "ambiguous" ? v.checks.candidates ?? [] : [v.checks.value ?? []]
+    if (collections.some((checks: Obj[]) => new Set(checks.map(c => c.externalId)).size !== checks.length)) return false
+  }
   const ref = (r: unknown) => object(r) && text(r.name) && (r.commitId === undefined || text(r.commitId))
   return f(v.sourceRef, ref) && f(v.targetRef, ref) && f(v.commits, x => array(x, text)) && f(v.changedFiles, x => array(x, c => object(c) && text(c.path) && (c.previousPath === undefined || text(c.previousPath)) && (c.changeKind === undefined || text(c.changeKind)))) && f(v.diff, string) && f(v.reviewState, string)
 }
