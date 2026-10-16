@@ -19,6 +19,11 @@ whether requirements were implemented correctly or mutate remote resources.
 
 ## Architectural boundary
 
+Before acquiring new evidence, use `review-backend-resolution` to select the
+configured work-item backend and each change backend independently. Pass its
+stable ID to acquisition; selection never fills missing origins in existing
+evidence. This model owns normalization, not configuration or backend selection.
+
 Keep provider retrieval and review reasoning separated by one normalization
 boundary:
 
