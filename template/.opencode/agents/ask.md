@@ -30,6 +30,7 @@ permission:
     "review-evidence-model": allow
     "review-backend-resolution": allow
     "review-evidence-acquisition": allow
+    "work-item-evidence-acquisition": allow
 
   edit: deny
   write: deny
@@ -68,8 +69,12 @@ For Review backend discovery or selection, load `review-backend-resolution`
 before invoking `review_backend_resolve`. The skill owns the configuration,
 precedence and acquisition handoff; the tool enforces the deterministic selection.
 
-For Review evidence acquisition, load `review-evidence-acquisition` and use
-`review_evidence_acquire` with the exact selected backend and resource IDs.
+For work-item evidence acquisition with a selected backend, load
+`work-item-evidence-acquisition` together with `review-evidence-model` before
+provider retrieval. Both are mandatory even when the caller supplies exact IDs
+or acquisition returns a controlled failure. For change evidence acquisition, load
+`review-evidence-acquisition`. These skills own retrieval through the provider
+interface with the exact selected backend and resource IDs.
 
 Load the smallest set of skills required by the request. Select capabilities from
 the user's requested outcomes rather than from a fixed skill order or from the

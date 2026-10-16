@@ -13,6 +13,16 @@ self-hosted URL boundaries, invalid configuration and credential isolation.
 OpenCode E2E scenarios additionally verify the owning skill and resolver calls
 through the independent harness on disposable workspace copies.
 
+Work-item acquisition uses `work-item-evidence-acquisition` with a backend already
+selected by the caller and one or more stable references. Its `WorkItemEvidence`
+is the canonical `WorkItem`, returned separately for every reference; it does not
+change the single-source-work-item constraint of `ReviewInput`. Provider fixture
+regressions (including missing discussion metadata) run with:
+
+```text
+node --experimental-strip-types --test tests/review-evidence-acquisition.test.mjs
+```
+
 This directory contains reusable prompts for validating the behavior of the
 workspace after changing a provider, model, OpenCode version, agent or skill.
 

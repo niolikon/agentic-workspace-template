@@ -146,3 +146,61 @@ test('given comment provenance through a specific owning-item locator then prese
     p.sourceReference=c.workItems[0].sourceReference;p.sourceLocator='comments/c1/content'
   })
 })
+
+test('given distinct comment creation and update times when acquired then preserve chronological evidence separately', async () => {
+  await workspace(async (root, catalog) => {
+    const result = await acquireEvidence(root, work)
+
+    assert.equal(result.status, 'acquired')
+    assert.deepEqual(result.evidence, catalog.workItems[0])
+    assert.deepEqual(result.evidence.comments.value.map(c => c.createdAt.value), [
+      '2026-10-15T10:00:00+02:00', '2026-10-15T11:00:00+02:00', '2026-10-15T12:00:00+02:00',
+    ])
+    assert.equal(result.evidence.comments.value[0].updatedAt.value, '2026-10-16T07:00:00Z')
+  }, catalog => {
+    catalog.workItems[0].comments.value.forEach((comment, index) => {
+      comment.createdAt.value = `2026-10-15T${10 + index}:00:00+02:00`
+    })
+    const updated = catalog.workItems[0].comments.value[0].updatedAt
+    updated.state = 'available'
+    updated.value = '2026-10-16T07:00:00Z'
+    delete updated.reason
+  })
+})
+
+test('given unavailable chronology and both relationship fields when acquired then keep each evidence boundary', async () => {
+  await workspace(async (root, catalog) => {
+    const result = await acquireEvidence(root, work)
+
+    assert.equal(result.status, 'acquired')
+    assert.deepEqual(result.evidence, catalog.workItems[0])
+    for (const comment of result.evidence.comments.value) {
+      for (const key of ['createdAt', 'parent', 'thread']) {
+        assert.equal(comment[key].state, 'unavailable')
+        assert.equal(Object.hasOwn(comment[key], 'value'), false)
+      }
+    }
+  }, catalog => {
+    for (const comment of catalog.workItems[0].comments.value) {
+      for (const key of ['createdAt', 'parent', 'thread']) {
+        comment[key] = {state: 'unavailable', reason: 'unsupported', provenance: comment[key].provenance}
+      }
+    }
+  })
+})
+
+test('given a missing reference followed by valid references when acquired then valid items remain independent and files unchanged', async () => {
+  await workspace(async (root, catalog) => {
+    const files = ['review-backends.json', 'tests/fixtures/review-providers/evidence.json']
+    const before = await Promise.all(files.map(file => readFile(path.join(root, file))))
+
+    const results = []
+    for (const externalId of ['ABSENT-59', ...catalog.workItems.map(item => item.externalId)]) {
+      results.push(await acquireEvidence(root, {...work, externalId}))
+    }
+
+    assert.equal(results[0].status, 'unavailable')
+    assert.deepEqual(results.slice(1), catalog.workItems.map(evidence => ({status: 'acquired', evidence})))
+    assert.deepEqual(await Promise.all(files.map(file => readFile(path.join(root, file)))), before)
+  })
+})

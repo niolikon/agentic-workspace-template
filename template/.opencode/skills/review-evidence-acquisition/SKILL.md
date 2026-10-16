@@ -5,6 +5,10 @@ description: Acquire canonical work-item and change evidence through selected Re
 
 # Review evidence acquisition
 
+For one or more work-item references with an already selected backend, use
+`work-item-evidence-acquisition` as the specialized consumer of this interface.
+The contract and adapter details below remain shared provider infrastructure.
+
 Use for retrieving work-item or change evidence. Load `review-backend-resolution`
 and resolve each resource independently, then invoke `review_evidence_acquire`
 with the exact `family`, resolved `backendId`, stable `externalId` and optional
