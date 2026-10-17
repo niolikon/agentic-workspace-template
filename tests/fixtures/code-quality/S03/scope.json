@@ -1,0 +1,17 @@
+{
+  "changes": [
+    {
+      "changeId": "C4",
+      "repository": "legacy",
+      "backend": "source-A",
+      "base": "C4-base",
+      "head": "C4-head",
+      "path": "optional.mjs",
+      "diff": "C4-optional.mjs.diff",
+      "before": "before/optional.mjs",
+      "after": "after/optional.mjs",
+      "state": "available"
+    }
+  ],
+  "context": "context.md"
+}

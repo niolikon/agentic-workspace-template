@@ -1,0 +1,11 @@
+--- a/load.mjs
++++ b/load.mjs
+@@ -1,7 +1,7 @@
+ export async function load(fetchValue) {
+   try { return await fetchValue(); }
+   catch (error) {
+-    if (error.name === 'TimeoutError') return { retry: true };
++    if (error.name === 'TypeError') return { retry: true };
+     throw error;
+   }
+ }

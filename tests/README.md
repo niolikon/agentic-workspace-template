@@ -1,5 +1,20 @@
 # Manual workspace validation
 
+Bounded code-quality and regression review is owned by
+`code-quality-and-regression-review`, composed with `engineering-guideline-review`
+for canonical policy. Its input-only before/after fixtures and concrete behavioral
+counterexamples run locally with:
+
+```text
+node --experimental-strip-types --test tests/code-quality-review.test.mjs
+```
+
+These tests verify fixture behavior and test adequacy, not LLM review correctness.
+OpenCode E2E must separately establish meaningful defects, cross-repository
+attribution, guideline delegation without duplication, missing-context limits,
+read-only behavior and the clean-change negative control. Expected review
+conclusions belong outside the fixtures and the execution workspace.
+
 Functional requirement assessment is owned by
 `requirement-implementation-assessment` after confirmed resolution. Its synthetic
 input fidelity and acquisition integration checks run with:

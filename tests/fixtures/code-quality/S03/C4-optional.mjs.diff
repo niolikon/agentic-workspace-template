@@ -1,0 +1,8 @@
+--- a/optional.mjs
++++ b/optional.mjs
+@@ -1 +1,4 @@
+-export async function invoke(operation) { return operation(); }
++export async function invoke(operation) {
++  try { return await operation(); } catch (error) {}
++  // return previousOperation();
++}

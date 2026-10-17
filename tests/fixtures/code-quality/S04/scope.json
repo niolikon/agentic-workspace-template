@@ -1,0 +1,16 @@
+{
+  "changes": [
+    {
+      "changeId": "C5",
+      "repository": "partial",
+      "backend": "unknown-origin",
+      "base": "C5-base",
+      "head": "C5-head",
+      "path": "read.mjs",
+      "diff": "change.diff",
+      "state": "partial",
+      "reason": "truncated"
+    }
+  ],
+  "context": "context.md"
+}

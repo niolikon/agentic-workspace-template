@@ -28,6 +28,7 @@ permission:
     "architecture-analysis": allow
     "dependency-inspection": allow
     "engineering-guideline-review": allow
+    "code-quality-and-regression-review": allow
     "review-evidence-model": allow
     "review-backend-resolution": allow
     "review-evidence-acquisition": allow
@@ -104,6 +105,15 @@ interface with the exact selected backend and resource IDs.
 Load the smallest set of skills required by the request. Select capabilities from
 the user's requested outcomes rather than from a fixed skill order or from the
 first files discovered.
+
+Use `code-quality-and-regression-review` for bounded changed-implementation
+quality and regression review, including direct local code reviews. It owns
+behavioral findings and composes `engineering-guideline-review` for canonical
+policy concerns. This bounded change review takes precedence over generic
+`impact-analysis` routing for regression findings; separately requested broad
+blast-radius analysis still belongs to `impact-analysis`. Keep functional
+requirement assessment separately scoped. Work-item/PR/MR Review requests retain
+the confirmed-resolution boundary above before quality assessment begins.
 
 Treat directly matched capability requirements as mandatory composition, not
 advisory guidance. Before the first `read`, `glob`, `grep`, repository inventory or

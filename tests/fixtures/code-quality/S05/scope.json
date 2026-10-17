@@ -1,0 +1,29 @@
+{
+  "changes": [
+    {
+      "changeId": "C6",
+      "repository": "catalog",
+      "backend": "source-A",
+      "base": "C6-base",
+      "head": "C6-head",
+      "path": "select.mjs",
+      "diff": "C6-select.mjs.diff",
+      "before": "before/select.mjs",
+      "after": "after/select.mjs",
+      "state": "available"
+    },
+    {
+      "changeId": "C6",
+      "repository": "catalog",
+      "backend": "source-A",
+      "base": "C6-base",
+      "head": "C6-head",
+      "path": "load.mjs",
+      "diff": "C6-load.mjs.diff",
+      "before": "before/load.mjs",
+      "after": "after/load.mjs",
+      "state": "available"
+    }
+  ],
+  "context": "context.md"
+}
