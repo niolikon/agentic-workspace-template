@@ -487,7 +487,7 @@ export default tool({
         "Plain text, DOCX/PPTX OOXML and extractable PDF text are searched deterministically within the selected scope.",
         "Pipe-separated query alternatives are evaluated independently and snippets are ranked by term co-occurrence and alternative coverage rather than first-term position.",
         "Unsupported binary formats remain visible as candidates; lack of indexed content is never reported as evidence of absence.",
-        "Search results establish candidate relevance only and do not establish semantic authority, claim certainty or factual correctness.",
+        "Path-only matches establish candidate relevance only. Returned content snippets are inspected source evidence; interpret their semantic authority, claim certainty and factual support through evidence-semantics. When the snippets already answer the complete question, no additional file inspection is required.",
       ],
     }, null, 2)
   },

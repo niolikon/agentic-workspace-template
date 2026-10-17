@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "review-backends/v1",
+  "workItemBackends": [
+    {
+      "id": "fixture-work",
+      "provider": "github",
+      "baseUrl": "https://code.example.test",
+      "adapter": "fixture",
+      "fixturePath": "fixtures/do-not-acquire.json"
+    }
+  ],
+  "changeBackends": [
+    {
+      "id": "fixture-change",
+      "provider": "github",
+      "baseUrl": "https://code.example.test",
+      "adapter": "fixture",
+      "fixturePath": "fixtures/do-not-acquire.json",
+      "repository": "team/service"
+    }
+  ],
+  "defaults": {
+    "workItemBackend": "fixture-work",
+    "changeBackend": "fixture-change"
+  }
+}

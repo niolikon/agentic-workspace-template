@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "workspace_source": "template",
+  "scenarios": [
+    {
+      "id": "C02",
+      "agent": "coding",
+      "prompt_file": "C02.md",
+      "overlay_dir": "overlay",
+      "timeout_seconds": 480,
+      "required_sut_files": [
+        ".opencode/agents/coding.md",
+        "review-backends.json",
+        "fixtures/do-not-acquire.json",
+        "repositories/Demo.Service/package.json",
+        "repositories/Demo.Service/src/batch.mjs",
+        "repositories/Demo.Service/src/cap.mjs",
+        "repositories/Demo.Service/test/cap.test.mjs",
+        "repositories/Demo.Service/src/sample.mjs",
+        "knowledge-base/repositories/Demo.Service/runtime.md",
+        "documents/batch-policy.md",
+        "trainings/batch-onboarding.md",
+        "notes/batch-proposal.md"
+      ],
+      "required_semantic_checks": [
+        "behavior",
+        "selection",
+        "boundaries"
+      ],
+      "expected": {
+        "exit_code": 0,
+        "require_events": true,
+        "no_error_events": true,
+        "required_calls": [
+          {
+            "tool": "skill",
+            "input_contains": "safe-file-writing"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "implementation-validation"
+          }
+        ],
+        "forbidden_calls": [
+          "review_backend_resolve",
+          "review_evidence_acquire",
+          "review_request_resolution",
+          "webfetch",
+          "websearch",
+          "task"
+        ],
+        "required_changed_files": [
+          "repositories/Demo.Service/src/cap.mjs"
+        ],
+        "allowed_changed_files": [
+          "repositories/Demo.Service/src/cap.mjs"
+        ]
+      }
+    }
+  ]
+}
