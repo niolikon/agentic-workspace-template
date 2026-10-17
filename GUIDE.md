@@ -398,3 +398,8 @@ workspace-local, ignored by Git and can be deleted safely when OpenCode is not
 using it. Do not configure dependency retrieval to use `%TEMP%`, `/tmp` or other
 directories outside the workspace when a workspace-local staging destination can
 be supplied. Retrieval itself remains subject to Bash approval.
+
+The internal read-only REST runtime for future provider adapters is documented in
+[REST.md](template/.opencode/skills/review-evidence-acquisition/REST.md). It handles
+credentials within tools, scoped GET requests, bounded pagination and fixed errors.
+It does not install a live provider adapter or change the fixture acquisition API.
