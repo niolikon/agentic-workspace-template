@@ -1,0 +1,418 @@
+{
+  "schemaVersion": "review-fixtures/v1",
+  "workItems": [
+    {
+      "provider": "jira",
+      "externalId": "WI-1",
+      "sourceReference": {
+        "provider": "jira",
+        "stableExternalId": "WI-1",
+        "url": "https://evidence.example.test/items/WI-1"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-17T08:00:00Z"
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "title"
+          }
+        ],
+        "value": "Page handling"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "description"
+          }
+        ],
+        "value": "For a call to pageSize(150), the returned numeric value must be 100."
+      },
+      "acceptanceCriteria": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "acceptanceCriteria"
+          }
+        ],
+        "value": [
+          "pageSize(150) returns 100."
+        ]
+      },
+      "comments": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "comments"
+          }
+        ],
+        "value": []
+      },
+      "labels": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "labels"
+          }
+        ],
+        "value": []
+      },
+      "type": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "type"
+          }
+        ],
+        "value": "story"
+      },
+      "status": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "status"
+          }
+        ],
+        "value": "active"
+      }
+    }
+  ],
+  "changeRequests": [
+    {
+      "provider": "github",
+      "externalId": "CH-5",
+      "sourceReference": {
+        "provider": "github",
+        "stableExternalId": "CH-5",
+        "url": "https://evidence.example.test/team/api/CH-5"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-17T08:00:00Z"
+      },
+      "repository": {
+        "provider": "github",
+        "stableId": "team/api",
+        "name": "api",
+        "fullName": "team/api",
+        "sourceReference": {
+          "provider": "github",
+          "stableExternalId": "team/api",
+          "url": "https://evidence.example.test/items/team/api"
+        }
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "title"
+          }
+        ],
+        "value": "Page behavior"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "description"
+          }
+        ],
+        "value": "Adds page.js module. Public functions in this module are the implementation surface of this change."
+      },
+      "sourceRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "sourceRef"
+          }
+        ],
+        "value": {
+          "name": "feature",
+          "commitId": "CH-5-head"
+        }
+      },
+      "targetRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "targetRef"
+          }
+        ],
+        "value": {
+          "name": "main",
+          "commitId": "CH-5-base"
+        }
+      },
+      "commits": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "commits"
+          }
+        ],
+        "value": [
+          "CH-5-head"
+        ]
+      },
+      "changedFiles": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "changedFiles"
+          }
+        ],
+        "value": [
+          {
+            "path": "page.js",
+            "changeKind": "added"
+          }
+        ]
+      },
+      "diff": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "diff"
+          }
+        ],
+        "value": "diff --git a/page.js b/page.js\nnew file mode 100644\n--- /dev/null\n+++ b/page.js\n@@ -0,0 +1,2 @@\n+function readLimit(requested) { return requested; }\n+export const pageSize = readLimit;\n"
+      },
+      "reviewState": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "reviewState"
+          }
+        ],
+        "value": "open"
+      },
+      "checks": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "checks"
+          }
+        ],
+        "value": []
+      },
+      "reviewDiscussions": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "change-fixture",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "CH-5",
+              "url": "https://evidence.example.test/team/api/CH-5"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "reviewDiscussions"
+          }
+        ],
+        "value": []
+      }
+    }
+  ]
+}

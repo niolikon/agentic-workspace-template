@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "review-fixtures/v1",
+  "workItems": [
+    {
+      "provider": "future-source",
+      "externalId": "WI-1",
+      "sourceReference": {
+        "provider": "future-source",
+        "stableExternalId": "WI-1",
+        "url": "https://evidence.example.test/items/WI-1"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-17T08:00:00Z"
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "title"
+          }
+        ],
+        "value": "Page handling"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "description"
+          }
+        ],
+        "value": "The exported pageSize(requested) function must cap positive integer page sizes at 100."
+      },
+      "acceptanceCriteria": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "acceptanceCriteria"
+          }
+        ],
+        "value": [
+          "For requested=150 pageSize returns 100; for requested=30 it returns 30."
+        ]
+      },
+      "comments": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "comments"
+          }
+        ],
+        "value": []
+      },
+      "labels": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "labels"
+          }
+        ],
+        "value": []
+      },
+      "type": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "type"
+          }
+        ],
+        "value": "story"
+      },
+      "status": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "future-source",
+            "backend": "neutral-work",
+            "sourceReference": {
+              "provider": "future-source",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "status"
+          }
+        ],
+        "value": "active"
+      }
+    }
+  ],
+  "changeRequests": []
+}

@@ -1,0 +1,254 @@
+{
+  "schemaVersion": "review-fixtures/v1",
+  "workItems": [],
+  "changeRequests": [
+    {
+      "provider": "gitlab",
+      "externalId": "CH-3",
+      "sourceReference": {
+        "provider": "gitlab",
+        "stableExternalId": "CH-3",
+        "url": "https://evidence.example.test/team/client/CH-3"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-17T08:00:00Z"
+      },
+      "repository": {
+        "provider": "gitlab",
+        "stableId": "team/client",
+        "name": "client",
+        "fullName": "team/client",
+        "sourceReference": {
+          "provider": "gitlab",
+          "stableExternalId": "team/client",
+          "url": "https://evidence.example.test/items/team/client"
+        }
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "title"
+          }
+        ],
+        "value": "Page behavior"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "description"
+          }
+        ],
+        "value": "Adds next-page.js module. Public functions in this module are the implementation surface of this change."
+      },
+      "sourceRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "sourceRef"
+          }
+        ],
+        "value": {
+          "name": "feature",
+          "commitId": "CH-3-head"
+        }
+      },
+      "targetRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "targetRef"
+          }
+        ],
+        "value": {
+          "name": "main",
+          "commitId": "CH-3-base"
+        }
+      },
+      "commits": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "commits"
+          }
+        ],
+        "value": [
+          "CH-3-head"
+        ]
+      },
+      "changedFiles": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "changedFiles"
+          }
+        ],
+        "value": [
+          {
+            "path": "next-page.js",
+            "changeKind": "added"
+          }
+        ]
+      },
+      "diff": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "diff"
+          }
+        ],
+        "value": "diff --git a/next-page.js b/next-page.js\nnew file mode 100644\n--- /dev/null\n+++ b/next-page.js\n@@ -0,0 +1,3 @@\n+export function nextPage(previous, fetchPage) {\n+  return fetchPage({ cursor: previous.nextCursor });\n+}\n"
+      },
+      "reviewState": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "reviewState"
+          }
+        ],
+        "value": "open"
+      },
+      "checks": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "checks"
+          }
+        ],
+        "value": []
+      },
+      "reviewDiscussions": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "gitlab",
+            "backend": "change-fixture-other",
+            "sourceReference": {
+              "provider": "gitlab",
+              "stableExternalId": "CH-3",
+              "url": "https://evidence.example.test/team/client/CH-3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "reviewDiscussions"
+          }
+        ],
+        "value": []
+      }
+    }
+  ]
+}

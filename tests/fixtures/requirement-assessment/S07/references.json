@@ -1,0 +1,30 @@
+[
+  {
+    "family": "workItemBackends",
+    "externalId": "WI-2",
+    "backendId": "work-fixture"
+  },
+  {
+    "family": "workItemBackends",
+    "externalId": "WI-7",
+    "backendId": "work-fixture"
+  },
+  {
+    "family": "changeBackends",
+    "externalId": "CH-7",
+    "backendId": "change-fixture",
+    "repository": "team/api"
+  },
+  {
+    "family": "changeBackends",
+    "externalId": "CH-3",
+    "backendId": "change-fixture-other",
+    "repository": "team/client"
+  },
+  {
+    "family": "changeBackends",
+    "externalId": "CH-8",
+    "backendId": "change-fixture-other",
+    "repository": "team/client"
+  }
+]

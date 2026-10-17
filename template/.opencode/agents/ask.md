@@ -34,6 +34,7 @@ permission:
     "work-item-evidence-acquisition": allow
     "change-evidence-acquisition": allow
     "review-request-resolution": allow
+    "requirement-implementation-assessment": allow
 
   edit: deny
   write: deny
@@ -79,6 +80,14 @@ and repository implementation reads until its confirmed canonical input is
 released. This confirmation boundary takes precedence over the general rule to
 load all outcome capabilities before retrieval. Acquisition-only requests and
 direct local guideline reviews retain their existing capability paths.
+
+Only after `begin` actually returns `status: reviewing`, `reviewAllowed: true`
+and `reviewInput`, load `requirement-implementation-assessment` to evaluate
+functional fulfillment across the complete canonical scope. That skill owns
+requirement chronology, cross-change correlation, evidence limits and findings;
+reuse the released snapshot and keep other review outcomes separately scoped.
+An `invalid-transition` result blocks assessment even when the tool call itself
+completed; do not use a `candidate` from confirm/status as the assessment input.
 
 For Review backend discovery or selection, load `review-backend-resolution`
 before invoking `review_backend_resolve`. The skill owns the configuration,
