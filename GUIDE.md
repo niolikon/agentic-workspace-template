@@ -46,8 +46,14 @@ or [change acquisition](template/.opencode/skills/change-evidence-acquisition/SK
 capability for one or more stable references. Change acquisition preserves each
 repository independently and returns canonical checks and review discussions
 where supported, with explicit evidence boundaries for unavailable metadata.
-The caller may compose one source work item and multiple changes from different
-backends; acquisition does not evaluate or mutate them.
+The caller may compose multiple work items and multiple changes from different
+backends; acquisition does not evaluate or mutate them. A natural-language Review
+request uses [request resolution](template/.opencode/skills/review-request-resolution/SKILL.md)
+to identify every reference, resolve backends independently and present a v2
+`ReviewInput` candidate. Ambiguities and evidence gaps remain visible. The user
+can correct the full scope; every revision requires confirmation before review.
+Only the confirmed snapshot is passed to downstream assessment skills. Existing
+v1 single-item evidence remains compatible at the model boundary.
 
 For existing workspaces the updater deploys skills and tools but preserves root
 configuration. Create `review-backends.json` manually using the empty template

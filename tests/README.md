@@ -15,8 +15,9 @@ through the independent harness on disposable workspace copies.
 
 Work-item acquisition uses `work-item-evidence-acquisition` with a backend already
 selected by the caller and one or more stable references. Its `WorkItemEvidence`
-is the canonical `WorkItem`, returned separately for every reference; it does not
-change the single-source-work-item constraint of `ReviewInput`. Provider fixture
+is the canonical `WorkItem`, returned separately for every reference. Resolution
+composes all requested items in v2 `ReviewInput.workItems`; v1 single-item inputs
+remain supported by the model contract. Provider fixture
 regressions (including missing discussion metadata) run with:
 
 ```text
@@ -37,6 +38,19 @@ tool contract; no live adapter or provider credentials are needed by these tests
 
 This directory contains reusable prompts for validating the behavior of the
 workspace after changing a provider, model, OpenCode version, agent or skill.
+
+Review resolution state, multiple independent identities, corrections, stale
+confirmation rejection and exact canonical handoff run without network access:
+
+```text
+node --experimental-strip-types --test tests/review-request-resolution.test.mjs
+```
+
+The production tool persists session state only under `.opencode/.tmp/reviews/`.
+Deterministic tests use disposable fixture workspaces; OpenCode E2E must separately
+verify natural requests stop for user confirmation before assessment. A single
+runner turn can test tool lifecycle integration but does not prove a live
+multi-turn human conversation.
 
 The tests are intentionally manual. They validate observable behavior rather
 than exact wording.
