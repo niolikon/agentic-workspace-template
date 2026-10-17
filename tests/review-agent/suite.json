@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "workspace_source": "template",
+  "scenarios": [
+    {
+      "id": "S01",
+      "prompt_file": "S01.md",
+      "overlay_dir": "overlay",
+      "agent": "review",
+      "timeout_seconds": 480,
+      "required_sut_files": [
+        ".opencode/agents/review.md",
+        "review-backends.json",
+        "tests/fixtures/review-agent/change-fixture-other.json",
+        "tests/fixtures/review-agent/change-fixture.json",
+        "tests/fixtures/review-agent/work-fixture.json"
+      ],
+      "required_semantic_checks": [
+        "boundary"
+      ],
+      "expected": {
+        "exit_code": 0,
+        "require_events": true,
+        "no_error_events": true,
+        "workspace_unchanged": true,
+        "required_calls": [
+          {
+            "tool": "skill",
+            "input_contains": "review-request-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-model"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-backend-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "work-item-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "change-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-acquisition"
+          },
+          {
+            "tool": "review_request_resolution",
+            "input_contains": "resolve"
+          }
+        ],
+        "forbidden_calls": [
+          "write",
+          "edit",
+          "apply_patch",
+          "bash",
+          "webfetch",
+          "websearch",
+          "task"
+        ]
+      }
+    },
+    {
+      "id": "S02",
+      "prompt_file": "S02.md",
+      "overlay_dir": "overlay",
+      "agent": "review",
+      "timeout_seconds": 480,
+      "required_sut_files": [
+        ".opencode/agents/review.md",
+        "review-backends.json",
+        "tests/fixtures/review-agent/change-fixture-other.json",
+        "tests/fixtures/review-agent/change-fixture.json",
+        "tests/fixtures/review-agent/work-fixture.json"
+      ],
+      "required_semantic_checks": [
+        "assessment",
+        "provenance",
+        "boundary"
+      ],
+      "expected": {
+        "exit_code": 0,
+        "require_events": true,
+        "no_error_events": true,
+        "workspace_unchanged": true,
+        "required_calls": [
+          {
+            "tool": "skill",
+            "input_contains": "review-request-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-model"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-backend-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "work-item-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "change-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "requirement-implementation-assessment"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "engineering-guideline-review"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "code-quality-and-regression-review"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "evidence-semantics"
+          },
+          {
+            "tool": "review_request_resolution",
+            "input_contains": "resolve"
+          },
+          {
+            "tool": "review_request_resolution",
+            "input_contains": "begin"
+          }
+        ],
+        "forbidden_calls": [
+          "write",
+          "edit",
+          "apply_patch",
+          "bash",
+          "webfetch",
+          "websearch",
+          "task"
+        ]
+      }
+    },
+    {
+      "id": "S03",
+      "prompt_file": "S03.md",
+      "overlay_dir": "overlay",
+      "agent": "review",
+      "timeout_seconds": 480,
+      "required_sut_files": [
+        ".opencode/agents/review.md",
+        "review-backends.json",
+        "tests/fixtures/review-agent/change-fixture-other.json",
+        "tests/fixtures/review-agent/change-fixture.json",
+        "tests/fixtures/review-agent/work-fixture.json"
+      ],
+      "required_semantic_checks": [
+        "boundary"
+      ],
+      "expected": {
+        "exit_code": 0,
+        "require_events": true,
+        "no_error_events": true,
+        "workspace_unchanged": true,
+        "required_calls": [
+          {
+            "tool": "skill",
+            "input_contains": "review-request-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-model"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-backend-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "work-item-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "change-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-acquisition"
+          },
+          {
+            "tool": "review_request_resolution",
+            "input_contains": "resolve"
+          }
+        ],
+        "forbidden_calls": [
+          "write",
+          "edit",
+          "apply_patch",
+          "bash",
+          "webfetch",
+          "websearch",
+          "task"
+        ]
+      }
+    },
+    {
+      "id": "S04",
+      "prompt_file": "S04.md",
+      "overlay_dir": "unavailable-overlay",
+      "agent": "review",
+      "timeout_seconds": 480,
+      "required_sut_files": [
+        ".opencode/agents/review.md",
+        "review-backends.json",
+        "tests/fixtures/review-agent/single-work.json",
+        "tests/fixtures/review-agent/unavailable-change.json"
+      ],
+      "required_semantic_checks": [
+        "assessment",
+        "provenance",
+        "boundary"
+      ],
+      "expected": {
+        "exit_code": 0,
+        "require_events": true,
+        "no_error_events": true,
+        "workspace_unchanged": true,
+        "required_calls": [
+          {
+            "tool": "skill",
+            "input_contains": "review-request-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-model"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-backend-resolution"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "work-item-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "change-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "review-evidence-acquisition"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "requirement-implementation-assessment"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "engineering-guideline-review"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "code-quality-and-regression-review"
+          },
+          {
+            "tool": "skill",
+            "input_contains": "evidence-semantics"
+          },
+          {
+            "tool": "review_request_resolution",
+            "input_contains": "resolve"
+          },
+          {
+            "tool": "review_request_resolution",
+            "input_contains": "begin"
+          }
+        ],
+        "forbidden_calls": [
+          "write",
+          "edit",
+          "apply_patch",
+          "bash",
+          "webfetch",
+          "websearch",
+          "task"
+        ]
+      }
+    }
+  ]
+}

@@ -96,6 +96,13 @@ procedural step that is always coupled to another skill.
 
 ## Evidence and safety
 
+The `review` primary agent composes the existing resolution/acquisition and
+assessment capabilities. It owns request interpretation and final synthesis,
+while skills retain provider access, requirement reasoning, guideline policy and
+quality/regression reasoning. Its default-deny permissions allow only the Review
+interfaces, selected skills and local reads; shell, writing and task delegation
+are denied. The resolution tool alone persists its existing session state.
+
 Review requests against work items pass through explicit scope resolution before
 assessment. A cohesive resolution skill composes backend selection and canonical
 acquisition, presents all work items and changes, and waits for user confirmation.

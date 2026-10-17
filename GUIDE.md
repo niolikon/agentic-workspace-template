@@ -316,13 +316,23 @@ helper scripts are optional and may be ignored or removed.
 
 ## 10. Agents
 
-The workspace contains three primary agents:
+The workspace contains four primary agents:
 
 - `ask`: read-only retrieval and cross-repository analysis;
+- `review`: read-only work-item implementation, engineering-guideline and quality
+  review across confirmed changes and repositories;
 - `coding`: code analysis and controlled modifications;
 - `knowledge`: incremental knowledge-base maintenance.
 
 The agents use the model configured in `opencode.jsonc` unless a model is explicitly set in their frontmatter.
+
+Select `review` for an implementation Review and provide the work-item and PR/MR
+references, including repository and backend selectors when known. It presents
+the resolved scope for confirmation before composing the existing assessment
+skills. Correcting or refreshing the scope requires fresh confirmation. Findings,
+uncertainty and unavailable evidence remain separate and traceable to their owning
+capabilities. Review reports appear only in the answer; remediation is a separate
+request. The existing `ask` review paths remain available.
 
 ## 11. Commands
 

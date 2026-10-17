@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "review-backends/v1",
+  "workItemBackends": [
+    {
+      "id": "work-fixture",
+      "provider": "jira",
+      "baseUrl": "https://evidence.example.test",
+      "adapter": "fixture",
+      "fixturePath": "tests/fixtures/review-agent/single-work.json"
+    }
+  ],
+  "changeBackends": [
+    {
+      "id": "change-fixture",
+      "provider": "github",
+      "baseUrl": "https://evidence.example.test",
+      "adapter": "fixture",
+      "fixturePath": "tests/fixtures/review-agent/unavailable-change.json"
+    }
+  ]
+}

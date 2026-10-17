@@ -1,5 +1,24 @@
 # Manual workspace validation
 
+The `review` agent composition suite for #73 / #74 lives in
+`tests/review-agent/suite.json`. Run it with the generic independent harness on a
+synthetic Demo/TaskBoard derivative after explicit remote consent. It declares
+mandatory semantic checks before execution. S01/S03 test natural confirmation and
+unresolved scope; S02/S04 explicitly exercise the existing mechanical lifecycle
+test boundary for downstream composition, not natural human confirmation.
+Input-only fixtures are in its shared overlay. Expected conclusions and semantic
+evaluation stay outside the execution workspace. Deterministic fixture behavior,
+canonical handoff, isolation and unavailable-evidence checks run with:
+
+```text
+node --experimental-strip-types --test tests/review-agent.test.mjs
+```
+
+Skill-load completion proves invocation only. E2E semantic evaluation must also
+verify functional coverage, guideline/quality ownership, concrete causal findings,
+provenance, evidence limits and read-only deltas. Local deterministic tests do not
+establish that the model performed these assessments correctly.
+
 Bounded code-quality and regression review is owned by
 `code-quality-and-regression-review`, composed with `engineering-guideline-review`
 for canonical policy. Its input-only before/after fixtures and concrete behavioral
