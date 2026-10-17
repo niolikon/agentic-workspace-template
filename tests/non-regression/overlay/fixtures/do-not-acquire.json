@@ -1,0 +1,1579 @@
+{
+  "schemaVersion": "review-fixtures/v1",
+  "workItems": [
+    {
+      "provider": "github",
+      "externalId": "WI-58",
+      "sourceReference": {
+        "provider": "github",
+        "stableExternalId": "WI-58",
+        "url": "https://code.example.test/team/service/issues/WI-58"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-16T08:00:00Z"
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Preserve audit entries"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Record an audit entry when an item changes."
+      },
+      "acceptanceCriteria": {
+        "state": "ambiguous",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "candidates": [
+          [
+            "Keep the item identity in each audit entry."
+          ],
+          [
+            "Retain an audit trail."
+          ]
+        ],
+        "reason": "Unclear description boundary"
+      },
+      "labels": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": []
+      },
+      "type": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "issue"
+      },
+      "status": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "open"
+      },
+      "comments": {
+        "state": "partial",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-58",
+              "url": "https://code.example.test/team/service/issues/WI-58"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": [
+          {
+            "externalId": "c1",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "c1",
+              "url": "https://code.example.test/team/service/comments/c1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "Observation c1: retain audit identity."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "displayName": "Synthetic author"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "2026-10-15T10:00:00+02:00"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "none"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "thread",
+                "externalId": "thread-7"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "reason": "not-provided"
+            }
+          },
+          {
+            "externalId": "c2",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "c2",
+              "url": "https://code.example.test/team/service/comments/c2"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "Observation c2: retain audit identity."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "displayName": "Synthetic author"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "2026-10-15T10:00:00+02:00"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "comment",
+                "externalId": "c1"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "thread",
+                "externalId": "thread-7"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "reason": "not-provided"
+            }
+          },
+          {
+            "externalId": "c3",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "c3",
+              "url": "https://code.example.test/team/service/comments/c3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "Observation c3: retain audit identity."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "displayName": "Synthetic author"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "2026-10-15T10:00:00+02:00"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "comment",
+                "externalId": "outside-page"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "thread",
+                "externalId": "thread-7"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "reason": "not-provided"
+            }
+          }
+        ],
+        "reason": "pagination-incomplete"
+      }
+    },
+    {
+      "provider": "github",
+      "externalId": "WI-59",
+      "sourceReference": {
+        "provider": "github",
+        "stableExternalId": "WI-59",
+        "url": "https://code.example.test/team/service/issues/WI-59"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-16T08:00:00Z"
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Preserve audit entries"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Record an audit entry when an item changes."
+      },
+      "acceptanceCriteria": {
+        "state": "ambiguous",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "candidates": [
+          [
+            "Keep the item identity in each audit entry."
+          ],
+          [
+            "Retain an audit trail."
+          ]
+        ],
+        "reason": "Unclear description boundary"
+      },
+      "labels": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": []
+      },
+      "type": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "issue"
+      },
+      "status": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "open"
+      },
+      "comments": {
+        "state": "partial",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-work",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "WI-59",
+              "url": "https://code.example.test/team/service/issues/WI-59"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": [
+          {
+            "externalId": "c1",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "c1",
+              "url": "https://code.example.test/team/service/comments/c1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "Observation c1: retain audit identity."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "displayName": "Synthetic author"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "2026-10-15T10:00:00+02:00"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "none"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "thread",
+                "externalId": "thread-7"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c1",
+                    "url": "https://code.example.test/team/service/comments/c1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "reason": "not-provided"
+            }
+          },
+          {
+            "externalId": "c2",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "c2",
+              "url": "https://code.example.test/team/service/comments/c2"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "Observation c2: retain audit identity."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "displayName": "Synthetic author"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "2026-10-15T10:00:00+02:00"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "comment",
+                "externalId": "c1"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "thread",
+                "externalId": "thread-7"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c2",
+                    "url": "https://code.example.test/team/service/comments/c2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "reason": "not-provided"
+            }
+          },
+          {
+            "externalId": "c3",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "c3",
+              "url": "https://code.example.test/team/service/comments/c3"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "Observation c3: retain audit identity."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "displayName": "Synthetic author"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": "2026-10-15T10:00:00+02:00"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "comment",
+                "externalId": "outside-page"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "value": {
+                "kind": "thread",
+                "externalId": "thread-7"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "github",
+                  "backend": "fixture-work",
+                  "sourceReference": {
+                    "provider": "github",
+                    "stableExternalId": "c3",
+                    "url": "https://code.example.test/team/service/comments/c3"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-16T08:00:00Z"
+                  }
+                }
+              ],
+              "reason": "not-provided"
+            }
+          }
+        ],
+        "reason": "pagination-incomplete"
+      }
+    }
+  ],
+  "changeRequests": [
+    {
+      "provider": "github",
+      "externalId": "PR-7",
+      "sourceReference": {
+        "provider": "github",
+        "stableExternalId": "PR-7",
+        "url": "https://code.example.test/team/service/pull/PR-7"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-16T08:00:00Z"
+      },
+      "repository": {
+        "provider": "github",
+        "stableId": "repo-7",
+        "name": "service",
+        "fullName": "team/service",
+        "sourceReference": {
+          "provider": "github",
+          "stableExternalId": "repo-7",
+          "url": "https://code.example.test/team/service/repos/repo-7"
+        }
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Add audit capture"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Persist item IDs in audit entries."
+      },
+      "sourceRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": {
+          "name": "feature/audit",
+          "commitId": "abc123"
+        }
+      },
+      "targetRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": {
+          "name": "main",
+          "commitId": "def456"
+        }
+      },
+      "commits": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": [
+          "abc123"
+        ]
+      },
+      "changedFiles": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": [
+          {
+            "path": "src/audit.ts",
+            "previousPath": "src/log.ts",
+            "changeKind": "renamed"
+          }
+        ]
+      },
+      "reviewState": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "open"
+      },
+      "diff": {
+        "state": "partial",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-7",
+              "url": "https://code.example.test/team/service/pull/PR-7"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "@@ -1 +1 @@\n-log(item)\n+audit(item.id)",
+        "reason": "truncated"
+      }
+    },
+    {
+      "provider": "github",
+      "externalId": "PR-8",
+      "sourceReference": {
+        "provider": "github",
+        "stableExternalId": "PR-8",
+        "url": "https://code.example.test/team/service/pull/PR-8"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-16T08:00:00Z"
+      },
+      "repository": {
+        "provider": "github",
+        "stableId": "repo-7",
+        "name": "service",
+        "fullName": "team/service",
+        "sourceReference": {
+          "provider": "github",
+          "stableExternalId": "repo-7",
+          "url": "https://code.example.test/team/service/repos/repo-7"
+        }
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Add audit capture"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "Persist item IDs in audit entries."
+      },
+      "sourceRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": {
+          "name": "feature/audit",
+          "commitId": "abc123"
+        }
+      },
+      "targetRef": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": {
+          "name": "main",
+          "commitId": "def456"
+        }
+      },
+      "commits": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": [
+          "abc123"
+        ]
+      },
+      "changedFiles": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": [
+          {
+            "path": "src/audit.ts",
+            "previousPath": "src/log.ts",
+            "changeKind": "renamed"
+          }
+        ]
+      },
+      "reviewState": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "open"
+      },
+      "diff": {
+        "state": "partial",
+        "provenance": [
+          {
+            "provider": "github",
+            "backend": "fixture-change",
+            "sourceReference": {
+              "provider": "github",
+              "stableExternalId": "PR-8",
+              "url": "https://code.example.test/team/service/pull/PR-8"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-16T08:00:00Z"
+            }
+          }
+        ],
+        "value": "@@ -1 +1 @@\n-log(item)\n+audit(item.id)",
+        "reason": "truncated"
+      }
+    }
+  ]
+}

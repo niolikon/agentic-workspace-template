@@ -101,7 +101,10 @@ Trace changed behavior through relevant context, selecting only applicable risks
 For each candidate finding, establish observation -> trigger -> causal path ->
 consequence, and check relevant safeguards or counterevidence before reporting.
 Give a concrete counterexample with predicted before/after results when observable;
-bound the trigger to failing conditions rather than implying every input fails.
+use an actual small input and predicted output, not only a formula or a generic
+warning. Bound a standalone function's demonstrated defect to that function;
+unobserved callers cannot establish wider runtime consequences or their priority.
+Bound the trigger to failing conditions rather than implying every input fails.
 Distinguish static predictions, supplied test results and actions observed in this
 review. Do not claim execution when only source was inspected. No runtime test or
 shell invocation is required: report a verification limit when safe read-only

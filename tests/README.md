@@ -1,5 +1,48 @@
 # Manual workspace validation
 
+Issue #75 requires both `tests/non-regression/suite.json` (default permissions)
+and `tests/non-regression/suite.coding.json` (explicitly approved Coding edit).
+They exercise ordinary Ask, source-role reconciliation, Coding analysis and a
+controlled edit, Knowledge persistence, and direct engineering-guideline review.
+Run both complete profiles against the candidate and the pre-Review `200192a` snapshot
+with the generic harness and mandatory external behavior/selection/boundary
+oracles. Keep expected conclusions outside the SUT. The inert Review backend
+catalog is a selection tripwire, never an acquisition source. C02 grants only
+its synthetic edit target and Node test command through native configuration;
+see `tests/non-regression/BASE.md` for isolated native grants and headless safety
+checks. `ORACLES.md` preserves the predeclared semantic obligations outside the
+overlay. All bases must be disposable and
+synthetic, and remote runs require explicit consent.
+
+`node --experimental-strip-types --test tests/non-regression.test.mjs` executes
+existing tool contracts. Set `NON_REGRESSION_BASELINE` to a historical `template/`
+directory to run the same assertions against that implementation. Only plugin
+schema registration is adapted; actual execute bodies, filesystem and Git run.
+These checks supplement, rather than replace, OpenCode semantic evaluation.
+The #75 stop-condition oracle also rejects redundant acquisition after a complete
+content hit, even when the final answer is correct. Search output distinguishes
+path-only discovery from inspected snippets; source authority and claim strength
+remain owned by evidence-semantics.
+
+The `review` agent composition suite for #73 / #74 lives in
+`tests/review-agent/suite.json`. Run it with the generic independent harness on a
+synthetic Demo/TaskBoard derivative after explicit remote consent. It declares
+mandatory semantic checks before execution. S01/S03 test natural confirmation and
+unresolved scope; S02/S04 explicitly exercise the existing mechanical lifecycle
+test boundary for downstream composition, not natural human confirmation.
+Input-only fixtures are in its shared overlay. Expected conclusions and semantic
+evaluation stay outside the execution workspace. Deterministic fixture behavior,
+canonical handoff, isolation and unavailable-evidence checks run with:
+
+```text
+node --experimental-strip-types --test tests/review-agent.test.mjs
+```
+
+Skill-load completion proves invocation only. E2E semantic evaluation must also
+verify functional coverage, guideline/quality ownership, concrete causal findings,
+provenance, evidence limits and read-only deltas. Local deterministic tests do not
+establish that the model performed these assessments correctly.
+
 Bounded code-quality and regression review is owned by
 `code-quality-and-regression-review`, composed with `engineering-guideline-review`
 for canonical policy. Its input-only before/after fixtures and concrete behavioral

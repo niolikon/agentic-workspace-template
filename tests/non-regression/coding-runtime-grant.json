@@ -1,0 +1,16 @@
+{
+  "agent": {
+    "coding": {
+      "permission": {
+        "edit": {
+          "*": "ask",
+          "*repositories/Demo.Service/src/cap.mjs": "allow",
+          "*repositories\\Demo.Service\\src\\cap.mjs": "allow"
+        },
+        "bash": {
+          "node --test test/cap.test.mjs": "allow"
+        }
+      }
+    }
+  }
+}

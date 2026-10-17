@@ -90,6 +90,10 @@ For each obligation, inspect all relevant confirmed changes together. Build a
 requirement-to-evidence relation using actual behavior, paths, contracts and
 explicit references. Neither matching numbers, array positions, titles nor branch
 names establish that relation. Unknown relations remain unknown.
+Co-location in a change does not establish a call or data-flow relationship.
+An independent helper's defect cannot weaken a requirement verdict without an
+observed path connecting it to that obligation. Keep the helper uncorrelated
+for functional assessment and leave its independent defect to quality review.
 
 One requirement may be fulfilled jointly by changes across repositories; one
 change may support several work items. Keep each contributing PR/MR, repository,

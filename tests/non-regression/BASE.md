@@ -1,0 +1,11 @@
+# Non-regression execution base
+
+Use a disposable, synthetic Demo or TaskBoard derivative containing root workspace instructions, provider configuration and canonical guidelines. Include a synthetic Git repository at repositories/Demo.Service before invoking the harness so its detached repository inventory is preserved. The overlay supplies all source/evidence inputs.
+
+Run both complete profiles: suite.json (A01/A02/C01/K01/G01) with production-default permissions, and suite.coding.json (C02) with its explicit approval. Neither profile alone completes #75. Do not use --only as a substitute.
+
+For C02, load coding-runtime-grant.json through process-local OPENCODE_CONFIG_CONTENT. It grants only the synthetic cap.mjs edit (including temporary absolute-path prefixes) and the documented Node test command. Inline runtime configuration takes precedence over agent Markdown; project JSON alone does not. Archive this non-secret runtime input and its SHA-256 outside the SUT and include it in evaluation provenance. Never put provider/agent configuration into a fixture overlay. Do not enable broad auto-approval or modify the production agent. Preserve other default agent permissions. Apply the same base and grants to the historical and current implementations; C01 still explicitly forbids all writes and commands.
+
+Document the headless CLI context in base instructions: ask-permission calls cannot receive interactive approval. Use allowed read/glob/grep and canonical inventories for mandatory path validation and Markdown probes rather than submitting shell path scripts requiring approval. Do not bypass or omit safety checks. Knowledge permits its normal read-only Git commands; the semantic boundary oracle must reject build/test execution, state-mutating shell commands and primary-source writes. Knowledge persistence, post-write rereads/probes and claim-strength checks remain mandatory.
+
+Use the authorized model/reasoning profile consistently, and never copy credentials or original repository contents. The fixture Review catalog is valid, has independent defaults and points only to the reused synthetic fixture adapter. Every Review selection remains forbidden for these scenarios. Expected semantic outcomes live in ORACLES.md, outside overlay and the execution workspace.
