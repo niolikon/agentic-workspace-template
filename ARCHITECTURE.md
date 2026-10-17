@@ -96,6 +96,14 @@ procedural step that is always coupled to another skill.
 
 ## Evidence and safety
 
+Review requests against work items pass through explicit scope resolution before
+assessment. A cohesive resolution skill composes backend selection and canonical
+acquisition, presents all work items and changes, and waits for user confirmation.
+A session tool owns revision-bound state transitions and the confirmed evidence
+snapshot. Corrections invalidate confirmation; downstream review consumes only
+the released snapshot. Multiple work items and changes are independent collections,
+with no implicit positional mapping. Provider evidence never supplies consent.
+
 20. **Claims must be evidence-backed.** Confirmed facts must be
     traceable to workspace-relative source paths. Inferences and
     unresolved questions must be clearly distinguished from confirmed

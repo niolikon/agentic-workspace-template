@@ -12,8 +12,9 @@ judgments. It can be composed before a Review Agent exists.
 
 `review-evidence-model` owns the canonical contract. `WorkItemEvidence` means
 the existing canonical `WorkItem` defined there; it is not a second schema.
-Multiple acquired items are independent evidence, not a `ReviewInput` containing
-multiple source work items. The caller chooses the source item for a review.
+Multiple acquired items remain independent evidence. The resolution caller retains
+all requested items in `ReviewInput.workItems` (v2), presents the full scope and
+obtains confirmation through `review-request-resolution` before assessment.
 
 ## Acquisition
 

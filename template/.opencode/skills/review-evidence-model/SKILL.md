@@ -5,7 +5,7 @@ description: Define and validate provider-neutral review inputs, normalized evid
 
 # Review evidence model
 
-Use this skill whenever review workflows need to exchange a source work item and
+Use this skill whenever review workflows need to exchange source work items and
 one or more implementation change requests without coupling downstream reasoning
 to GitHub, GitLab, Bitbucket, Jira or Azure DevOps response shapes.
 
@@ -47,18 +47,18 @@ reasoning.
 
 ## Canonical review input
 
-A valid review input contains exactly one source work item and one or more change
-requests:
+A new resolved review input contains one or more source work items and one or more
+change requests, independently acquired across repositories and backends:
 
 ```text
 ReviewInput {
-  schemaVersion: "review-evidence/v1"
-  workItem: WorkItem
+  schemaVersion: "review-evidence/v2"
+  workItems: [WorkItem, ...]
   changeRequests: [ChangeRequest, ...]
 }
 ```
 
-The work item and change requests are independent provider identities. Do not
+The work items and change requests are independent provider identities. Do not
 require them to come from the same provider, host, project or repository.
 
 Examples of valid compositions include:
@@ -66,11 +66,23 @@ Examples of valid compositions include:
 - Jira work item + GitHub pull request;
 - GitLab issue + GitLab merge request;
 - Jira work item + Azure DevOps pull request;
-- one work item + multiple change requests from one or several supported
+- multiple work items + multiple change requests from one or several supported
   providers.
 
-Reject an input that contains no work item, more than one source work item or no
-change request. Do not silently select one item from an ambiguous collection.
+Reject an input that contains no work item or no change request. Preserve all
+requested identities; never select just one source item. Collection position
+does not establish a relationship: do not zip arrays, require equal lengths,
+or assume all changes implement every work item. Many items may relate to many
+changes. Report unknown relationships independently of scope confirmation.
+
+Existing `review-evidence/v1` objects with exactly one `workItem` and nonempty
+`changeRequests` remain valid legacy acquisition compositions. Consumers may
+adapt them to v2 by wrapping that unchanged object in `workItems`; never accept
+both `workItem` and `workItems` or silently downcast multiple items to v1.
+New resolution emits v2 only. All WorkItem/ChangeRequest field contracts remain
+unchanged. For Review execution, `review-request-resolution` owns presenting and
+confirming the entire candidate; only its confirmed snapshot is canonical input
+for downstream assessment. A normalized object alone is not user confirmation.
 
 ## Provider identity
 
@@ -497,7 +509,7 @@ Reject or surface a normalization error for:
 - a declared provider that contradicts the parsed/adapter-owned source provider;
 - missing stable external ID for the source work item;
 - missing stable external ID or repository identity for a change request;
-- zero or multiple source work items;
+- zero source work items (or multiple items in legacy v1);
 - zero change requests.
 
 Do not treat provider mismatch as permission failure or missing evidence. It is an
@@ -546,7 +558,8 @@ A provider-neutral review capability consuming this model must:
    than prompts to invent missing content;
 4. keep findings attributable to the contributing normalized evidence;
 5. allow work-item and change-request providers to differ;
-6. allow multiple change requests to contribute to one review;
+6. allow multiple work items and multiple change requests to contribute to one
+   review without assuming a 1:1 mapping;
 7. consult opaque provider extensions only through an explicitly specialized
    capability, never as routine provider branching.
 

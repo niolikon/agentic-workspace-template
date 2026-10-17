@@ -11,6 +11,7 @@ permission:
   workspace_evidence_search: allow
   review_backend_resolve: allow
   review_evidence_acquire: allow
+  review_request_resolution: allow
   
   read: allow
   glob: allow
@@ -32,6 +33,7 @@ permission:
     "review-evidence-acquisition": allow
     "work-item-evidence-acquisition": allow
     "change-evidence-acquisition": allow
+    "review-request-resolution": allow
 
   edit: deny
   write: deny
@@ -65,6 +67,18 @@ training material, notes and derived knowledge.
 - orchestrate the final answer without reimplementing capability procedures.
 
 ## Capability orchestration
+
+For an implementation Review request referencing work items, requirements or
+PRs/MRs, load
+`review-request-resolution` before acquisition or assessment. Before invoking
+`review_request_resolution`, also complete a separate `skill` tool call for
+`review-evidence-model`; loading the resolution skill does not load its model
+contract. The resolution skill owns scope
+resolution, corrections and explicit user confirmation. Defer assessment skills
+and repository implementation reads until its confirmed canonical input is
+released. This confirmation boundary takes precedence over the general rule to
+load all outcome capabilities before retrieval. Acquisition-only requests and
+direct local guideline reviews retain their existing capability paths.
 
 For Review backend discovery or selection, load `review-backend-resolution`
 before invoking `review_backend_resolve`. The skill owns the configuration,
