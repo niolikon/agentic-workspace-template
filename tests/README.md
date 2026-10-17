@@ -177,3 +177,15 @@ threaded comments, structural failures, controlled diagnostics and path confinem
 permissions on Windows; do not report a blocked junction test as passing.
 Fixture inputs and an example registry live in `fixtures/review-providers/`;
 expected outcomes are maintained separately in executable tests.
+
+Shared internal REST adapter infrastructure runs without services or real secrets:
+
+```text
+node --experimental-strip-types --test tests/review-rest-runtime.test.mjs
+```
+
+These tests verify authentication at the transport boundary, reflected credential
+redaction, scoped GET requests, fixed failures, pagination, timeouts, malformed
+optional data and response limits. Trusted decoder fixtures represent raw input;
+assertions own expected outcomes. They do not prove any provider-specific adapter
+or live service behavior. See the acquisition skill's REST.md for adapter duties.

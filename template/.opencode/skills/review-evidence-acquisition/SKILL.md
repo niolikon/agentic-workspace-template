@@ -99,3 +99,9 @@ failure. Never convert normalization failures into partially invented ReviewInpu
 objects. Canonical partial/ambiguous/unavailable fields are successful acquisitions
 with explicit evidence boundaries, independent of transport failure. Stop the
 affected acquisition on failure; no network fallback or backend substitution.
+
+Internal REST infrastructure for future provider tools is available in `rest.ts`.
+Adapter implementers must follow [REST.md](REST.md), including its GET operation
+registration, credential boundary, normalization and partial-result contracts.
+Agents must continue using installed evidence tools; they must never invoke this
+library through shell commands or supply transport/authentication parameters.

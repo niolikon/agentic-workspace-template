@@ -84,16 +84,27 @@ export function resolveBackend(config: unknown, request: Request) {
   return inferred.length ? { status: "ambiguous", source: "inference", candidates: inferred.map(b => b.id).sort() } : { status: "unavailable", reason: "No configured backend matches this evidence family and resource scope." }
 }
 
-export async function resolveFromWorkspace(workspace: string, request: Request) {
+// Internal adapter lookup. Never register this function as an agent tool.
+export async function lookupRuntimeBackend(workspace: string, request: Request) {
   try {
     const root = await realpath(workspace)
     const file = await realpath(path.join(root, "review-backends.json"))
     const relative = path.relative(root, file)
     if (relative.startsWith("..") || path.isAbsolute(relative)) return { status: "invalid-config", reason: "Review backend configuration must remain inside the workspace." }
     const config: unknown = JSON.parse(await readFile(file, "utf8"))
-    return resolveBackend(config, request)
+    const selected = resolveBackend(config, request)
+    if (selected.status !== "resolved") return selected
+    const backend = (config as Config)[request.family].find(b => b.id === selected.backend!.id)!
+    return { ...selected, backend }
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return { status: "unavailable", reason: "No review-backends.json configuration found." }
     return { status: "invalid-config", reason: "Review backend configuration could not be read or parsed." }
   }
+}
+
+export async function resolveFromWorkspace(workspace: string, request: Request) {
+  const result = await lookupRuntimeBackend(workspace, request)
+  if (result.status !== "resolved" || !result.backend) return result
+  const { credentialEnv, ...backend } = result.backend
+  return { ...result, backend }
 }
