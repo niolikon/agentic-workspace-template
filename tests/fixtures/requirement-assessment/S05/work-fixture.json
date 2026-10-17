@@ -1,0 +1,460 @@
+{
+  "schemaVersion": "review-fixtures/v1",
+  "workItems": [
+    {
+      "provider": "jira",
+      "externalId": "WI-1",
+      "sourceReference": {
+        "provider": "jira",
+        "stableExternalId": "WI-1",
+        "url": "https://evidence.example.test/items/WI-1"
+      },
+      "retrieval": {
+        "capability": "fixture-evidence",
+        "mode": "fixture",
+        "retrievedAt": "2026-10-17T08:00:00Z"
+      },
+      "title": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "title"
+          }
+        ],
+        "value": "Page handling"
+      },
+      "description": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "description"
+          }
+        ],
+        "value": "The exported pageSize(requested) function must cap positive integer page sizes at 100."
+      },
+      "acceptanceCriteria": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "acceptanceCriteria"
+          }
+        ],
+        "value": [
+          "For requested=150 pageSize returns 100; for requested=30 it returns 30."
+        ]
+      },
+      "comments": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "comments"
+          }
+        ],
+        "value": [
+          {
+            "externalId": "C-1",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "C-1",
+              "url": "https://evidence.example.test/items/C-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-1",
+                    "url": "https://evidence.example.test/items/C-1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "content"
+                }
+              ],
+              "value": "Confirmed refinement: replace the 100 cap with 40. Values below 40 remain unchanged. This applies to this delivery."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-1",
+                    "url": "https://evidence.example.test/items/C-1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "author"
+                }
+              ],
+              "value": {
+                "externalId": "product-owner"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-1",
+                    "url": "https://evidence.example.test/items/C-1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "createdAt"
+                }
+              ],
+              "value": "2026-10-16T10:00:00Z"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-1",
+                    "url": "https://evidence.example.test/items/C-1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "parent"
+                }
+              ],
+              "value": {
+                "kind": "none"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-1",
+                    "url": "https://evidence.example.test/items/C-1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "thread"
+                }
+              ],
+              "value": {
+                "kind": "none"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-1",
+                    "url": "https://evidence.example.test/items/C-1"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "updatedAt"
+                }
+              ],
+              "reason": "not-provided"
+            }
+          },
+          {
+            "externalId": "C-2",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "C-2",
+              "url": "https://evidence.example.test/items/C-2"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "content": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-2",
+                    "url": "https://evidence.example.test/items/C-2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "content"
+                }
+              ],
+              "value": "Could we eventually allow unlimited page sizes? This is only a question for a future release, not a change to the confirmed cap."
+            },
+            "author": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-2",
+                    "url": "https://evidence.example.test/items/C-2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "author"
+                }
+              ],
+              "value": {
+                "externalId": "product-owner"
+              }
+            },
+            "createdAt": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-2",
+                    "url": "https://evidence.example.test/items/C-2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "createdAt"
+                }
+              ],
+              "value": "2026-10-17T07:00:00Z"
+            },
+            "parent": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-2",
+                    "url": "https://evidence.example.test/items/C-2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "parent"
+                }
+              ],
+              "value": {
+                "kind": "none"
+              }
+            },
+            "thread": {
+              "state": "available",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-2",
+                    "url": "https://evidence.example.test/items/C-2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "thread"
+                }
+              ],
+              "value": {
+                "kind": "none"
+              }
+            },
+            "updatedAt": {
+              "state": "unavailable",
+              "provenance": [
+                {
+                  "provider": "jira",
+                  "backend": "work-fixture",
+                  "sourceReference": {
+                    "provider": "jira",
+                    "stableExternalId": "C-2",
+                    "url": "https://evidence.example.test/items/C-2"
+                  },
+                  "retrieval": {
+                    "capability": "fixture-evidence",
+                    "mode": "fixture",
+                    "retrievedAt": "2026-10-17T08:00:00Z"
+                  },
+                  "sourceLocator": "updatedAt"
+                }
+              ],
+              "reason": "not-provided"
+            }
+          }
+        ]
+      },
+      "labels": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "labels"
+          }
+        ],
+        "value": []
+      },
+      "type": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "type"
+          }
+        ],
+        "value": "story"
+      },
+      "status": {
+        "state": "available",
+        "provenance": [
+          {
+            "provider": "jira",
+            "backend": "work-fixture",
+            "sourceReference": {
+              "provider": "jira",
+              "stableExternalId": "WI-1",
+              "url": "https://evidence.example.test/items/WI-1"
+            },
+            "retrieval": {
+              "capability": "fixture-evidence",
+              "mode": "fixture",
+              "retrievedAt": "2026-10-17T08:00:00Z"
+            },
+            "sourceLocator": "status"
+          }
+        ],
+        "value": "active"
+      }
+    }
+  ],
+  "changeRequests": []
+}

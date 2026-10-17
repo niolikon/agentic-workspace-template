@@ -1,5 +1,19 @@
 # Manual workspace validation
 
+Functional requirement assessment is owned by
+`requirement-implementation-assessment` after confirmed resolution. Its synthetic
+input fidelity and acquisition integration checks run with:
+
+```text
+node --experimental-strip-types --test tests/requirement-assessment.test.mjs
+```
+
+These deterministic checks do not establish semantic assessment correctness.
+OpenCode E2E additionally verifies full/partial/missing/insufficient outcomes,
+applicable refinements, N:M cross-repository contributions and attributable
+findings using independent substantive oracles. Fixtures contain only evidence;
+expected conclusions remain outside the provider catalogs and SUT.
+
 Backend resolution also has deterministic automated tests. From the repository
 root, with Node.js 22.14 or later, run:
 

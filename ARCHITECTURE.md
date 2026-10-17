@@ -104,6 +104,12 @@ snapshot. Corrections invalidate confirmation; downstream review consumes only
 the released snapshot. Multiple work items and changes are independent collections,
 with no implicit positional mapping. Provider evidence never supplies consent.
 
+Functional requirement assessment consumes that released snapshot and correlates
+the combined implementation across changes and repositories. Its owning skill
+preserves applicable requirement refinements and the provenance of both sides of
+each finding. Missing evidence limits claim strength; it is not proof of a defect.
+This reasoning capability does not acquire evidence or perform other review types.
+
 20. **Claims must be evidence-backed.** Confirmed facts must be
     traceable to workspace-relative source paths. Inferences and
     unresolved questions must be clearly distinguished from confirmed

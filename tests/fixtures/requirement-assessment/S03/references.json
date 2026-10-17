@@ -1,0 +1,13 @@
+[
+  {
+    "family": "workItemBackends",
+    "externalId": "WI-3",
+    "backendId": "work-fixture"
+  },
+  {
+    "family": "changeBackends",
+    "externalId": "CH-4",
+    "backendId": "change-fixture",
+    "repository": "team/api"
+  }
+]

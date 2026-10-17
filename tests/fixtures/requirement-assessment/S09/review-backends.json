@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "review-backends/v1",
+  "workItemBackends": [
+    {
+      "id": "neutral-work",
+      "provider": "future-source",
+      "baseUrl": "https://evidence.example.test",
+      "adapter": "fixture",
+      "fixturePath": "tests/fixtures/requirement-assessment/S09/neutral-work.json"
+    }
+  ],
+  "changeBackends": [
+    {
+      "id": "neutral-change",
+      "provider": "future-source",
+      "baseUrl": "https://evidence.example.test",
+      "adapter": "fixture",
+      "fixturePath": "tests/fixtures/requirement-assessment/S09/neutral-change.json"
+    }
+  ]
+}
