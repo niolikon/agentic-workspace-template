@@ -1,0 +1,1 @@
+Public contract: take(rows, limit) returns at most limit rows, retaining the first limit entries when available. load returns {retry:true} for TimeoutError and propagates other failures. tests.mjs is the complete test entrypoint for these two modules in this synthetic repository. The source snapshots and tests correspond to C1-head.

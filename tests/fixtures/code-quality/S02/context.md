@@ -1,0 +1,1 @@
+API and worker both emit messages consumed by schedule. Input delay is milliseconds; delaySeconds wire field contains seconds. C2-head and C3-head are proposed together with this unchanged consumer version Q1. There is no adapter between these modules. The two producers maintain independent copies of the conversion logic. Test inventory was not acquired.

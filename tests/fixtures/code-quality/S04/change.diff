@@ -1,0 +1,5 @@
+--- a/read.mjs
++++ b/read.mjs
+@@ -8,1 +8,1 @@
+-  return adapt(value);
++  return normalize(value);

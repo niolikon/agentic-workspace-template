@@ -1,0 +1,29 @@
+{
+  "changes": [
+    {
+      "changeId": "C2",
+      "repository": "api",
+      "backend": "source-A",
+      "base": "C2-base",
+      "head": "C2-head",
+      "path": "api.mjs",
+      "diff": "C2-api.mjs.diff",
+      "before": "before/api.mjs",
+      "after": "after/api.mjs",
+      "state": "available"
+    },
+    {
+      "changeId": "C3",
+      "repository": "worker",
+      "backend": "future-source-B",
+      "base": "C3-base",
+      "head": "C3-head",
+      "path": "worker.mjs",
+      "diff": "C3-worker.mjs.diff",
+      "before": "before/worker.mjs",
+      "after": "after/worker.mjs",
+      "state": "available"
+    }
+  ],
+  "context": "context.md"
+}

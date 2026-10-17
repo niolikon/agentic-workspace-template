@@ -1,0 +1,1 @@
+Public contract and revision alignment: take retains the first limit entries, including an empty result at limit=0; load recovers TimeoutError with {retry:true} and propagates every other failure. These snapshots and the complete tests.mjs entrypoint correspond to C6-head. Review is bounded to these exports, not the whole system.

@@ -110,6 +110,14 @@ preserves applicable requirement refinements and the provenance of both sides of
 each finding. Missing evidence limits claim strength; it is not proof of a defect.
 This reasoning capability does not acquire evidence or perform other review types.
 
+Changed-implementation quality and regression reasoning is owned by
+`code-quality-and-regression-review`. It accepts bounded local change evidence or
+the confirmed Review snapshot and preserves revision and repository attribution.
+Canonical engineering policy remains exclusively owned by
+`engineering-guideline-review`; overlapping concerns are delegated rather than
+duplicated. Behavioral findings require a causal implementation path, while
+missing context remains an explicit verification limit. Both reviews are read-only.
+
 20. **Claims must be evidence-backed.** Confirmed facts must be
     traceable to workspace-relative source paths. Inferences and
     unresolved questions must be clearly distinguished from confirmed

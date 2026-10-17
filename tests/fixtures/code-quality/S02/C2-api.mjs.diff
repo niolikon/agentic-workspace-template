@@ -1,0 +1,5 @@
+--- a/api.mjs
++++ b/api.mjs
+@@ -1 +1 @@
+-export function delay(ms) { return { delaySeconds: ms / 1000 }; }
++export function delay(ms) { return { delaySeconds: ms }; }
